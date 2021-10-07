@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Colors from '../Colors';
 import FieldStates from '../enums/FieldStates';
 import Modes from '../enums/SolveModes';
-import styles from '../styles';
-
-const visualStateRepresentations = ['', 'close', 'close', 'check'];
+import Styles from '../Styles';
 
 const SolvableField = ({fieldData, mode, size}) => {
   const [visualState, setVisualState] = useState(FieldStates.UNTOUCHED);
@@ -24,20 +23,28 @@ const SolvableField = ({fieldData, mode, size}) => {
     }
   };
 
-  const style = {...styles.field, ...styles.boardField, width: '100%', height: '100%'};
+  const color =
+    visualState !== FieldStates.CORRECTLY_UNCOVERED
+      ? Colors.untouchedBoardField
+      : fieldData.color
+      ? fieldData.color
+      : Colors.uncoveredBoardField;
 
-  const iconColor =
-    visualState === FieldStates.WRONGLY_UNCOVERED
-      ? '#e03030'
-      : visualState === FieldStates.CORRECTLY_UNCOVERED
-      ? '#30e030'
-      : '#e0e0e0';
+  const style = {
+    ...Styles.field,
+    ...Styles.boardField,
+    width: '100%',
+    height: '100%',
+    backgroundColor: color,
+  };
+
+  const iconColor = visualState === FieldStates.WRONGLY_UNCOVERED ? '#e03030' : '#808080';
 
   return (
-    <View style={[styles.field, styles.boardField]}>
+    <View style={[Styles.field, Styles.boardField]}>
       <TouchableOpacity onPress={handlePress} style={style}>
-        {visualState !== FieldStates.UNTOUCHED && (
-          <Icon color={iconColor} name={visualStateRepresentations[visualState]} size={300 * size} />
+        {(visualState === FieldStates.MARKED_EMPTY || visualState === FieldStates.WRONGLY_UNCOVERED) && (
+          <Icon color={iconColor} name={'close'} size={300 * size} />
         )}
       </TouchableOpacity>
     </View>

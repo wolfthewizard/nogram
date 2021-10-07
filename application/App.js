@@ -1,7 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import UserSolvingActivity from './src/activities/UserSolvingActivity';
-import styles from './src/styles';
+import styles from './src/Styles';
 
 const App = () => {
   return (

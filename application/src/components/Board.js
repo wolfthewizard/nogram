@@ -2,7 +2,7 @@ import React, {useState, useMemo} from 'react';
 import {View} from 'react-native';
 import LabelField from '../components/LabelField';
 import SolvableField from '../components/SolvableField';
-import styles from '../styles';
+import Styles from '../Styles';
 
 const generateHints = series => {
   const cellStreaks = [];
@@ -66,7 +66,7 @@ const Board = ({boardData, mode}) => {
   );
 
   return (
-    <View style={{...styles.board, aspectRatio: 1}}>
+    <View style={{...Styles.board, aspectRatio: 1}}>
       <View style={{flexDirection: 'column'}}>
         {wholeBoard.map((row, i) => (
           <View style={{flexDirection: 'row', width: '100%', aspectRatio: totalWidth}} key={i}>

@@ -1,14 +1,14 @@
 import React from 'react';
 import {View} from 'react-native';
 import {Text} from 'react-native-elements';
-import styles from '../styles';
+import Styles from '../Styles';
 
 const LabelField = ({value, size}) => {
   return (
-    <View style={[styles.field, styles.hintField]}>
+    <View style={[Styles.field, Styles.hintField]}>
       <Text
         style={{
-          ...styles.field,
+          ...Styles.field,
           width: '100%',
           height: '100%',
           color: 'white',
