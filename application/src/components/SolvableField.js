@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Colors from '../data/Colors';
@@ -6,29 +6,39 @@ import FieldStates from '../enums/FieldStates';
 import Modes from '../enums/SolveModes';
 import Styles from '../data/Styles';
 
-const SolvableField = ({fieldData, mode, setLives, size}) => {
+const SolvableField = ({
+  fieldData,
+  mode,
+  decrementLives,
+  decrementTilesLeft,
+  gameFinished,
+  size,
+}) => {
   const [visualState, setVisualState] = useState(
     fieldData.state !== undefined ? fieldData.state : FieldStates.UNTOUCHED,
   );
 
   const handlePress = () => {
-    if (mode === Modes.UNCOVER) {
-      if (visualState === FieldStates.UNTOUCHED) {
-        let newVisualState;
-        if (fieldData.hasPixel) {
-          newVisualState = FieldStates.CORRECTLY_UNCOVERED;
-        } else {
-          newVisualState = FieldStates.WRONGLY_UNCOVERED;
-          setLives((previousLives) => previousLives - 1);
+    if (!gameFinished) {
+      if (mode === Modes.UNCOVER) {
+        if (visualState === FieldStates.UNTOUCHED) {
+          let newVisualState;
+          if (fieldData.hasPixel) {
+            newVisualState = FieldStates.CORRECTLY_UNCOVERED;
+            decrementTilesLeft();
+          } else {
+            newVisualState = FieldStates.WRONGLY_UNCOVERED;
+            decrementLives();
+          }
+          setVisualState(newVisualState);
         }
+      } else {
+        const newVisualState =
+          visualState === FieldStates.MARKED_EMPTY
+            ? FieldStates.UNTOUCHED
+            : FieldStates.MARKED_EMPTY;
         setVisualState(newVisualState);
       }
-    } else {
-      const newVisualState =
-        visualState === FieldStates.MARKED_EMPTY
-          ? FieldStates.UNTOUCHED
-          : FieldStates.MARKED_EMPTY;
-      setVisualState(newVisualState);
     }
   };
 

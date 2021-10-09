@@ -1,4 +1,4 @@
-import React, {useState, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {View} from 'react-native';
 import LabelField from '../components/LabelField';
 import SolvableField from '../components/SolvableField';
@@ -19,9 +19,13 @@ const generateHints = (series) => {
   return cellStreaks.length > 0 ? cellStreaks : [0];
 };
 
-const Board = ({boardData, mode, setLives}) => {
-  const [boardFields, setBoardFields] = useState(boardData.fields.flat());
-
+const Board = ({
+  boardData,
+  mode,
+  decrementLives,
+  decrementTilesLeft,
+  gameFinished,
+}) => {
   const rows = boardData.fields;
   const columns = useMemo(
     () =>
@@ -69,7 +73,9 @@ const Board = ({boardData, mode, setLives}) => {
               <SolvableField
                 fieldData={boardData.fields[playingRowNum][playingColNum]}
                 mode={mode}
-                setLives={setLives}
+                decrementLives={decrementLives}
+                decrementTilesLeft={decrementTilesLeft}
+                gameFinished={gameFinished}
                 size={size}
               />
             );
@@ -92,7 +98,7 @@ const Board = ({boardData, mode, setLives}) => {
           }
         });
       }),
-    [rowHints, columnHints, mode],
+    [rowHints, columnHints, mode, gameFinished],
   );
 
   return (
