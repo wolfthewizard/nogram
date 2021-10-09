@@ -7,7 +7,9 @@ import Modes from '../enums/SolveModes';
 import Styles from '../data/Styles';
 
 const SolvableField = ({fieldData, mode, setLives, size}) => {
-  const [visualState, setVisualState] = useState(FieldStates.UNTOUCHED);
+  const [visualState, setVisualState] = useState(
+    fieldData.state !== undefined ? fieldData.state : FieldStates.UNTOUCHED,
+  );
 
   const handlePress = () => {
     if (mode === Modes.UNCOVER) {
