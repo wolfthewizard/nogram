@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Colors from '../Colors';
+import Colors from '../data/Colors';
 import FieldStates from '../enums/FieldStates';
 import Modes from '../enums/SolveModes';
-import Styles from '../Styles';
+import Styles from '../data/Styles';
 
 const SolvableField = ({fieldData, mode, size}) => {
   const [visualState, setVisualState] = useState(FieldStates.UNTOUCHED);
@@ -18,12 +18,15 @@ const SolvableField = ({fieldData, mode, size}) => {
             : FieldStates.WRONGLY_UNCOVERED
           : FieldStates.MARKED_EMPTY;
       setVisualState(newVisualState);
-    } else if (visualState === FieldStates.MARKED_EMPTY && mode === Modes.MARK_EMPTY) {
+    } else if (
+      visualState === FieldStates.MARKED_EMPTY &&
+      mode === Modes.MARK_EMPTY
+    ) {
       setVisualState(FieldStates.UNTOUCHED);
     }
   };
 
-  const color =
+  const backgroundColor =
     visualState !== FieldStates.CORRECTLY_UNCOVERED
       ? Colors.untouchedBoardField
       : fieldData.color
@@ -35,17 +38,23 @@ const SolvableField = ({fieldData, mode, size}) => {
     ...Styles.boardField,
     width: '100%',
     height: '100%',
-    backgroundColor: color,
+    backgroundColor: backgroundColor,
   };
 
-  const iconColor = visualState === FieldStates.WRONGLY_UNCOVERED ? '#e03030' : '#808080';
+  const iconColor =
+    visualState === FieldStates.WRONGLY_UNCOVERED
+      ? Colors.wrong
+      : Colors.default;
+  const icon =
+    visualState === FieldStates.MARKED_EMPTY ||
+    visualState === FieldStates.WRONGLY_UNCOVERED ? (
+      <Icon color={iconColor} name={'close'} size={300 * size} />
+    ) : null;
 
   return (
     <View style={[Styles.field, Styles.boardField]}>
       <TouchableOpacity onPress={handlePress} style={style}>
-        {(visualState === FieldStates.MARKED_EMPTY || visualState === FieldStates.WRONGLY_UNCOVERED) && (
-          <Icon color={iconColor} name={'close'} size={300 * size} />
-        )}
+        {icon}
       </TouchableOpacity>
     </View>
   );

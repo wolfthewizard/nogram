@@ -14,11 +14,41 @@ const UserSolvingActivity = () => {
           width: 5,
           height: 5,
           fields: [
-            [{hasPixel: false}, {hasPixel: true}, {hasPixel: false}, {hasPixel: true}, {hasPixel: false}],
-            [{hasPixel: false}, {hasPixel: true}, {hasPixel: false}, {hasPixel: true}, {hasPixel: false}],
-            [{hasPixel: false}, {hasPixel: false}, {hasPixel: false}, {hasPixel: false}, {hasPixel: false}],
-            [{hasPixel: true}, {hasPixel: false}, {hasPixel: false}, {hasPixel: false}, {hasPixel: true}],
-            [{hasPixel: false}, {hasPixel: true}, {hasPixel: true}, {hasPixel: true}, {hasPixel: false}],
+            [
+              {hasPixel: false},
+              {hasPixel: true},
+              {hasPixel: false},
+              {hasPixel: true},
+              {hasPixel: false},
+            ],
+            [
+              {hasPixel: false},
+              {hasPixel: true},
+              {hasPixel: false},
+              {hasPixel: true},
+              {hasPixel: false},
+            ],
+            [
+              {hasPixel: false},
+              {hasPixel: false},
+              {hasPixel: false},
+              {hasPixel: false},
+              {hasPixel: false},
+            ],
+            [
+              {hasPixel: true},
+              {hasPixel: false},
+              {hasPixel: false},
+              {hasPixel: false},
+              {hasPixel: true},
+            ],
+            [
+              {hasPixel: false},
+              {hasPixel: true},
+              {hasPixel: true},
+              {hasPixel: true},
+              {hasPixel: false},
+            ],
           ],
         }}
         mode={mode}

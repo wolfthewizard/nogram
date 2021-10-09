@@ -1,7 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import {Text} from 'react-native-elements';
-import Styles from '../Styles';
+import Styles from '../data/Styles';
 
 const LabelField = ({value, size}) => {
   return (
