@@ -5,6 +5,8 @@ const Colors = {
   default: '#808080',
   switchOn: '#d0d0d0',
   switchOff: '#202020',
+  lifeAvailable: '#d02020',
+  lifeLost: '#202020',
 };
 
 export default Colors;

@@ -6,23 +6,27 @@ import FieldStates from '../enums/FieldStates';
 import Modes from '../enums/SolveModes';
 import Styles from '../data/Styles';
 
-const SolvableField = ({fieldData, mode, size}) => {
+const SolvableField = ({fieldData, mode, setLives, size}) => {
   const [visualState, setVisualState] = useState(FieldStates.UNTOUCHED);
 
   const handlePress = () => {
-    if (visualState === FieldStates.UNTOUCHED) {
+    if (mode === Modes.UNCOVER) {
+      if (visualState === FieldStates.UNTOUCHED) {
+        let newVisualState;
+        if (fieldData.hasPixel) {
+          newVisualState = FieldStates.CORRECTLY_UNCOVERED;
+        } else {
+          newVisualState = FieldStates.WRONGLY_UNCOVERED;
+          setLives((previousLives) => previousLives - 1);
+        }
+        setVisualState(newVisualState);
+      }
+    } else {
       const newVisualState =
-        mode === Modes.UNCOVER
-          ? fieldData.hasPixel
-            ? FieldStates.CORRECTLY_UNCOVERED
-            : FieldStates.WRONGLY_UNCOVERED
+        visualState === FieldStates.MARKED_EMPTY
+          ? FieldStates.UNTOUCHED
           : FieldStates.MARKED_EMPTY;
       setVisualState(newVisualState);
-    } else if (
-      visualState === FieldStates.MARKED_EMPTY &&
-      mode === Modes.MARK_EMPTY
-    ) {
-      setVisualState(FieldStates.UNTOUCHED);
     }
   };
 

@@ -19,7 +19,7 @@ const generateHints = (series) => {
   return cellStreaks.length > 0 ? cellStreaks : [0];
 };
 
-const Board = ({boardData, mode}) => {
+const Board = ({boardData, mode, setLives}) => {
   const [boardFields, setBoardFields] = useState(boardData.fields.flat());
 
   const rows = boardData.fields;
@@ -69,6 +69,7 @@ const Board = ({boardData, mode}) => {
               <SolvableField
                 fieldData={boardData.fields[playingRowNum][playingColNum]}
                 mode={mode}
+                setLives={setLives}
                 size={size}
               />
             );

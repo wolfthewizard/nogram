@@ -3,9 +3,12 @@ import {View} from 'react-native';
 import Board from '../components/Board';
 import Modes from '../enums/SolveModes';
 import ModeSwitch from '../components/ModeSwitch';
+import LifeBar from '../components/LifeBar';
 
 const UserSolvingActivity = () => {
+  const maxLives = 3; // todo: move when implementing game storage in db
   const [mode, setMode] = useState(Modes.UNCOVER);
+  const [lives, setLives] = useState(maxLives);
 
   return (
     <View style={{alignItems: 'center'}}>
@@ -52,8 +55,10 @@ const UserSolvingActivity = () => {
           ],
         }}
         mode={mode}
+        setLives={setLives}
       />
       <ModeSwitch mode={mode} setMode={setMode} />
+      <LifeBar maxLives={maxLives} lives={lives} />
     </View>
   );
 };
