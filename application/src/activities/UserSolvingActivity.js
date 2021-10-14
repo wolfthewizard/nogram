@@ -7,7 +7,8 @@ import LifeBar from '../components/LifeBar';
 import GameStates from '../enums/GameStates';
 import {Text} from 'react-native-elements';
 
-const UserSolvingActivity = ({gameData}) => {
+const UserSolvingActivity = ({route, navigation}) => {
+  const {gameData} = route.params;
   const [gameState, setGameState] = useState(GameStates.GOING);
   const [gameFinished, setGameFinished] = useState(false);
   const [mode, setMode] = useState(Modes.UNCOVER);
