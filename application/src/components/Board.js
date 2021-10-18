@@ -102,8 +102,8 @@ const Board = ({
   );
 
   return (
-    <View style={{...Styles.board, aspectRatio: 1}}>
-      <View style={{flexDirection: 'column'}}>
+    <View style={{...Styles.board}}>
+      <View style={{...Styles.board, flexDirection: 'column'}}>
         {wholeBoard.map((row, i) => (
           <View
             style={{
