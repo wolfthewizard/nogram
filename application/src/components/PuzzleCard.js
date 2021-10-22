@@ -13,7 +13,7 @@ const PuzzleCard = ({puzzleData, openPuzzle}) => {
         borderRadius: 15,
       }}>
       <TouchableOpacity onPress={openPuzzle}>
-        <Text style={{color: 'white', fontSize: 20}}>{puzzleData.title}</Text>
+        <Text style={{color: 'white', fontSize: 20}}>{puzzleData.name}</Text>
       </TouchableOpacity>
     </View>
   );
