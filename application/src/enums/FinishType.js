@@ -1,0 +1,8 @@
+const FinishType = {
+  NEVER_FINISHED: 0,
+  LOST_WITHOUT_FINISHING: 1,
+  FINISHED_WITH_LOSING: 2,
+  FINISHED_WITHOUT_LOSING: 3,
+};
+
+export default FinishType;

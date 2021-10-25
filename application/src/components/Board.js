@@ -25,12 +25,14 @@ const Board = ({
   decrementLives,
   decrementTilesLeft,
   gameFinished,
+  fields,
+  setFields,
 }) => {
-  const rows = boardData.fields;
+  const rows = fields;
   const columns = useMemo(
     () =>
       [...Array(boardData.width).keys()].map((i) =>
-        [...Array(boardData.height).keys()].map((j) => boardData.fields[j][i]),
+        [...Array(boardData.height).keys()].map((j) => fields[j][i]),
       ),
     [],
   );
@@ -60,6 +62,7 @@ const Board = ({
 
   const size = 1 / totalWidth;
 
+  // todo: optimize this bit as it is recalculated with every pixel hit
   const wholeBoard = useMemo(
     () =>
       [...Array(totalHeight).keys()].map((absoluteRowNum) => {
@@ -69,9 +72,23 @@ const Board = ({
           if (playingRowNum < 0 && playingColNum < 0) {
             return null;
           } else if (playingRowNum >= 0 && playingColNum >= 0) {
+            const updateOwnState = (newOwnState) => {
+              setFields((prevFields) =>
+                prevFields.map((prevFieldRow, i) =>
+                  i !== playingRowNum
+                    ? prevFieldRow
+                    : prevFieldRow.map((prevField, i) =>
+                        i !== playingColNum
+                          ? prevField
+                          : {...prevField, state: newOwnState},
+                      ),
+                ),
+              );
+            };
             return (
               <SolvableField
-                fieldData={boardData.fields[playingRowNum][playingColNum]}
+                fieldData={fields[playingRowNum][playingColNum]}
+                updateOwnState={updateOwnState}
                 mode={mode}
                 decrementLives={decrementLives}
                 decrementTilesLeft={decrementTilesLeft}
@@ -98,7 +115,7 @@ const Board = ({
           }
         });
       }),
-    [rowHints, columnHints, mode, gameFinished],
+    [rowHints, columnHints, mode, gameFinished, fields],
   );
 
   return (

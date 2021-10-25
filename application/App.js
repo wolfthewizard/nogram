@@ -7,6 +7,9 @@ import UserSolvingActivity from './src/activities/UserSolvingActivity';
 import initDb from './src/db/initDb';
 
 import styles from './src/data/Styles';
+import {DB_INITIALIZED_SIGNATURE} from './src/db/dbQuerySignatures';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+AsyncStorage.removeItem(DB_INITIALIZED_SIGNATURE).then(() => null);
 
 const Stack = createNativeStackNavigator();
 

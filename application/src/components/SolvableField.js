@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Colors from '../data/Colors';
@@ -8,20 +8,17 @@ import Styles from '../data/Styles';
 
 const SolvableField = ({
   fieldData,
+  updateOwnState,
   mode,
   decrementLives,
   decrementTilesLeft,
   gameFinished,
   size,
 }) => {
-  const [visualState, setVisualState] = useState(
-    fieldData.state !== undefined ? fieldData.state : FieldStates.UNTOUCHED,
-  );
-
   const handlePress = () => {
     if (!gameFinished) {
       if (mode === Modes.UNCOVER) {
-        if (visualState === FieldStates.UNTOUCHED) {
+        if (fieldData.state === FieldStates.UNTOUCHED) {
           let newVisualState;
           if (fieldData.hasPixel) {
             newVisualState = FieldStates.CORRECTLY_UNCOVERED;
@@ -30,20 +27,20 @@ const SolvableField = ({
             newVisualState = FieldStates.WRONGLY_UNCOVERED;
             decrementLives();
           }
-          setVisualState(newVisualState);
+          updateOwnState(newVisualState);
         }
       } else {
         const newVisualState =
-          visualState === FieldStates.MARKED_EMPTY
+          fieldData.state === FieldStates.MARKED_EMPTY
             ? FieldStates.UNTOUCHED
             : FieldStates.MARKED_EMPTY;
-        setVisualState(newVisualState);
+        updateOwnState(newVisualState);
       }
     }
   };
 
   const backgroundColor =
-    visualState !== FieldStates.CORRECTLY_UNCOVERED
+    fieldData.state !== FieldStates.CORRECTLY_UNCOVERED
       ? Colors.untouchedBoardField
       : fieldData.color
       ? fieldData.color
@@ -58,12 +55,12 @@ const SolvableField = ({
   };
 
   const iconColor =
-    visualState === FieldStates.WRONGLY_UNCOVERED
+    fieldData.state === FieldStates.WRONGLY_UNCOVERED
       ? Colors.wrong
       : Colors.default;
   const icon =
-    visualState === FieldStates.MARKED_EMPTY ||
-    visualState === FieldStates.WRONGLY_UNCOVERED ? (
+    fieldData.state === FieldStates.MARKED_EMPTY ||
+    fieldData.state === FieldStates.WRONGLY_UNCOVERED ? (
       <Icon color={iconColor} name={'close'} size={300 * size} />
     ) : null;
 

@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/core';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, View} from 'react-native';
 import PuzzleCard from '../components/PuzzleCard';
 import GameDBMediator from '../db/GameDBMediator';
@@ -6,10 +7,11 @@ import GameDBMediator from '../db/GameDBMediator';
 const UserChoosingActivity = ({navigation}) => {
   const [puzzles, setPuzzles] = useState([]);
 
-  // todo: make sure it is updated after coming back from solving puzzle
-  useEffect(() => {
-    GameDBMediator.getGamesList((gamesList) => setPuzzles(gamesList));
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      GameDBMediator.getGamesList((gamesList) => setPuzzles(gamesList));
+    }, []),
+  );
 
   return (
     <View>
@@ -22,7 +24,10 @@ const UserChoosingActivity = ({navigation}) => {
             openPuzzle={() =>
               GameDBMediator.getGameDetails(item.id, (gameData) =>
                 navigation.navigate('Play Puzzle', {
-                  gameData,
+                  gameData: {
+                    ...item,
+                    ...gameData,
+                  },
                 }),
               )
             }

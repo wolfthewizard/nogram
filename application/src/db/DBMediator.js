@@ -18,6 +18,14 @@ class DBMediator {
       console.error(`error during reading value for key ${key}: ${e}`);
     }
   }
+
+  static async mergeValue(key, value) {
+    try {
+      await AsyncStorage.mergeItem(key, JSON.stringify(value));
+    } catch (e) {
+      console.error(`error during saving value for key ${key}: ${e}`);
+    }
+  }
 }
 
 export default DBMediator;
