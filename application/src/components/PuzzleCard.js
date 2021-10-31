@@ -56,7 +56,6 @@ const PuzzleCard = ({puzzleData, openPuzzle}) => {
                 {completePercent}%
               </Text>
             ) : puzzleData.solveStatus === SolveStatus.SOLVED ? (
-              // <Text>test</Text>
               <Icon name="trophy" size={50} color={elementColor} />
             ) : null}
           </View>

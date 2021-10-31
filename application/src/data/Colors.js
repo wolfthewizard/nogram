@@ -7,7 +7,7 @@ const Colors = {
   switchOff: '#202020',
   lifeAvailable: '#d02020',
   lifeLost: '#202020',
-  gold: '#ff8000',
+  gold: '#ffd700',
   silver: '#c0c0c0',
 };
 

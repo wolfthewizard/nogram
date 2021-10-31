@@ -20,19 +20,20 @@ const generateHints = (series) => {
 };
 
 const Board = ({
-  boardData,
+  boardWidth,
+  boardHeight,
+  fields,
   mode,
+  gameFinished,
+  setFields,
   decrementLives,
   decrementTilesLeft,
-  gameFinished,
-  fields,
-  setFields,
 }) => {
   const rows = fields;
   const columns = useMemo(
     () =>
-      [...Array(boardData.width).keys()].map((i) =>
-        [...Array(boardData.height).keys()].map((j) => fields[j][i]),
+      [...Array(boardWidth).keys()].map((i) =>
+        [...Array(boardHeight).keys()].map((j) => fields[j][i]),
       ),
     [],
   );
@@ -52,12 +53,12 @@ const Board = ({
     [columnHints],
   );
   const totalWidth = useMemo(
-    () => rowHintMaxLength + boardData.width,
-    [rowHintMaxLength, boardData],
+    () => rowHintMaxLength + boardWidth,
+    [rowHintMaxLength, boardWidth],
   );
   const totalHeight = useMemo(
-    () => colHintMaxLength + boardData.height,
-    [colHintMaxLength, boardData],
+    () => colHintMaxLength + boardHeight,
+    [colHintMaxLength, boardHeight],
   );
 
   const size = 1 / totalWidth;

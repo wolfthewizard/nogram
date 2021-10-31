@@ -1,125 +1,77 @@
-import FieldStates from '../enums/FieldStates';
-import DBMediator from './DBMediator';
-import {
-  USER_PUZZLE_DETAILS_SIGNATURE,
-  USER_PUZZLE_LIST_SIGNATURE,
-} from './dbQuerySignatures';
+import {TABLE_NAME} from './dbData';
+import {getDBConnection} from './DBMediator';
 
-class GameDBMediator {
-  static getGamesList(callback) {
-    DBMediator.readValue(USER_PUZZLE_LIST_SIGNATURE, callback);
-  }
-
-  static getGameDetails(id, callback) {
-    DBMediator.readValue(USER_PUZZLE_DETAILS_SIGNATURE + id, callback);
-  }
-
-  static saveGameFieldsState(id, fields) {
-    DBMediator.readValue(USER_PUZZLE_DETAILS_SIGNATURE + id, () =>
-      DBMediator.mergeValue(USER_PUZZLE_DETAILS_SIGNATURE + id, {
-        boardData: {fields: fields},
-      }),
+const getMenuPuzzleList = async (callback) => {
+  const db = await getDBConnection();
+  try {
+    const menuPuzzleList = [];
+    const results = await db.executeSql(
+      `select id, name, totalPixels, foundPixels, solveStatus, finishType from ${TABLE_NAME};`,
     );
-  }
-
-  static saveGameLivesCount(id, currentLives) {
-    DBMediator.readValue(USER_PUZZLE_DETAILS_SIGNATURE + id, () =>
-      DBMediator.mergeValue(USER_PUZZLE_DETAILS_SIGNATURE + id, {
-        currentLives: currentLives,
-      }),
-    );
-  }
-
-  static saveGameFoundPixels(id, foundPixels) {
-    DBMediator.readValue(
-      USER_PUZZLE_LIST_SIGNATURE,
-      (puzzleList) =>
-        DBMediator.saveValue(
-          USER_PUZZLE_LIST_SIGNATURE,
-          puzzleList.map((puzzleDescr) =>
-            puzzleDescr.id !== id
-              ? puzzleDescr
-              : {...puzzleDescr, foundPixels: foundPixels},
-          ),
-        ),
-      // DBMediator.mergeValue(USER_PUZZLE_LIST_SIGNATURE, {
-      //   list: puzzleList.list.map((puzzleDescr) =>
-      //     puzzleDescr.id !== id ? {} : {foundPixels: foundPixels},
-      //   ),
-      // }),
-    );
-  }
-
-  static saveGameStatus(id, solveStatus) {
-    DBMediator.readValue(
-      USER_PUZZLE_LIST_SIGNATURE,
-      (puzzleList) =>
-        DBMediator.saveValue(
-          USER_PUZZLE_LIST_SIGNATURE,
-          puzzleList.map((puzzleDescr) =>
-            puzzleDescr.id !== id
-              ? puzzleDescr
-              : {...puzzleDescr, solveStatus: solveStatus},
-          ),
-        ),
-      // DBMediator.mergeValue(USER_PUZZLE_LIST_SIGNATURE, {
-      //   list: puzzleList.list.map((puzzleDescr) =>
-      //     puzzleDescr.id !== id ? {} : {solveStatus: solveStatus},
-      //   ),
-      // }),
-    );
-  }
-
-  static saveGameFinishType(id, finishType) {
-    DBMediator.readValue(USER_PUZZLE_LIST_SIGNATURE, (puzzleList) => {
-      DBMediator.saveValue(
-        USER_PUZZLE_LIST_SIGNATURE,
-        puzzleList.map((puzzleDescr) =>
-          puzzleDescr.id !== id
-            ? puzzleDescr
-            : {...puzzleDescr, finishType: finishType},
-        ),
-      );
-      // DBMediator.mergeValue(USER_PUZZLE_LIST_SIGNATURE, {
-      //   list: puzzleList.list.map((puzzleDescr) =>
-      //     puzzleDescr.id !== id ? {} : {finishType: finishType},
-      //   ),
-      // });
+    results.forEach((result) => {
+      for (let index = 0; index < result.rows.length; index++) {
+        menuPuzzleList.push(result.rows.item(index));
+      }
     });
+    callback(menuPuzzleList);
+  } catch (error) {
+    console.error(error);
+    throw Error('Failed to retrieve puzzle list for menu.');
   }
+};
 
-  static afterGame(id, foundPixels, solveStatus, finishType) {
-    DBMediator.readValue(USER_PUZZLE_LIST_SIGNATURE, (puzzleList) => {
-      DBMediator.saveValue(
-        USER_PUZZLE_LIST_SIGNATURE,
-        puzzleList.map((puzzleDescr) =>
-          puzzleDescr.id !== id
-            ? puzzleDescr
-            : {
-                ...puzzleDescr,
-                foundPixels: 0,
-                solveStatus: solveStatus,
-                finishType: finishType,
-              },
-        ),
-      );
-    });
-    DBMediator.readValue(USER_PUZZLE_DETAILS_SIGNATURE + id, (puzzleDetails) =>
-      DBMediator.saveValue(USER_PUZZLE_DETAILS_SIGNATURE + id, {
-        ...puzzleDetails,
-        currentLives: puzzleDetails.maxLives,
-        boardData: {
-          ...puzzleDetails.boardData,
-          fields: puzzleDetails.boardData.fields.map((row) =>
-            row.map((fieldData) => ({
-              ...fieldData,
-              state: FieldStates.UNTOUCHED,
-            })),
-          ),
-        },
-      }),
+const getPuzzleById = async (id, callback) => {
+  const db = await getDBConnection();
+  try {
+    const puzzles = await db.executeSql(
+      `select * from ${TABLE_NAME} where id=${id};`,
     );
+    const puzzle = puzzles[0].rows.item(0);
+    callback({...puzzle, fields: JSON.parse(puzzle.fields)});
+  } catch (error) {
+    console.error(error);
+    throw Error('Failed to retrieve puzzle details.');
   }
-}
+};
 
-export default GameDBMediator;
+const saveGameFieldsState = async (id, fields) => {
+  const db = await getDBConnection();
+  const insertQuery = `update ${TABLE_NAME} set fields='${JSON.stringify(
+    fields,
+  )}' where id=${id}`;
+  db.executeSql(insertQuery);
+};
+
+const saveGameLivesCount = async (id, lives) => {
+  const db = await getDBConnection();
+  const insertQuery = `update ${TABLE_NAME} set currentLives='${lives}' where id=${id}`;
+  db.executeSql(insertQuery);
+};
+
+const saveGameFoundPixels = async (id, foundPixels) => {
+  const db = await getDBConnection();
+  const insertQuery = `update ${TABLE_NAME} set foundPixels='${foundPixels}' where id=${id}`;
+  db.executeSql(insertQuery);
+};
+
+const saveGameStatus = async (id, solveStatus) => {
+  const db = await getDBConnection();
+  const insertQuery = `update ${TABLE_NAME} set solveStatus='${solveStatus}' where id=${id}`;
+  db.executeSql(insertQuery);
+};
+
+const saveGameFinishType = async (id, finishType) => {
+  const db = await getDBConnection();
+  const insertQuery = `update ${TABLE_NAME} set finishType='${finishType}' where id=${id}`;
+  db.executeSql(insertQuery);
+};
+
+export {
+  getMenuPuzzleList,
+  getPuzzleById,
+  saveGameFieldsState,
+  saveGameLivesCount,
+  saveGameFoundPixels,
+  saveGameStatus,
+  saveGameFinishType,
+};

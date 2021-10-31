@@ -7,9 +7,16 @@ import LifeBar from '../components/LifeBar';
 import GameStates from '../enums/GameStates';
 import {Text} from 'react-native-elements';
 import {useFocusEffect} from '@react-navigation/core';
-import GameDBMediator from '../db/GameDBMediator';
 import FinishType from '../enums/FinishType';
 import SolveStatus from '../enums/SolveStatus';
+import {
+  saveGameFieldsState,
+  saveGameFinishType,
+  saveGameFoundPixels,
+  saveGameLivesCount,
+  saveGameStatus,
+} from '../db/GameDBMediator';
+import FieldStates from '../enums/FieldStates';
 
 const UserSolvingActivity = ({route, navigation}) => {
   const {gameData} = route.params;
@@ -22,13 +29,13 @@ const UserSolvingActivity = ({route, navigation}) => {
   const [tilesLeft, setTilesLeft] = useState(
     gameData.totalPixels - gameData.foundPixels,
   );
-  const [fields, setFields] = useState(gameData.boardData.fields);
+  const [fields, setFields] = useState(gameData.fields);
 
   const decrementLives = () => {
     setLives((previousLives) => previousLives - 1);
     if (gameData.solveStatus !== SolveStatus.BEGAN) {
       gameData.solveStatus = SolveStatus.BEGAN;
-      GameDBMediator.saveGameStatus(SolveStatus.BEGAN);
+      saveGameStatus(gameData.id, SolveStatus.BEGAN);
     }
   };
 
@@ -36,91 +43,58 @@ const UserSolvingActivity = ({route, navigation}) => {
     setTilesLeft((previousTiles) => previousTiles - 1);
     if (gameData.solveStatus !== SolveStatus.BEGAN) {
       gameData.solveStatus = SolveStatus.BEGAN;
-      GameDBMediator.saveGameStatus(SolveStatus.BEGAN);
+      saveGameStatus(gameData.id, SolveStatus.BEGAN);
     }
   };
-
-  // useEffect(() => {
-  //   GameDBMediator.saveGameFoundPixels(
-  //     gameData.id,
-  //     gameData.totalPixels - tilesLeft,
-  //   );
-  // }, [tilesLeft]);
-
-  // useEffect(
-  //   () => GameDBMediator.saveGameLivesCount(gameData.id, lives),
-  //   [lives],
-  // );
 
   useEffect(() => {
     if (lives === 0) {
       setGameState(GameStates.LOST);
       setGameFinished(true);
       if (gameData.finishType === FinishType.NEVER_FINISHED) {
-        // GameDBMediator.saveGameFinishType(
-        //   gameData.id,
-        //   FinishType.LOST_WITHOUT_FINISHING,
-        // );
-        // GameDBMediator.saveGameStatus(gameData.id, SolveStatus.UNSOLVED);
-        GameDBMediator.afterGame(
-          gameData.id,
-          gameData.totalPixels - tilesLeft,
-          SolveStatus.UNSOLVED,
-          FinishType.LOST_WITHOUT_FINISHING,
-        );
+        saveGameFinishType(gameData.id, FinishType.LOST_WITHOUT_FINISHING);
+        saveGameStatus(gameData.id, SolveStatus.UNSOLVED);
       } else if (
         gameData.finishType === FinishType.FINISHED_WITHOUT_LOSING ||
         gameData.finishType === FinishType.FINISHED_WITH_LOSING
       ) {
-        // GameDBMediator.saveGameStatus(gameData.id, SolveStatus.SOLVED);
-        GameDBMediator.afterGame(
-          gameData.id,
-          gameData.totalPixels - tilesLeft,
-          SolveStatus.SOLVED,
-          gameData.finishType,
-        );
+        saveGameStatus(gameData.id, SolveStatus.SOLVED);
       }
+      saveGameFoundPixels(gameData.id, 0);
+      saveGameLivesCount(gameData.id, gameData.maxLives);
+      saveGameFieldsState(
+        gameData.id,
+        fields.map((row) =>
+          row.map((field) => ({...field, state: FieldStates.UNTOUCHED})),
+        ),
+      );
     } else if (tilesLeft === 0) {
       setGameState(GameStates.WON);
       setGameFinished(true);
       if (gameData.finishType === FinishType.NEVER_FINISHED) {
-        // GameDBMediator.saveGameFinishType(
-        //   gameData.id,
-        //   FinishType.FINISHED_WITHOUT_LOSING,
-        // );
-        GameDBMediator.afterGame(
-          gameData.id,
-          gameData.totalPixels - tilesLeft,
-          SolveStatus.SOLVED,
-          FinishType.FINISHED_WITHOUT_LOSING,
-        );
+        saveGameFinishType(gameData.id, FinishType.FINISHED_WITHOUT_LOSING);
       } else if (gameData.finishType === FinishType.LOST_WITHOUT_FINISHING) {
-        // GameDBMediator.saveGameFinishType(
-        //   gameData.id,
-        //   FinishType.FINISHED_WITH_LOSING,
-        // );
-        GameDBMediator.afterGame(
-          gameData.id,
-          gameData.totalPixels - tilesLeft,
-          SolveStatus.SOLVED,
-          FinishType.FINISHED_WITH_LOSING,
-        );
+        saveGameFinishType(gameData.id, FinishType.FINISHED_WITH_LOSING);
       }
-      // GameDBMediator.saveGameStatus(gameData.id, SolveStatus.SOLVED);
-    } else {
-      GameDBMediator.saveGameFoundPixels(
+      saveGameStatus(gameData.id, SolveStatus.SOLVED);
+      saveGameFoundPixels(gameData.id, 0);
+      saveGameLivesCount(gameData.id, gameData.maxLives);
+      saveGameFieldsState(
         gameData.id,
-        gameData.totalPixels - tilesLeft,
+        fields.map((row) =>
+          row.map((field) => ({...field, state: FieldStates.UNTOUCHED})),
+        ),
       );
-      GameDBMediator.saveGameLivesCount(gameData.id, lives);
+    } else {
+      saveGameFoundPixels(gameData.id, gameData.totalPixels - tilesLeft);
+      saveGameLivesCount(gameData.id, lives);
     }
   }, [lives, tilesLeft]);
 
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
-        !gameFinished &&
-          GameDBMediator.saveGameFieldsState(gameData.id, fields);
+        !gameFinished && saveGameFieldsState(gameData.id, fields);
         return false; // close activity and go back
       };
 
@@ -133,13 +107,14 @@ const UserSolvingActivity = ({route, navigation}) => {
   return (
     <View style={{alignItems: 'center'}}>
       <Board
-        boardData={gameData.boardData}
+        boardWidth={gameData.boardWidth}
+        boardHeight={gameData.boardHeight}
+        fields={fields}
         mode={mode}
+        gameFinished={gameFinished}
+        setFields={setFields}
         decrementLives={decrementLives}
         decrementTilesLeft={decrementTilesLeft}
-        gameFinished={gameFinished}
-        fields={fields}
-        setFields={setFields}
       />
       {gameState === GameStates.GOING && (
         <>

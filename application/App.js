@@ -4,12 +4,10 @@ import React, {useEffect} from 'react';
 import {View} from 'react-native';
 import UserChoosingActivity from './src/activities/UserChoosingActivity';
 import UserSolvingActivity from './src/activities/UserSolvingActivity';
-import initDb from './src/db/initDb';
+
+// todo: resolve race condition: initial db population vs db data retrieval
 
 import styles from './src/data/Styles';
-import {DB_INITIALIZED_SIGNATURE} from './src/db/dbQuerySignatures';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-AsyncStorage.removeItem(DB_INITIALIZED_SIGNATURE).then(() => null);
 
 const Stack = createNativeStackNavigator();
 
@@ -38,7 +36,6 @@ const NogramStack = () => (
 );
 
 const App = () => {
-  useEffect(initDb, []);
   return (
     <View style={styles.application}>
       <NogramStack />
