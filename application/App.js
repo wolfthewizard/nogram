@@ -11,25 +11,60 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import styles from './src/data/Styles';
 import Colors from './src/data/Colors';
+import SolverChoosingActivity from './src/activities/SolverChoosingActivity';
+import {Text} from 'react-native-elements';
+import {color} from 'react-native-elements/dist/helpers';
+import SolverSolvingActivity from './src/activities/SolverSolvingActivity';
 
-const Stack = createNativeStackNavigator();
+const TabNavigator = createBottomTabNavigator();
 
-const UserPuzzlesTab = () => (
-  <Stack.Navigator initialRouteName="Home" screenOptions={{headerShown: false}}>
-    <Stack.Screen name="Home">
-      {(props) => <UserChoosingActivity {...props} />}
-    </Stack.Screen>
-    <Stack.Screen name="Play Puzzle" component={UserSolvingActivity} />
-  </Stack.Navigator>
+const Tabs = () => (
+  <TabNavigator.Navigator
+    initialRouteName="UserPuzzleChoice"
+    screenOptions={({route}) => ({
+      headerShown: false,
+      tabBarIcon: ({color, size}) => {
+        const iconType =
+          route.name === 'UserPuzzleChoice' ? 'account' : 'robot';
+        return <Icon name={iconType} size={size} color={color} />;
+      },
+      tabBarLabel: ({color}) =>
+        route.name === 'UserPuzzleChoice' ? (
+          <Text style={{color}}>Play</Text>
+        ) : (
+          <Text style={{color}}>Autosolve</Text>
+        ),
+      tabBarActiveTintColor: Colors.copper,
+      tabBarInactiveTintColor: Colors.gray,
+    })}>
+    <TabNavigator.Screen
+      name="UserPuzzleChoice"
+      component={UserChoosingActivity}
+    />
+    <TabNavigator.Screen
+      name="SolverPuzzleChoice"
+      component={SolverChoosingActivity}
+    />
+  </TabNavigator.Navigator>
 );
 
-const SolverPuzzlesTab = () => (
-  <View>
-    <Icon name="robot" size={64} color="red" />
-  </View>
-);
+const StackNavigator = createNativeStackNavigator();
 
-const Tab = createBottomTabNavigator();
+const Stacks = () => (
+  <StackNavigator.Navigator
+    initialRouteName="Home"
+    screenOptions={{headerShown: false}}>
+    <StackNavigator.Screen name="Home" component={Tabs} />
+    <StackNavigator.Screen
+      name="UserPuzzleSolve"
+      component={UserSolvingActivity}
+    />
+    <StackNavigator.Screen
+      name="SolverPuzzleSolve"
+      component={SolverSolvingActivity}
+    />
+  </StackNavigator.Navigator>
+);
 
 const AppNavigation = () => (
   <NavigationContainer
@@ -44,19 +79,7 @@ const AppNavigation = () => (
         notification: '#404040',
       },
     }}>
-    <Tab.Navigator
-      screenOptions={({route}) => ({
-        headerShown: false,
-        tabBarIcon: ({focused, color, size}) => {
-          const iconType = route.name === 'UserPuzzles' ? 'account' : 'robot';
-          return <Icon name={iconType} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: Colors.copper,
-        tabBarInactiveTintColor: Colors.gray,
-      })}>
-      <Tab.Screen name="UserPuzzles" component={UserPuzzlesTab} />
-      <Tab.Screen name="SolverPuzzles" component={SolverPuzzlesTab} />
-    </Tab.Navigator>
+    <Stacks />
   </NavigationContainer>
 );
 

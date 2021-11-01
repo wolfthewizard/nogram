@@ -1,3 +1,5 @@
+import FinishType from '../enums/FinishType';
+import SolveStatus from '../enums/SolveStatus';
 import {TABLE_NAME} from './dbData';
 import {getDBConnection} from './DBMediator';
 
@@ -17,6 +19,28 @@ const getMenuPuzzleList = async (callback) => {
   } catch (error) {
     console.error(error);
     throw Error('Failed to retrieve puzzle list for menu.');
+  }
+};
+
+const getSolverPuzzleList = async (callback) => {
+  const db = await getDBConnection();
+  try {
+    const solverPuzzleList = [];
+    const results = await db.executeSql(
+      `select id, name 
+      from ${TABLE_NAME} 
+      where finishType = ${FinishType.FINISHED_WITHOUT_LOSING} 
+      or finishType = ${FinishType.FINISHED_WITH_LOSING};`,
+    );
+    results.forEach((result) => {
+      for (let index = 0; index < result.rows.length; index++) {
+        solverPuzzleList.push(result.rows.item(index));
+      }
+    });
+    callback(solverPuzzleList);
+  } catch (error) {
+    console.error(error);
+    throw Error('Failed to retrieve puzzle list for solver.');
   }
 };
 
@@ -68,6 +92,7 @@ const saveGameFinishType = async (id, finishType) => {
 
 export {
   getMenuPuzzleList,
+  getSolverPuzzleList,
   getPuzzleById,
   saveGameFieldsState,
   saveGameLivesCount,

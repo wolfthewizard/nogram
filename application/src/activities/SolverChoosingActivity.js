@@ -2,14 +2,14 @@ import {useFocusEffect} from '@react-navigation/core';
 import React, {useCallback, useState} from 'react';
 import {FlatList, View} from 'react-native';
 import PuzzleCard from '../components/PuzzleCard';
-import {getMenuPuzzleList, getPuzzleById} from '../db/GameDBMediator';
+import {getPuzzleById, getSolverPuzzleList} from '../db/GameDBMediator';
 
-const UserChoosingActivity = ({navigation}) => {
+const SolverChoosingActivity = ({navigation}) => {
   const [puzzles, setPuzzles] = useState([]);
 
   useFocusEffect(
     useCallback(() => {
-      getMenuPuzzleList((gamesList) => setPuzzles(gamesList));
+      getSolverPuzzleList((gamesList) => setPuzzles(gamesList));
     }, []),
   );
 
@@ -23,7 +23,7 @@ const UserChoosingActivity = ({navigation}) => {
             puzzleData={item}
             openPuzzle={() =>
               getPuzzleById(item.id, (gameData) =>
-                navigation.navigate('UserPuzzleSolve', {
+                navigation.navigate('SolverPuzzleSolve', {
                   gameData,
                 }),
               )
@@ -36,4 +36,4 @@ const UserChoosingActivity = ({navigation}) => {
   );
 };
 
-export default UserChoosingActivity;
+export default SolverChoosingActivity;
