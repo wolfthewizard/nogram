@@ -385,6 +385,17 @@ const puzzles = [
         {hasPixel: false},
       ],
     ],
+  },
+  {
+    name: 'Cross',
+    maxLives: 3,
+    boardWidth: 3,
+    boardHeight: 3,
+    fields: [
+      [{hasPixel: true}, {hasPixel: false}, {hasPixel: true}],
+      [{hasPixel: false}, {hasPixel: true}, {hasPixel: false}],
+      [{hasPixel: true}, {hasPixel: false}, {hasPixel: true}],
+    ],
   } /*
   {
     name: 'BLANK',
@@ -429,6 +440,7 @@ const puzzles = [
       ],
     ],
   },*/,
+  ,
 ];
 
 export default puzzles;

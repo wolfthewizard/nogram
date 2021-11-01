@@ -18,6 +18,7 @@ import {
 } from '../db/GameDBMediator';
 import FieldStates from '../enums/FieldStates';
 import Colors from '../data/Colors';
+import Solver from '../solver/UltraNaiveSolver';
 
 const SolverSolvingActivity = ({route, navigation}) => {
   const {gameData} = route.params;
@@ -37,7 +38,14 @@ const SolverSolvingActivity = ({route, navigation}) => {
       <View style={{paddingTop: 20}}>
         <Button
           title="Solve"
-          onPress={() => {}}
+          onPress={() => {
+            new Solver().solve(
+              gameData.boardWidth,
+              gameData.boardHeight,
+              fields,
+              setFields,
+            );
+          }}
           buttonStyle={{backgroundColor: Colors.copper}}
           titleStyle={{color: Colors.nearBlack, fontSize: 36}}
         />
