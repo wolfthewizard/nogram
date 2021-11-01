@@ -41,10 +41,10 @@ const SolvableField = ({
 
   const backgroundColor =
     fieldData.state !== FieldStates.CORRECTLY_UNCOVERED
-      ? Colors.untouchedBoardField
+      ? Colors.nearBlack
       : fieldData.color
       ? fieldData.color
-      : Colors.uncoveredBoardField;
+      : Colors.nearWhite;
 
   const style = {
     ...Styles.field,

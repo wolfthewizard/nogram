@@ -1,6 +1,7 @@
 const Colors = {
-  untouchedBoardField: '#202020',
-  uncoveredBoardField: '#d0d0d0',
+  nearBlack: '#202020',
+  nearWhite: '#d0d0d0',
+  gray: '#606060',
   wrong: '#e03030',
   default: '#808080',
   switchOn: '#d0d0d0',
@@ -9,6 +10,7 @@ const Colors = {
   lifeLost: '#202020',
   gold: '#ffd700',
   silver: '#c0c0c0',
+  copper: '#da8a67',
 };
 
 export default Colors;
