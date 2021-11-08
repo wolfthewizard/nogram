@@ -17,6 +17,7 @@ import {
   saveGameStatus,
 } from '../db/GameDBMediator';
 import FieldStates from '../enums/FieldStates';
+import ResponsiveBoard from '../components/ResponsiveBoard';
 
 const UserSolvingActivity = ({route, navigation}) => {
   const {gameData} = route.params;
@@ -51,6 +52,7 @@ const UserSolvingActivity = ({route, navigation}) => {
     if (lives === 0) {
       setGameState(GameStates.LOST);
       setGameFinished(true);
+      setTilesLeft(gameData.totalPixels);
       if (gameData.finishType === FinishType.NEVER_FINISHED) {
         saveGameFinishType(gameData.id, FinishType.LOST_WITHOUT_FINISHING);
         saveGameStatus(gameData.id, SolveStatus.UNSOLVED);
@@ -71,6 +73,7 @@ const UserSolvingActivity = ({route, navigation}) => {
     } else if (tilesLeft === 0) {
       setGameState(GameStates.WON);
       setGameFinished(true);
+      setTilesLeft(gameData.totalPixels);
       if (gameData.finishType === FinishType.NEVER_FINISHED) {
         saveGameFinishType(gameData.id, FinishType.FINISHED_WITHOUT_LOSING);
       } else if (gameData.finishType === FinishType.LOST_WITHOUT_FINISHING) {
@@ -86,7 +89,6 @@ const UserSolvingActivity = ({route, navigation}) => {
         ),
       );
     } else {
-      saveGameFoundPixels(gameData.id, gameData.totalPixels - tilesLeft);
       saveGameLivesCount(gameData.id, lives);
     }
   }, [lives, tilesLeft]);
@@ -95,6 +97,7 @@ const UserSolvingActivity = ({route, navigation}) => {
     useCallback(() => {
       const onBackPress = () => {
         !gameFinished && saveGameFieldsState(gameData.id, fields);
+        saveGameFoundPixels(gameData.id, gameData.totalPixels - tilesLeft);
         return false; // close activity and go back
       };
 
@@ -116,6 +119,7 @@ const UserSolvingActivity = ({route, navigation}) => {
         decrementLives={decrementLives}
         decrementTilesLeft={decrementTilesLeft}
       />
+      {/* <ResponsiveBoard /> */}
       {gameState === GameStates.GOING && (
         <>
           <ModeSwitch mode={mode} setMode={setMode} />

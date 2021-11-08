@@ -1,13 +1,24 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import Board from '../components/Board';
 import {Button} from 'react-native-elements';
 import Colors from '../data/Colors';
 import Solver from '../solver/NaiveSolver';
+import FieldStates from '../enums/FieldStates';
 
 const SolverSolvingActivity = ({route, navigation}) => {
   const {gameData} = route.params;
   const [fields, setFields] = useState(gameData.fields);
+
+  useEffect(
+    () =>
+      setFields((prevFields) =>
+        prevFields.map((row) =>
+          row.map((field) => ({...field, state: FieldStates.UNTOUCHED})),
+        ),
+      ),
+    [],
+  );
 
   return (
     <View style={{alignItems: 'center'}}>
