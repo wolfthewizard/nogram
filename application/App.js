@@ -1,7 +1,7 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {View} from 'react-native';
 import UserChoosingActivity from './src/activities/UserChoosingActivity';
 import UserSolvingActivity from './src/activities/UserSolvingActivity';
@@ -13,8 +13,8 @@ import styles from './src/data/Styles';
 import Colors from './src/data/Colors';
 import SolverChoosingActivity from './src/activities/SolverChoosingActivity';
 import {Text} from 'react-native-elements';
-import {color} from 'react-native-elements/dist/helpers';
 import SolverSolvingActivity from './src/activities/SolverSolvingActivity';
+import SolverInputActivity from './src/activities/SolverInputActivity';
 
 const TabNavigator = createBottomTabNavigator();
 
@@ -62,6 +62,10 @@ const Stacks = () => (
     <StackNavigator.Screen
       name="SolverPuzzleSolve"
       component={SolverSolvingActivity}
+    />
+    <StackNavigator.Screen
+      name="SolverPuzzleInput"
+      component={SolverInputActivity}
     />
   </StackNavigator.Navigator>
 );

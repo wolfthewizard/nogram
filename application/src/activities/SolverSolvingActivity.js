@@ -8,17 +8,23 @@ import FieldStates from '../enums/FieldStates';
 
 const SolverSolvingActivity = ({route, navigation}) => {
   const {gameData} = route.params;
-  const [fields, setFields] = useState(gameData.fields);
-
-  useEffect(
-    () =>
-      setFields((prevFields) =>
-        prevFields.map((row) =>
-          row.map((field) => ({...field, state: FieldStates.UNTOUCHED})),
-        ),
-      ),
-    [],
+  const [fields, setFields] = useState(
+    [...Array(gameData.boardHeight).keys()].map(() =>
+      [...Array(gameData.boardWidth).keys()].map(() => ({
+        state: FieldStates.UNTOUCHED,
+      })),
+    ),
   );
+
+  // useEffect(
+  //   () =>
+  //     setFields((prevFields) =>
+  //       prevFields.map((row) =>
+  //         row.map((field) => ({...field, state: FieldStates.UNTOUCHED})),
+  //       ),
+  //     ),
+  //   [],
+  // );
 
   return (
     <View style={{alignItems: 'center'}}>
@@ -30,6 +36,8 @@ const SolverSolvingActivity = ({route, navigation}) => {
         setFields={() => null}
         decrementLives={() => null}
         decrementTilesLeft={() => null}
+        rowHintsPredefined={gameData.rowHints}
+        colHintsPredefined={gameData.colHints}
       />
       <View style={{paddingTop: 20}}>
         <Button
@@ -40,6 +48,8 @@ const SolverSolvingActivity = ({route, navigation}) => {
               gameData.boardHeight,
               fields,
               setFields,
+              gameData.rowHints,
+              gameData.colHints,
             );
           }}
           buttonStyle={{backgroundColor: Colors.copper}}

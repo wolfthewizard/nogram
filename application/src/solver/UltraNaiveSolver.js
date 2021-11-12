@@ -1,5 +1,7 @@
 import FieldStates from '../enums/FieldStates';
 
+// legacy solver, needs predefined puzzle (set of emtpy/filled fields) to work
+// will not solve puzzle with only hints defined
 class Solver {
   constructor() {}
 

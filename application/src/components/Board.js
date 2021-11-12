@@ -28,6 +28,8 @@ const Board = ({
   setFields,
   decrementLives,
   decrementTilesLeft,
+  rowHintsPredefined,
+  colHintsPredefined,
 }) => {
   const rows = fields;
   const columns = useMemo(
@@ -38,9 +40,12 @@ const Board = ({
     [],
   );
 
-  const rowHints = useMemo(() => rows.map((row) => generateHints(row)), []);
+  const rowHints = useMemo(
+    () => rowHintsPredefined || rows.map((row) => generateHints(row)),
+    [],
+  );
   const columnHints = useMemo(
-    () => columns.map((column) => generateHints(column)),
+    () => colHintsPredefined || columns.map((column) => generateHints(column)),
     [],
   );
 

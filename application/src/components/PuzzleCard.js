@@ -65,8 +65,9 @@ const PuzzleCard = ({puzzleData, openPuzzle}) => {
             flex: 0.8,
             color: 'white',
             fontSize: 20,
+            fontStyle: puzzleData.name ? 'normal' : 'italic',
           }}>
-          {puzzleData.name}
+          {puzzleData.name ? puzzleData.name : 'Unnamed'}
         </Text>
       </TouchableOpacity>
     </View>

@@ -1,6 +1,4 @@
-import FinishType from '../enums/FinishType';
-import SolveStatus from '../enums/SolveStatus';
-import {TABLE_NAME} from './dbData';
+import {USER_PUZZLES_TABLE_NAME} from './dbData';
 import {getDBConnection} from './DBMediator';
 
 const getMenuPuzzleList = async (callback) => {
@@ -8,7 +6,7 @@ const getMenuPuzzleList = async (callback) => {
   try {
     const menuPuzzleList = [];
     const results = await db.executeSql(
-      `select id, name, totalPixels, foundPixels, solveStatus, finishType from ${TABLE_NAME};`,
+      `select id, name, totalPixels, foundPixels, solveStatus, finishType from ${USER_PUZZLES_TABLE_NAME};`,
     );
     results.forEach((result) => {
       for (let index = 0; index < result.rows.length; index++) {
@@ -22,33 +20,11 @@ const getMenuPuzzleList = async (callback) => {
   }
 };
 
-const getSolverPuzzleList = async (callback) => {
-  const db = await getDBConnection();
-  try {
-    const solverPuzzleList = [];
-    const results = await db.executeSql(
-      `select id, name 
-      from ${TABLE_NAME} 
-      where finishType = ${FinishType.FINISHED_WITHOUT_LOSING} 
-      or finishType = ${FinishType.FINISHED_WITH_LOSING};`,
-    );
-    results.forEach((result) => {
-      for (let index = 0; index < result.rows.length; index++) {
-        solverPuzzleList.push(result.rows.item(index));
-      }
-    });
-    callback(solverPuzzleList);
-  } catch (error) {
-    console.error(error);
-    throw Error('Failed to retrieve puzzle list for solver.');
-  }
-};
-
 const getPuzzleById = async (id, callback) => {
   const db = await getDBConnection();
   try {
     const puzzles = await db.executeSql(
-      `select * from ${TABLE_NAME} where id=${id};`,
+      `select * from ${USER_PUZZLES_TABLE_NAME} where id=${id};`,
     );
     const puzzle = puzzles[0].rows.item(0);
     callback({...puzzle, fields: JSON.parse(puzzle.fields)});
@@ -60,7 +36,7 @@ const getPuzzleById = async (id, callback) => {
 
 const saveGameFieldsState = async (id, fields) => {
   const db = await getDBConnection();
-  const insertQuery = `update ${TABLE_NAME} set fields='${JSON.stringify(
+  const insertQuery = `update ${USER_PUZZLES_TABLE_NAME} set fields='${JSON.stringify(
     fields,
   )}' where id=${id}`;
   db.executeSql(insertQuery);
@@ -68,31 +44,30 @@ const saveGameFieldsState = async (id, fields) => {
 
 const saveGameLivesCount = async (id, lives) => {
   const db = await getDBConnection();
-  const insertQuery = `update ${TABLE_NAME} set currentLives='${lives}' where id=${id}`;
+  const insertQuery = `update ${USER_PUZZLES_TABLE_NAME} set currentLives='${lives}' where id=${id}`;
   db.executeSql(insertQuery);
 };
 
 const saveGameFoundPixels = async (id, foundPixels) => {
   const db = await getDBConnection();
-  const insertQuery = `update ${TABLE_NAME} set foundPixels='${foundPixels}' where id=${id}`;
+  const insertQuery = `update ${USER_PUZZLES_TABLE_NAME} set foundPixels='${foundPixels}' where id=${id}`;
   db.executeSql(insertQuery);
 };
 
 const saveGameStatus = async (id, solveStatus) => {
   const db = await getDBConnection();
-  const insertQuery = `update ${TABLE_NAME} set solveStatus='${solveStatus}' where id=${id}`;
+  const insertQuery = `update ${USER_PUZZLES_TABLE_NAME} set solveStatus='${solveStatus}' where id=${id}`;
   db.executeSql(insertQuery);
 };
 
 const saveGameFinishType = async (id, finishType) => {
   const db = await getDBConnection();
-  const insertQuery = `update ${TABLE_NAME} set finishType='${finishType}' where id=${id}`;
+  const insertQuery = `update ${USER_PUZZLES_TABLE_NAME} set finishType='${finishType}' where id=${id}`;
   db.executeSql(insertQuery);
 };
 
 export {
   getMenuPuzzleList,
-  getSolverPuzzleList,
   getPuzzleById,
   saveGameFieldsState,
   saveGameLivesCount,

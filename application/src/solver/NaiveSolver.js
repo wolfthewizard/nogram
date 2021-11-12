@@ -24,7 +24,7 @@ const combinations = (elementAmount, elements) => {
 class Solver {
   constructor() {}
 
-  solve(width, height, initialFields, setFields) {
+  solve(width, height, initialFields, setFields, rowHints, colHints) {
     const resetFields = initialFields.map((row) =>
       row.map((field) => ({
         ...field,
@@ -39,8 +39,8 @@ class Solver {
       [...Array(height).keys()].map((j) => resetFields[j][i]),
     );
 
-    const rowHints = mutableRows.map((row) => Solver.generateHints(row));
-    const colHints = mutableCols.map((col) => Solver.generateHints(col));
+    // const rowHints = mutableRows.map((row) => Solver.generateHints(row));
+    // const colHints = mutableCols.map((col) => Solver.generateHints(col));
 
     const rowCombinationAmount = Solver.getAmountOfLineCombinations(
       rowHints,
@@ -251,36 +251,6 @@ class Solver {
       ) {
         // not all hints were satisfied
         return false;
-      }
-    }
-    return true;
-  }
-
-  static branchOnField(width, height, fields, absoluteIndex) {
-    if (absoluteIndex === width * height) {
-      return Solver.validateSolution(fields);
-    } else {
-      fields[Math.floor(absoluteIndex / width)][absoluteIndex % width].state =
-        FieldStates.UNTOUCHED;
-      if (Solver.branchOnField(width, height, fields, absoluteIndex + 1)) {
-        return true;
-      }
-      fields[Math.floor(absoluteIndex / width)][absoluteIndex % width].state =
-        FieldStates.CORRECTLY_UNCOVERED;
-      return Solver.branchOnField(width, height, fields, absoluteIndex + 1);
-    }
-  }
-
-  static validateSolution(proposedFields) {
-    for (const row of proposedFields) {
-      for (const field of row) {
-        if (
-          (field.state === FieldStates.CORRECTLY_UNCOVERED &&
-            !field.hasPixel) ||
-          (field.state === FieldStates.UNTOUCHED && field.hasPixel)
-        ) {
-          return false;
-        }
       }
     }
     return true;

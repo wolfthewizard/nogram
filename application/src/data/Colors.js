@@ -2,6 +2,8 @@ const Colors = {
   nearBlack: '#202020',
   nearWhite: '#d0d0d0',
   gray: '#606060',
+  lightGray: '#808080',
+  veryLightGray: '#a0a0a0',
   wrong: '#e03030',
   default: '#808080',
   switchOn: '#d0d0d0',
