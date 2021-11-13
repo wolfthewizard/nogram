@@ -24,7 +24,14 @@ const combinations = (elementAmount, elements) => {
 class Solver {
   constructor() {}
 
-  solve(width, height, initialFields, setFields, rowHints, colHints) {
+  solve(
+    width,
+    height,
+    initialFields,
+    setFields,
+    rowHintsWithZeros,
+    colHintsWithZeros,
+  ) {
     const resetFields = initialFields.map((row) =>
       row.map((field) => ({
         ...field,
@@ -41,6 +48,8 @@ class Solver {
 
     // const rowHints = mutableRows.map((row) => Solver.generateHints(row));
     // const colHints = mutableCols.map((col) => Solver.generateHints(col));
+    const rowHints = Solver.removeZerosFromHints(rowHintsWithZeros);
+    const colHints = Solver.removeZerosFromHints(colHintsWithZeros);
 
     const rowCombinationAmount = Solver.getAmountOfLineCombinations(
       rowHints,
@@ -94,6 +103,9 @@ class Solver {
     // in contrast to hints on board, do not generate 0 hint for empty line
     // return cellStreaks.length > 0 ? cellStreaks : [0];
   };
+
+  static removeZerosFromHints = (hints) =>
+    hints.map((line) => (line.length === 1 && line[0] === 0 ? [] : line));
 
   static getAmountOfLineCombinations(hints, dimension) {
     return hints.reduce((currentCombinations, nextLineHints) => {
