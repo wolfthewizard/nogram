@@ -14,7 +14,7 @@ const SolverChoosingActivity = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       getSolverPuzzleList((solverPuzzles, solvedUserPuzzles) => {
-        setPuzzles(solverPuzzles);
+        setPuzzles(solvedUserPuzzles);
       });
     }, []),
   );
@@ -55,7 +55,12 @@ const SolverChoosingActivity = ({navigation}) => {
             <PuzzleCard
               puzzleData={item}
               openPuzzle={() =>
-                getSolverPuzzleById(item.id, (gameData) =>
+                // getSolverPuzzleById(item.id, (gameData) =>
+                //   navigation.navigate('SolverPuzzleSolve', {
+                //     gameData,
+                //   }),
+                // )
+                getPuzzleById(item.id, (gameData) =>
                   navigation.navigate('SolverPuzzleSolve', {
                     gameData,
                   }),

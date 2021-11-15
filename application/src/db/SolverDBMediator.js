@@ -20,9 +20,10 @@ const getSolverPuzzleList = async (callback) => {
     const solvedUserPuzzles = [];
     const results2 = await db.executeSql(
       `select id, name 
-        from ${USER_PUZZLES_TABLE_NAME} 
-        where finishType = ${FinishType.FINISHED_WITHOUT_LOSING} 
-        or finishType = ${FinishType.FINISHED_WITH_LOSING};`,
+      from ${USER_PUZZLES_TABLE_NAME};',
+        // from ${USER_PUZZLES_TABLE_NAME} 
+        // where finishType = ${FinishType.FINISHED_WITHOUT_LOSING} 
+        // or finishType = ${FinishType.FINISHED_WITH_LOSING};`,
     );
     results2.forEach((result) => {
       for (let index = 0; index < result.rows.length; index++) {

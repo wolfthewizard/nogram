@@ -46,10 +46,12 @@ class Solver {
       [...Array(height).keys()].map((j) => resetFields[j][i]),
     );
 
-    // const rowHints = mutableRows.map((row) => Solver.generateHints(row));
-    // const colHints = mutableCols.map((col) => Solver.generateHints(col));
-    const rowHints = Solver.removeZerosFromHints(rowHintsWithZeros);
-    const colHints = Solver.removeZerosFromHints(colHintsWithZeros);
+    const rowHints = mutableRows.map((row) => Solver.generateHints(row));
+    const colHints = mutableCols.map((col) => Solver.generateHints(col));
+    // const rowHints = Solver.removeZerosFromHints(rowHintsWithZeros);
+    // const colHints = Solver.removeZerosFromHints(colHintsWithZeros);
+
+    const startTime = new Date().getTime();
 
     const rowCombinationAmount = Solver.getAmountOfLineCombinations(
       rowHints,
@@ -85,6 +87,9 @@ class Solver {
         console.log('unsolvable');
       }
     }
+
+    const endTime = new Date().getTime();
+    console.log(endTime - startTime);
   }
 
   static generateHints = (series) => {
@@ -198,33 +203,84 @@ class Solver {
             nextStreakIndex++;
           }
         }
-        // for a given way to fill the line,
-        // check if any combinations of filling lower lines produces a solution
+        // if rules are broken so far, check next combination
         if (
-          this.prepareLineAndLower(
+          this.partiallyValidateAlongLines(
             lines,
-            linesCombinations,
-            index + 1,
-            lineDepth,
-            lineBroadth,
-            hintLines,
             perpendicularHintLines,
+            lineDepth,
+            index,
           )
         ) {
-          return true;
+          // for a given way to fill the line,
+          // check if any combinations of filling lower lines produces a solution
+          if (
+            this.prepareLineAndLower(
+              lines,
+              linesCombinations,
+              index + 1,
+              lineDepth,
+              lineBroadth,
+              hintLines,
+              perpendicularHintLines,
+            )
+          ) {
+            return true;
+          }
         }
       }
       return false;
     }
   }
 
-  static validateAlongLines(alteredLines, hints, lineDepth, lineBroadth) {
-    for (let i = 0; i < lineBroadth; i++) {
+  static partiallyValidateAlongLines(
+    alteredLines,
+    hints,
+    lineDepth,
+    maxBroadth,
+  ) {
+    for (let i = 0; i < lineDepth; i++) {
       const hintLine = hints[i];
       let currentHintIndex = 0;
       let currentHint = hintLine[currentHintIndex];
       let currentHintBegan = false;
-      for (let j = 0; j < lineDepth; j++) {
+      for (let j = 0; j < maxBroadth; j++) {
+        if (alteredLines[j][i].state === FieldStates.CORRECTLY_UNCOVERED) {
+          if (currentHint === undefined) {
+            // more blocks in a line than amount of hints suggests
+            return false;
+          }
+          if (!currentHintBegan) {
+            currentHintBegan = true;
+          }
+          currentHint--;
+          if (currentHint < 0) {
+            // more pixels in a row than current hint suggests
+            return false;
+          }
+        } else {
+          if (currentHintBegan) {
+            if (currentHint > 0) {
+              // less pixels in a row than current hint suggests
+              return false;
+            }
+            currentHintBegan = false;
+            currentHintIndex++;
+            currentHint = hintLine[currentHintIndex];
+          }
+        }
+      }
+    }
+    return true;
+  }
+
+  static validateAlongLines(alteredLines, hints, lineDepth, lineBroadth) {
+    for (let i = 0; i < lineDepth; i++) {
+      const hintLine = hints[i];
+      let currentHintIndex = 0;
+      let currentHint = hintLine[currentHintIndex];
+      let currentHintBegan = false;
+      for (let j = 0; j < lineBroadth; j++) {
         if (alteredLines[j][i].state === FieldStates.CORRECTLY_UNCOVERED) {
           if (currentHint === undefined) {
             // more blocks in a line than amount of hints suggests
@@ -255,9 +311,9 @@ class Solver {
         return false;
       }
       if (
-        (alteredLines[lineDepth - 1][i].state === FieldStates.UNTOUCHED &&
+        (alteredLines[lineBroadth - 1][i].state === FieldStates.UNTOUCHED &&
           currentHintIndex !== hintLine.length) ||
-        (alteredLines[lineDepth - 1][i].state ===
+        (alteredLines[lineBroadth - 1][i].state ===
           FieldStates.CORRECTLY_UNCOVERED &&
           currentHintIndex !== hintLine.length - 1)
       ) {
