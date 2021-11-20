@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import Board from '../components/Board';
 import {Button} from 'react-native-elements';
 import Colors from '../data/Colors';
-import Solver from '../solver/NaiveSolver';
+import Solver from '../solver/EliminationSolver';
 import FieldStates from '../enums/FieldStates';
 
 const SolverSolvingActivity = ({route, navigation}) => {
