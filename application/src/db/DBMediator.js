@@ -4,9 +4,11 @@ import FinishType from '../enums/FinishType';
 import SolveStatus from '../enums/SolveStatus';
 import {
   DB_NAME,
+  PUZZLE_PACKS_TABLE_NAME,
   SOLVER_PUZZLES_TABLE_NAME,
   USER_PUZZLES_TABLE_NAME,
 } from './dbData';
+import puzzlePacks from './puzzlePacks';
 import puzzles from './puzzles';
 
 const force_repopulate = false;
@@ -18,8 +20,36 @@ const initDb = async () => {
   const db = await getDBConnection();
   // const dropTableQuery = `drop table if exists ${USER_PUZZLES_TABLE_NAME}`;
   // await db.executeSql(dropTableQuery);
+  const createPuzzlePacksQuery = `create table if not exists ${PUZZLE_PACKS_TABLE_NAME} (
+    id integer not null primary key,
+    name text not null,
+    imgPath text not null
+  );`;
+  await db.executeSql(createPuzzlePacksQuery);
+  getPuzzlePacksSize(async (size) => {
+    if (size === 0 || force_repopulate) {
+      console.log('repopulating puzzle packs');
+      if (force_repopulate) {
+        const clearQuery = `delete from ${PUZZLE_PACKS_TABLE_NAME}`;
+        await db.executeSql(clearQuery);
+      }
+      for (const puzzlePack of puzzlePacks) {
+        const insertPuzzlePackQuery = `insert into ${PUZZLE_PACKS_TABLE_NAME} (
+          id,
+          name, 
+          imgPath
+        ) values (
+          ${puzzlePack.id},
+          '${puzzlePack.name}',
+          '${puzzlePack.imgPath}'
+        );`;
+        await db.executeSql(insertPuzzlePackQuery);
+      }
+    }
+  });
   const createDbQuery = `create table if not exists ${USER_PUZZLES_TABLE_NAME} (
     id integer not null primary key,
+    packId integer not null,
     name text not null,
     totalPixels integer not null,
     foundPixels integer not null,
@@ -40,6 +70,7 @@ const initDb = async () => {
       }
       for (const puzzle of puzzles) {
         const insertPuzzleQuery = `insert into ${USER_PUZZLES_TABLE_NAME} (
+          packId,
           name, 
           totalPixels, 
           foundPixels, 
@@ -51,6 +82,7 @@ const initDb = async () => {
           boardHeight,
           fields
         ) values (
+          ${puzzle.packId},
           '${puzzle.name}',
           ${puzzle.fields.reduce(
             (currRowSum, nextRow) =>
@@ -96,6 +128,14 @@ const getDbSize = async (callback) => {
   const db = await getDBConnection();
   const dbSize = await db.executeSql(
     `select count(*) from ${USER_PUZZLES_TABLE_NAME};`,
+  );
+  callback(dbSize[0].rows.item(0)['count(*)']);
+};
+
+const getPuzzlePacksSize = async (callback) => {
+  const db = await getDBConnection();
+  const dbSize = await db.executeSql(
+    `select count(*) from ${PUZZLE_PACKS_TABLE_NAME};`,
   );
   callback(dbSize[0].rows.item(0)['count(*)']);
 };

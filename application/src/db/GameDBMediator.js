@@ -1,25 +1,6 @@
 import {USER_PUZZLES_TABLE_NAME} from './dbData';
 import {getDBConnection} from './DBMediator';
 
-const getMenuPuzzleList = async (callback) => {
-  const db = await getDBConnection();
-  try {
-    const menuPuzzleList = [];
-    const results = await db.executeSql(
-      `select id, name, totalPixels, foundPixels, solveStatus, finishType from ${USER_PUZZLES_TABLE_NAME};`,
-    );
-    results.forEach((result) => {
-      for (let index = 0; index < result.rows.length; index++) {
-        menuPuzzleList.push(result.rows.item(index));
-      }
-    });
-    callback(menuPuzzleList);
-  } catch (error) {
-    console.error(error);
-    throw Error('Failed to retrieve puzzle list for menu.');
-  }
-};
-
 const getPuzzleById = async (id, callback) => {
   const db = await getDBConnection();
   try {
@@ -67,7 +48,6 @@ const saveGameFinishType = async (id, finishType) => {
 };
 
 export {
-  getMenuPuzzleList,
   getPuzzleById,
   saveGameFieldsState,
   saveGameLivesCount,

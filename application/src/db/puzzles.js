@@ -1,6 +1,7 @@
 const puzzles = [
   {
     name: 'Smile',
+    packId: 0,
     maxLives: 3,
     boardWidth: 5,
     boardHeight: 5,
@@ -44,6 +45,7 @@ const puzzles = [
   },
   {
     name: 'Five',
+    packId: 0,
     maxLives: 3,
     boardWidth: 5,
     boardHeight: 5,
@@ -87,6 +89,7 @@ const puzzles = [
   },
   {
     name: 'Magical Wolf',
+    packId: 0,
     maxLives: 3,
     boardWidth: 5,
     boardHeight: 5,
@@ -99,37 +102,38 @@ const puzzles = [
         {hasPixel: true, color: '#d0d010'},
       ],
       [
-        {hasPixel: true, color: '#202020'},
+        {hasPixel: true, color: '#404040'},
         {hasPixel: true, color: '#101060'},
         {hasPixel: true, color: '#101060'},
         {hasPixel: true, color: '#101060'},
-        {hasPixel: true, color: '#202020'},
+        {hasPixel: true, color: '#404040'},
       ],
       [
-        {hasPixel: true, color: '#202020'},
-        {hasPixel: true, color: '#202020'},
-        {hasPixel: true, color: '#202020'},
-        {hasPixel: true, color: '#202020'},
-        {hasPixel: true, color: '#202020'},
+        {hasPixel: true, color: '#404040'},
+        {hasPixel: true, color: '#404040'},
+        {hasPixel: true, color: '#404040'},
+        {hasPixel: true, color: '#404040'},
+        {hasPixel: true, color: '#404040'},
       ],
       [
-        {hasPixel: true, color: '#202020'},
+        {hasPixel: true, color: '#404040'},
         {hasPixel: true, color: '#a01010'},
-        {hasPixel: true, color: '#202020'},
+        {hasPixel: true, color: '#404040'},
         {hasPixel: true, color: '#a01010'},
-        {hasPixel: true, color: '#202020'},
+        {hasPixel: true, color: '#404040'},
       ],
       [
-        {hasPixel: true, color: '#202020'},
-        {hasPixel: true, color: '#202020'},
-        {hasPixel: true, color: '#202020'},
-        {hasPixel: true, color: '#202020'},
-        {hasPixel: true, color: '#202020'},
+        {hasPixel: true, color: '#404040'},
+        {hasPixel: true, color: '#404040'},
+        {hasPixel: true, color: '#404040'},
+        {hasPixel: true, color: '#404040'},
+        {hasPixel: true, color: '#404040'},
       ],
     ],
   },
   {
     name: 'Chick',
+    packId: 0,
     maxLives: 3,
     boardWidth: 5,
     boardHeight: 5,
@@ -173,6 +177,7 @@ const puzzles = [
   },
   {
     name: 'Pick',
+    packId: 0,
     maxLives: 3,
     boardWidth: 5,
     boardHeight: 5,
@@ -216,6 +221,7 @@ const puzzles = [
   },
   {
     name: 'Boat',
+    packId: 0,
     maxLives: 3,
     boardWidth: 5,
     boardHeight: 5,
@@ -259,6 +265,7 @@ const puzzles = [
   },
   {
     name: 'Fork',
+    packId: 0,
     maxLives: 3,
     boardWidth: 5,
     boardHeight: 5,
@@ -302,6 +309,7 @@ const puzzles = [
   },
   {
     name: 'Love',
+    packId: 0,
     maxLives: 3,
     boardWidth: 5,
     boardHeight: 5,
@@ -345,6 +353,7 @@ const puzzles = [
   },
   {
     name: 'Saturn',
+    packId: 0,
     maxLives: 3,
     boardWidth: 5,
     boardHeight: 5,
@@ -388,6 +397,7 @@ const puzzles = [
   },
   {
     name: 'Cross',
+    packId: 1,
     maxLives: 3,
     boardWidth: 3,
     boardHeight: 3,
@@ -399,6 +409,7 @@ const puzzles = [
   },
   {
     name: 'Fish 12x8',
+    packId: 1,
     maxLives: 5,
     boardWidth: 12,
     boardHeight: 8,
@@ -520,6 +531,7 @@ const puzzles = [
 
   {
     name: 'Sword 12x12',
+    packId: 1,
     maxLives: 3,
     boardWidth: 12,
     boardHeight: 12,
@@ -696,6 +708,7 @@ const puzzles = [
   },
   {
     name: 'Apple 8x8',
+    packId: 1,
     maxLives: 3,
     boardWidth: 8,
     boardHeight: 8,
@@ -784,6 +797,7 @@ const puzzles = [
   },
   {
     name: 'Knight 16x16',
+    packId: 1,
     maxLives: 5,
     boardWidth: 16,
     boardHeight: 16,
@@ -1080,6 +1094,7 @@ const puzzles = [
   },
   {
     name: 'Holy Warrior',
+    packId: 1,
     maxLives: 8,
     boardWidth: 32,
     boardHeight: 32,
