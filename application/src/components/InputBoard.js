@@ -28,7 +28,11 @@ const InputBoard = ({colHints, rowHints, setColHints, setRowHints}) => {
 
   return (
     <View
-      style={{width: '100%', height: 650, alignItems: 'center'}}
+      style={{
+        width: '100%',
+        height: '100%',
+        alignItems: 'center',
+      }}
       onLayout={(evt) => {
         const {x, y, width, height} = evt.nativeEvent.layout;
         setDimensions({width, height});
@@ -38,7 +42,7 @@ const InputBoard = ({colHints, rowHints, setColHints, setRowHints}) => {
           style={{
             width: rowHintsWidth * size,
             height: colHintsHeight * size,
-            backgroundColor: Colors.nearBlack,
+            // backgroundColor: Colors.nearBlack,
           }}
         />
         <View
@@ -46,7 +50,7 @@ const InputBoard = ({colHints, rowHints, setColHints, setRowHints}) => {
             height: colHintsHeight * size,
             flexDirection: 'row',
             alignItems: 'flex-end',
-            backgroundColor: Colors.nearBlack,
+            // backgroundColor: Colors.nearBlack,
           }}>
           {colHints.map((colHintsLine, i) => (
             <HintSlip
@@ -78,7 +82,7 @@ const InputBoard = ({colHints, rowHints, setColHints, setRowHints}) => {
             }>
             <Icon
               style={{
-                backgroundColor: Colors.nearBlack,
+                // backgroundColor: Colors.nearBlack,
                 textAlignVertical: 'center',
                 width: size,
                 height: '100%',
@@ -97,7 +101,7 @@ const InputBoard = ({colHints, rowHints, setColHints, setRowHints}) => {
             width: rowHintsWidth * size,
             flexDirection: 'column',
             alignItems: 'flex-end',
-            backgroundColor: Colors.nearBlack,
+            // backgroundColor: Colors.nearBlack,
           }}>
           {rowHints.map((rowHintsLine, i) => (
             <HintSlip

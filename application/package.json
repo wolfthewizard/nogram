@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@babel/preset-env": "^7.15.8",
+    "@dudigital/react-native-zoomable-view": "^1.1.3",
+    "@openspacelabs/react-native-zoomable-view": "git+ssh://git@github.com:openspacelabs/react-native-zoomable-view.git#97afaa034d4fe871b0142358668b2817a96ed1a1",
     "@react-native-async-storage/async-storage": "^1.15.9",
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/native": "^6.0.6",

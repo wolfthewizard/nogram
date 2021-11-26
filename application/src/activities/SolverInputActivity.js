@@ -1,54 +1,100 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {TextInput, View} from 'react-native';
 import {Button} from 'react-native-elements';
 import InputBoard from '../components/InputBoard';
 import Colors from '../data/Colors';
 import {addPuzzle} from '../db/SolverDBMediator';
+import ReactNativeZoomableView from '@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView';
 
 const SolverInputActivity = ({navigation}) => {
   const [puzzleTitle, setPuzzleTitle] = useState('');
   const [colHints, setColHints] = useState([[0]]);
   const [rowHints, setRowHints] = useState([[0]]);
+  const isInitial = useRef(true);
+
+  const zoomableView = useRef(null);
+
+  // useEffect(() => {
+  //   if (isInitial.current) {
+  //     isInitial.current = false;
+  //   } else {
+  //     zoomableView.current
+  //       .zoomTo(
+  //         zoomableView.current.zoomLevel +
+  //           (1 - (colHints.length + 3) / (colHints.length + 4)) * 0.75,
+  //       )
+  //       .then(() => {
+  //         console.log('done zoomin');
+  //         zoomableView.current.moveTo(2000, -2000);
+  //       });
+  //   }
+  // }, [colHints, zoomableView]);
 
   return (
-    <View style={{flex: 1, flexDirection: 'column'}}>
+    <View
+      style={{
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: Colors.nearBlack,
+      }}>
       <View
         style={{
           width: '100%',
-          flex: 0.15,
-          backgroundColor: Colors.nearBlack,
-          alignItems: 'center',
-          justifyContent: 'center',
+          flex: 0.85,
+          flexDirection: 'column-reverse',
+          justifyContent: 'space-between',
         }}>
-        <TextInput
-          value={puzzleTitle}
-          onChangeText={(val) => setPuzzleTitle(val)}
-          placeholder="Puzzle title"
-          placeholderTextColor={Colors.veryLightGray}
+        <View
           style={{
-            borderWidth: 1,
-            borderColor: Colors.gray,
-            borderRadius: 5,
-            color: 'white',
-            alignSelf: 'stretch',
-            fontSize: 24,
-            marginHorizontal: 20,
-            textAlign: 'center',
-          }}
-        />
-      </View>
-      <View
-        style={{
-          width: '100%',
-          flex: 0.7,
-          backgroundColor: Colors.nearBlack,
-        }}>
-        <InputBoard
-          colHints={colHints}
-          rowHints={rowHints}
-          setColHints={setColHints}
-          setRowHints={setRowHints}
-        />
+            width: '100%',
+            flex: 0.85,
+            backgroundColor: Colors.nearBlack,
+          }}>
+          <ReactNativeZoomableView
+            ref={zoomableView}
+            maxZoom={5}
+            minZoom={1}
+            zoomStep={0.5}
+            initialZoom={1}
+            bindToBorders={true}
+            style={{
+              backgroundColor: Colors.nearBlack,
+              width: '100%',
+              height: '100%',
+            }}>
+            <InputBoard
+              colHints={colHints}
+              rowHints={rowHints}
+              setColHints={setColHints}
+              setRowHints={setRowHints}
+            />
+          </ReactNativeZoomableView>
+        </View>
+        <View
+          style={{
+            width: '100%',
+            flex: 0.15,
+            backgroundColor: Colors.nearBlack,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <TextInput
+            value={puzzleTitle}
+            onChangeText={(val) => setPuzzleTitle(val)}
+            placeholder="Puzzle title"
+            placeholderTextColor={Colors.veryLightGray}
+            style={{
+              borderWidth: 1,
+              borderColor: Colors.gray,
+              borderRadius: 5,
+              color: 'white',
+              alignSelf: 'stretch',
+              fontSize: 24,
+              marginHorizontal: 20,
+              textAlign: 'center',
+            }}
+          />
+        </View>
       </View>
       <View
         style={{
@@ -69,11 +115,6 @@ const SolverInputActivity = ({navigation}) => {
             buttonStyle={{backgroundColor: Colors.copper}}
             titleStyle={{color: Colors.nearBlack, fontSize: 36}}
             onPress={() => {
-              // console.log(puzzleTitle);
-              // console.log(colHints.length);
-              // console.log(rowHints.length);
-              // console.log(colHints);
-              // console.log(rowHints);
               addPuzzle(
                 {
                   name: puzzleTitle,
