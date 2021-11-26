@@ -60,6 +60,13 @@ const addPuzzle = async (puzzleData, callback) => {
   callback && callback();
 };
 
+const removePuzzle = async (id, callback) => {
+  const db = await getDBConnection();
+  const insertQuery = `delete from ${SOLVER_PUZZLES_TABLE_NAME} where id=${id};`;
+  db.executeSql(insertQuery);
+  callback && callback();
+};
+
 const getSolverPuzzleById = async (id, callback) => {
   const db = await getDBConnection();
   try {
@@ -78,4 +85,4 @@ const getSolverPuzzleById = async (id, callback) => {
   }
 };
 
-export {getSolverPuzzleList, getSolverPuzzleById, addPuzzle};
+export {getSolverPuzzleList, getSolverPuzzleById, addPuzzle, removePuzzle};
