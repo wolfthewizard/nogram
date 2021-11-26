@@ -141,27 +141,43 @@ const SolverChoosingActivity = ({navigation}) => {
             data={puzzles}
             renderItem={({item, index}) => {
               return (
-                <SolverPuzzleCard
-                  puzzleData={item}
-                  openPuzzle={
-                    () =>
-                      getSolverPuzzleById(item.id, (gameData) =>
-                        navigation.navigate('SolverPuzzleSolve', {
-                          gameData,
-                        }),
-                      )
-                    // getPuzzleById(item.id, (gameData) =>
-                    //   navigation.navigate('SolverPuzzleSolve', {
-                    //     gameData,
-                    //   }),
-                    // )
-                  }
-                  requestDelete={() => {
-                    deletedPuzzle.current = item;
-                    setModalOpen(true);
-                  }}
-                  key={index}
-                />
+                <>
+                  {item.id === 8 && puzzles.length > 8 && (
+                    <View style={{marginTop: 20}}>
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontSize: 10,
+                          textAlign: 'center',
+                        }}>
+                        Predefined Puzzles
+                      </Text>
+                    </View>
+                  )}
+                  <SolverPuzzleCard
+                    puzzleData={item}
+                    openPuzzle={
+                      () =>
+                        getSolverPuzzleById(item.id, (gameData) =>
+                          navigation.navigate('SolverPuzzleSolve', {
+                            gameData,
+                          }),
+                        )
+                      // getPuzzleById(item.id, (gameData) =>
+                      //   navigation.navigate('SolverPuzzleSolve', {
+                      //     gameData,
+                      //   }),
+                      // )
+                    }
+                    requestDelete={() => {
+                      if (item.id > 8) {
+                        deletedPuzzle.current = item;
+                        setModalOpen(true);
+                      }
+                    }}
+                    key={index}
+                  />
+                </>
               );
             }}
           />
