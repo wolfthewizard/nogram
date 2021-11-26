@@ -77,10 +77,11 @@ class Solver {
       [...Array(height).keys()].map((j) => mutableRows[j][i]),
     );
 
-    const rowHints = mutableRows.map((row) => Solver.generateHints(row));
-    const colHints = mutableCols.map((col) => Solver.generateHints(col));
-    // const rowHints = Solver.removeZerosFromHints(rowHintsWithZeros);
-    // const colHints = Solver.removeZerosFromHints(colHintsWithZeros);
+    // const rowHints = mutableRows.map((row) => Solver.generateHints(row));
+    // const colHints = mutableCols.map((col) => Solver.generateHints(col));
+
+    const rowHints = Solver.removeZerosFromHints(rowHintsWithZeros);
+    const colHints = Solver.removeZerosFromHints(colHintsWithZeros);
 
     console.log('starting the solving process');
     const startTime = new Date().getTime();

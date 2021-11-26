@@ -10,6 +10,7 @@ import {
 } from './dbData';
 import puzzlePacks from './puzzlePacks';
 import puzzles from './puzzles';
+import solverPuzzles from './solverPuzzles';
 
 const force_repopulate = false;
 
@@ -122,6 +123,30 @@ const initDb = async () => {
     rowHints text not null
   );`;
   await db.executeSql(createSolverPuzzleTableQuery);
+  getSolverPuzzlesSize(async (size) => {
+    if (size === 0 || force_repopulate) {
+      if (force_repopulate) {
+        const clearQuery = `delete from ${SOLVER_PUZZLES_TABLE_NAME}`;
+        await db.executeSql(clearQuery);
+      }
+      for (const puzzle of solverPuzzles.reverse()) {
+        const insertPuzzleQuery = `insert into ${SOLVER_PUZZLES_TABLE_NAME} (
+          name,
+          boardWidth,
+          boardHeight,
+          colHints,
+          rowHints
+        ) values (
+          '${puzzle.name}',
+          ${puzzle.boardWidth},
+          ${puzzle.boardHeight},
+          '${JSON.stringify(puzzle.colHints)}',
+          '${JSON.stringify(puzzle.rowHints)}'
+        );`;
+        await db.executeSql(insertPuzzleQuery);
+      }
+    }
+  });
 };
 
 const getDbSize = async (callback) => {
@@ -136,6 +161,14 @@ const getPuzzlePacksSize = async (callback) => {
   const db = await getDBConnection();
   const dbSize = await db.executeSql(
     `select count(*) from ${PUZZLE_PACKS_TABLE_NAME};`,
+  );
+  callback(dbSize[0].rows.item(0)['count(*)']);
+};
+
+const getSolverPuzzlesSize = async (callback) => {
+  const db = await getDBConnection();
+  const dbSize = await db.executeSql(
+    `select count(*) from ${SOLVER_PUZZLES_TABLE_NAME};`,
   );
   callback(dbSize[0].rows.item(0)['count(*)']);
 };

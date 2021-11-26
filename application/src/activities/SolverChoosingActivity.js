@@ -143,17 +143,18 @@ const SolverChoosingActivity = ({navigation}) => {
               return (
                 <SolverPuzzleCard
                   puzzleData={item}
-                  openPuzzle={() =>
-                    // getSolverPuzzleById(item.id, (gameData) =>
+                  openPuzzle={
+                    () =>
+                      getSolverPuzzleById(item.id, (gameData) =>
+                        navigation.navigate('SolverPuzzleSolve', {
+                          gameData,
+                        }),
+                      )
+                    // getPuzzleById(item.id, (gameData) =>
                     //   navigation.navigate('SolverPuzzleSolve', {
                     //     gameData,
                     //   }),
                     // )
-                    getPuzzleById(item.id, (gameData) =>
-                      navigation.navigate('SolverPuzzleSolve', {
-                        gameData,
-                      }),
-                    )
                   }
                   requestDelete={() => {
                     deletedPuzzle.current = item;

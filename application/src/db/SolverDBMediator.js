@@ -9,7 +9,8 @@ const getSolverPuzzleList = async (callback) => {
     const solverPuzzles = [];
     const results1 = await db.executeSql(
       `select id, name 
-        from ${SOLVER_PUZZLES_TABLE_NAME};`,
+        from ${SOLVER_PUZZLES_TABLE_NAME}
+        order by id desc;`,
     );
     results1.forEach((result) => {
       for (let index = 0; index < result.rows.length; index++) {
