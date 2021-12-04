@@ -7,14 +7,17 @@ W kolejnej części rozdziału wypisane są także definicje potrzebne do zrozum
 jakim jest rozwiązywanie nonogramów.
 
 
+
 \section{Przedstawienie nonogramów}
+
 
 \subsection{Opis}
     Nonogramy (znane także jako \textit{Paint by Number} oraz \textit{Picross}) to łamigłówki, w których
 celem jest odpowiednie wypełnienie komórek na siatce tak, by uzyskać określony wzór (np. obrazek).
 W tym celu należy kolorować pola zgodnie ze wskazówkami umieszczonymi obok każdego wiersza oraz kolumny
 na siatce. Wskazówki mają postać ciągu liczb - każda z liczb oznacza ilość wypełnionych komórek z rzędu,
-a pomiędzy grupami wypełnionych komórek znajduje się przynajmniej jedna pusta komórka.\\
+a pomiędzy grupami wypełnionych komórek znajduje się przynajmniej jedna pusta komórka.
+
     Uściślając powyższą, nieformalną definicję, nonogram to łamigłówka na siatce wielkości $w \times h$,
 gdzie $w$ oznacza szerokość planszy wyrażoną w ilości komórek, a $h$ wysokość planszy wyrażoną w
 ilości komórek. Dla każdego wiersza i kolumny mamy przedstawiony ciąg liczb $H_n$ będący wskazówką
@@ -44,6 +47,7 @@ by dla każdego wiersza oraz każdej kolumny wskazówki dla nich były spełnion
     \caption{Przykładowa plansza}
 \end{figure}
 
+
 \subsection{Definicje}
 \begin{definition}
     Wskazówką nazywamy ciąg $H_i$ liczb, opisujący ułożenie wypełnionych komórek w danej linii.
@@ -58,7 +62,9 @@ szerokość i wysokość planszy, a $R_n$ i $C_n$ są ciągami wskazówek dla wi
 \end{definition}
 
 
+
 \section{Wymagane zagadnienia matematyczne}
+
 
 \subsection{Problem decyzyjny}
 \begin{definition}
@@ -71,6 +77,7 @@ należy przedstawić go w postaci problemu decyzyjnego.
     Czy zadany nonogram $N = (w, h, R_n, C_n)$ ma rozwiązanie?
 \end{example}
 
+
 \subsection{Klasa złożoności P}
 \begin{definition}
     Klasa złożoności P zawiera wszystkie problemy decyzyjne, których rozwiązanie można znaleźć w czasie wielomianowym.
@@ -82,6 +89,7 @@ w postaci problemu decyzyjnego mogłoby brzmieć następująco: Czy dla danego w
 istnieje ścieżka z punktu $v_1 \in V$ do punktu $v_2 \in V$ o długości niewiększej niż $x$?
 \end{example}
 
+
 \subsection{Klasa złożoności NP}
 \begin{definition}
     Klasa złożoności NP zawiera wszystkie problemy decyzyjne, których rozwiązanie dla odpowiedzi pozytywnej
@@ -91,14 +99,17 @@ można zweryfikować w czasie wielomianowym.
     Mając zbiór $I$ przedmiotów, gdzie przedmiot $i_n$ to dwójka $(v_n, w_n)$, gdzie $v_n$ to wartość,
 a $w_n$ to waga, oraz ograniczenie górne na sumę wag wybranych przedmiotów $w_{max}$, czy można
 wybrać przedmioty w taki sposób by nie przekroczyć limitu wagi $w_{max}$, a by suma wartości
-wybranych przedmiotów była większa lub równa $c$?\\
+wybranych przedmiotów była większa lub równa $c$?
+
     Tak zadany problem to wersja decyzyjna problemu plecakowego. Być może nie istnieje algorytm znajdujący
 przydział przedmiotów w czasie wielomianowym, ale mając przedstawione rozwiązanie $S \subseteq I$
 można zsumować wartości przedmiotów z $S$ i sprawdzić czy jest to poprawne rozwiązanie.
 \end{example}
+
     Należy zauważyć, że każdy problem z klasy \textit{P} należy także do klasy \textit{NP}, ponieważ
 rozwiązanie problemu decyzyjnego jest jednym ze sposobów weryfikacji poprawności jego rozwiązania.
 To czy $P = NP$ jest jak do tej pory nierozwiązanym problemem.
+
 
 \subsection{Redukcja wielomianowa}
 \begin{definition}
@@ -118,6 +129,7 @@ a następnie rozwiązanie go za pomocą algorytmu działającego w czasie wielom
     Jeśli istnieje redukcja z \textit{A} w \textit{B} w czasie wielomianowym, to \textit{B} jest
 co najmniej tak złożony jak \textit{A}.
 \end{corollary}
+
 
 \subsection{Klasa problemów NP-trudnych}
 \begin{definition}
@@ -148,6 +160,7 @@ można zweryfikować w czasie wielomianowym.
 \end{corollary}
 
 
+
 \section{Przypisanie problemu rozwiązania nonogramów do odpowiedniej klasy złożoności}
 
     Mając zdefiniowane pojęcia potrzebne do klasyfikacji problemu do odpowiedniej klasy złożoności,
@@ -155,17 +168,19 @@ należy znaleźć klasę do jakiej należy rozwiązywanie nonogramów. Z uwagi n
 poddana zostanie decyzyjna wersja problemu, tj. 
 '\textit{Czy zadany nonogram $N = (w, h, R_n, C_n)$ ma rozwiązanie?}'.
 
+
 \subsection{Problem rozwiązania nonogramu jest w NP}
     Niech $M_{h, w}$ będzie macierzą oznaczająca rozwiązanie zadanego nonogramu $N = (w, h, R_n, C_n)$,
 gdzie $m_{i, j}$ oznacza stan komórki w wierszu $i$ i kolumnie $j$, oraz $m_{i, j} = 1$, jeśli komórka
 jest wypełniona, a $m_{i, j} = 0$ jeśli pusta. Macierz $M_{h, w}$ jest mapowana na $h + w$ list,
-będących ciągami stanów komórek w kolejnych wierszach, i kolumnach.\\
+będących ciągami stanów komórek w kolejnych wierszach, i kolumnach.
+
     Do weryfikacji rozwiązania użyjemy następującej procedury:
 
 \begin{pseudokod}[H]
     %\SetAlTitleFnt{small}
     \SetArgSty{normalfont}
-    \KwIn{Lista linii $L$, Lista wskazówek $LH$, długość linii $n$}
+    \KwIn{Lista linii $L$, lista wskazówek $LH$, długość linii $n$}
     \KwOut{Poprawność rozwiązania w osi (\texttt{true/false})}
     \For{$i \leftarrow 1$ \KwTo $|L|$}{
         $Li \leftarrow L[i]$\;
@@ -174,7 +189,7 @@ będących ciągami stanów komórek w kolejnych wierszach, i kolumnach.\\
         $A \leftarrow []$\;
         \For{$c \in Li$} {
             \If{$c = 1$} {
-                $a \leftarrow a + 1$\
+                $a \leftarrow a + 1$\;
             }
             \Else{
                 \If{$a > 0$} {
@@ -199,7 +214,8 @@ będących ciągami stanów komórek w kolejnych wierszach, i kolumnach.\\
     W procedurze \ref{alg:axisValidation} następuje weryfikacja rozwiązania w danej osi. Przykładowo,
 wywołując procedurę \ref{alg:axisValidation} dla listy wierszy i ich wskazówek, weryfikujemy Poprawność
 rozwiązania w poziomie. Weryfikacja rozwiązania następuje przez wywołanie procedury dwukrotnie,
-dla wierszy oraz kolumn. Jeśli w obu przypadkach procedura zwróci \texttt{true}, to rozwiązanie jest poprawne.\\
+dla wierszy oraz kolumn. Jeśli w obu przypadkach procedura zwróci \texttt{true}, to rozwiązanie jest poprawne.
+
     Czas wykonania procedury jest zależny od wielkości planszy. Zewnętrzna pętla wykonuje się
 tyle razy, ile jest linii w osi ($h$ w przypadku wierszy, $w$ w przypadku kolumn). Na początku pętli
 dochodzi do ekstrakcji pewnych danych do lokalnych zmiennych oraz inicjalizacji tablicy - w zależności
@@ -214,11 +230,13 @@ Na końcu zewnętrznej pętli wykonywana jest druga pętla, która iteruje po el
 w rozwiązaniu, i porównuje ich watość do analogicznych elementów we wskazówce odtworzonej z układu linii.
 Rozbieżność oznacza, że rozwiązanie nie jest prawidłowe, i procedura przedwcześnie zakańcza wykonanie.
 Długość wskazówki można z góry ograniczyć przez $\lceil \frac{x}{2} \rceil$, gdzie $x$ jest długością
-linii.\\
+linii.
+
     Zadana procedura sprawdza poprawność rozwiązania nonogramów, a jej złożoność, w zależności od
 implementacji operacji na tablicach, może wynosić $\mathcal{O}(n^2)$ bądź $\mathcal{O}(n^3)$.
 Zaproponowana procedura ma złożoność wielomianową, zatem problem decyzyjny rozwiązywania nonogramów
 należy do klasy \textit{NP}.
+
 
 \subsection{Problem rozwiązania nonogramu jest NP-trudny}
     Dowód NP-trudności rozwiązywania nonogramów jest obszerny i wykracza poza zakres tej pracy.
@@ -228,6 +246,7 @@ Autor rozpoczyna dowód od powołania się na NP-trudność gry na grafach, nazw
 NP-trudność zmodyfikowanej wersji gry, określonej na grafach planarnych. Po udowodnieniu tego faktu,
 autor konstruuje redukcję wielomianową z planarnej \textit{Bounded Nondeterministic Constraint Logic}
 w rozwiązywanie nonogramów, tym samym udowadniając ich przynależność do tej klasy problemów.
+
 
 \subsection{Problem rozwiązania nonogramu jest NP-zupełny}
     Pokazawszy, że zadany problem jest w NP, oraz jest NP-trudny, pokazane zostało że problem ten

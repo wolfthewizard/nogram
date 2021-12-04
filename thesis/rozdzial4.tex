@@ -1,5 +1,102 @@
-\chapter{Instalacja i wdrożenie}
+\chapter{Solver nonogramów}
 \thispagestyle{chapterBeginStyle}
 
-W tym rozdziale należy omówić zawartość pakietu instalacyjnego oraz założenia co do środowiska, w którym realizowany system będzie instalowany. Należy przedstawić procedurę instalacji i wdrożenia systemu. Czynności instalacyjne powinny być szczegółowo rozpisane na kroki. Procedura wdrożenia powinna obejmować konfigurację platformy sprzętowej, OS (np. konfiguracje niezbędnych sterowników) oraz konfigurację wdrażanego systemu, m.in.\ tworzenia niezbędnych kont użytkowników. Procedura instalacji powinna prowadzić od stanu, w którym nie są zainstalowane żadne składniki systemu, do stanu w którym system jest gotowy do pracy i oczekuje na akcje typowego użytkownika.
+    W tym rozdziale opisany jest rozwój solvera. Opisane są kolejne główne wersje solverów, zbadany
+jest także wpływ zastosowanych heurystyk na wydajność w rozwiązywaniu wybranych łamigłówek.
 
+
+
+\section{Wersje solverów}
+
+
+\subsection{Solver całościowy}
+    Solver całościowy jest najprostszym z solverów implementowanych w toku pisania aplikacji. Jego
+implementacja opiera się na założeniu, że obrazek ukryty w łamigłówce jest ciągiem pustych i pełnych
+pikseli. Solver sprawdza wszystkie możliwe kombinacje pól, aż do wykrycia rozwiązania, bądź stwierdzenia
+jego braku. Wskazówki umieszczone obok planszy służą jedynie do walidacji rozwiązania, i nie są
+wykorzystywane w trakcie rozwiązywania nonogramu.
+
+    Solver ten zaczyna od pustej planszy. Następnie, dla pierwszego pola wywoływana jest rekursyjna
+metoda: jeśli indeks pola mieści się w zakresie planszy, to najpierw jego status ustawiany jest na
+pusty, i następuje wywołanie metody dla nastepnego indeksu, a jeśli rozwiązanie nie zostanie znalezione,
+to pole jest wypełniane i ponownie dochodzi do wywołania metody na następnym polu. Jeśli indeks
+wykracza poza zakres planszy, to znaczy że wszystkie pola mają ustawiony status i wywoływana jest
+metoda sprawdzająca poprawność rozwiązania, podobna do tej opisanej w \ref{alg:axisValidation}.
+Jeśli solver zakończy działanie zwracając \texttt{true}, to w przekazanej mu macierzy pól 
+(równoznaczne z listą wierszy) znajdzie się rozwiązanie łamigłówki.
+
+\begin{pseudokod}[H]
+    %\SetAlTitleFnt{small}
+    \SetArgSty{normalfont}
+    \SetKwFunction{Verify}{Verify}
+    \KwIn{Lista wierszy $R$, indeks pola $i$, lista wskazówek wierszy $Hr$ i kolumn $Hc$, szerokość $w$ i wysokość $h$ planszy}
+    \KwOut{Czy znaleziono rozwiązanie \texttt{true/false}}
+    \If{$i \geq w \cdot h$}{
+        \texttt{return} \Verify{$R$, $Hr$, $Hc$, $w$, $h$}\;
+    }
+    \Else{
+        $iWiersza \leftarrow \lceil \frac{i}{w} \rceil$\;
+        $iKolumny \leftarrow i\ mod\ w$\;
+        $R[iWiersza][iKolumny] \leftarrow 0$\;
+        \If{\texttt{SolverCałościowy}($R, i+1, Hr, Hc, w, h$)}{
+            \texttt{return true}\;
+        }
+        $R[iWiersza][iKolumny] \leftarrow 1$\;
+        \texttt{return SolverCałościowy}($R, i+1, Hr, Hc, w, h$)\;
+    }
+    \caption{SolverCałościowy}\label{alg:allSolver}
+\end{pseudokod}
+
+    Złożoność czasowa tego solvera jest bardzo duża. Procedura sprawdzająca poprawność rozwiązania
+może zostać wywołana $2^{w*h}$ razy, czyli inaczej $2^n$, gdzie $n$ to ilość pól na planszy. 
+Wynika to z faktu, że kazde kolejne pole wymaga sprawdzenia pól poprzednich, a samo może znajdować
+się w dwóch stanach, więc podwaja ilość wywołań procedury sprawdzającej.
+
+
+\subsection{Solver osiowy}
+    W odróżnieniu od solvera całościowego, solver osiowy korzysta ze wskazówek przy szukaniu rozwiązań.
+Opiera się on na fakcie, że każda linia (wiersz lub kolumna) może znajdować się w jednym z możliwych
+stanów, których liczba nigdy nie dojdzie do $2^x$, gdzie $x$ jest długością linii. Sprawdzając
+rozwiązanie w tym solverze, gwarantowana jest poprawność w jednej z osi, co dodatkowo znacząco skraca
+czas szukania rozwiązania.
+
+    Solver zaczyna od pustej planszy. Przed rozpoczęciem rozwiązywania sprawdzana jest ilość wszystkich
+kombinacji w danej osi (iloczyn możliwości każdej z linii), i wybierana jest oś z mniejszą liczbą
+możliwości. Następnie generowane są kombinacje dla każdej z linii. Solver korzysta z rekursyjnej
+metody, i ustawia pierwszą kombinację dla pierwszej linii. Następnie wywołuje metodę dla kolejnej linii,
+aż do ostatniej, i wtedy weryfikuje rozwiązanie. Jeśli dla danego ustawienia w linii łamigłówka
+nie ma rozwiązania, to solver przechodzi do kolejnego ustawienia i wywołuje metodę w kolejnej linii.
+
+\begin{pseudokod}[H]
+    %\SetAlTitleFnt{small}
+    \SetArgSty{normalfont}
+    \SetKwFunction{Verify}{Verify}
+    \SetKwFunction{ApplyComb}{ApplyComb}
+    \KwIn{Lista linii $L$, indeks linii $i$, lista wskazówek linii prostopadłych $H$, ilość linii $n$}
+    \KwOut{Czy znaleziono rozwiązanie \texttt{true/false}}
+    \If{$i = n$}{
+        \Verify{$L$, $H$, $n$}\;
+    }
+    \Else{
+        $line \leftarrow L[i]$\;
+        \ForEach{$comb \in line.combinations$}{
+            \ApplyComb{$line, comb$}\;
+            \If{\texttt{SolverOsiowy}($L, i+1, H, n$)}{
+                \texttt{return true}\;
+            }
+        }
+        \texttt{return false}\;
+    }
+    \caption{SolverOsiowy}\label{alg:axisSolver}
+\end{pseudokod}
+
+    Dzięki eliminacji kombinacji sprzecznych ze wskazówkami w danej osi, procedura sprawdzania
+poprawności rozwiązania jest wywoływana o wiele rzadziej niż w przypadku solvera całościowego.
+O ile ilość kombinacji w linii przy rozpatrywaniu każdej komórki z osobna to $2^n$, gdzie $n$ to
+długość linii, tak w przypadku rozważania poprawnych kombinacji dla linii jest ona zależna od
+długości i zawartości wskazówki, i można ją ograniczyć z góry przez
+${n + 1 - h} \choose h$, a $h$ to ilość wskazówek w linii. To przybliżenie jest zawyżone, ponieważ
+zakłada występowanie jedynie bloków długości jeden we wskazówce. W przeciętnym przypadku, bloki
+wypełnionych komórek będą dłuższe, oraz będzie ich mniej. Dodatkowo, jak zostało wspomniane na początku,
+weryfikacja jest wymagana jedynie w jednej z dwóch osi, jako że konstrukcja potencjalnych rozwiązań
+opiera się o zestawianie poprawnych kombinacji z linii.

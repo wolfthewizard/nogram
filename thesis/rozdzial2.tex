@@ -1,93 +1,45 @@
 \chapter{Projekt systemu}
 \thispagestyle{chapterBeginStyle}
 
-{\color{dgray}
-W tym rozdziale przedstawiono szczegółowy projekt systemy w notacji UML uwzględniający wymagania funkcjonalne opisane w rozdziale~\ref{rozdzial1}. Do opisu relacji pomiędzy składowymi systemu wykorzystano diagramy \ldots.
-Przedstawiono w pseudokodzie i omówiono algorytmy generowania \ldots.
-}
+    W tej części opisane zostały wymagania dla aplikacji w kontekście możliwości interakcji przez
+użytkownika.
 
 
-\section{Grupy użytkowników i założenia}
 
-{\color{dgray}
-Architektura systemu \ldots jest wielowarstwowa i rozproszona, przy czym \ldots. Podsystem  \ldots jest systemem zbiorczym dla danych \ldots wysyłanych do serwera \ldots. 
+\section{Wymagania aplikacji}
+\begin{enumerate}
+    \item Użytkownik może wybrać jedną z predefiniowanych paczek łamigłówek by przejść do wyboru łamigłówki
+    \item Użytkownik może wybrać jedną z predefiniowanych łamigłówek w paczce by przejść do jej rozwiązywania
+    \item Użytkownik może rozwiązać łamigłówkę przy użyciu wyświetlanej planszy
+    \item Użytkownik może oznaczać pola, co do których ma pewność, że są puste
+    \item Aplikacja śledzi błędy użytkownika w trakcie rozwiązywania łamigłówki i przerywa jej rozwiązywanie
+w przypadku popełnienia zbyt wielu błędów
+    \item Postęp rozwiązywania łamigłówki jest zapisywany przy wyjściu do poprzedniego ekranu
+    \item W menu wyboru łamigłówki wyświetlany jest stan łamigłówki tak, by można było ocenić:
+    \begin{itemize}
+        \item czy została rozpoczęta
+        \item czy została ukończona bez przegranej
+        \item czy została ukończona z przegraną
+    \end{itemize}
+    \item Użytkownik może wprowadzić łamigłówkę dla solvera za pomocą ekranu wprowadzania łamigłówki
+    \item Użytkownik może wybrać łamigłówkę do rozwiązania dla solvera
+    \item Użytkownik może nakazać rozwiązanie wprowadzonej łamigłówki
+\end{enumerate}
 
-Taka architektura jest zgodna z wzorcem projektowym MVC\footnote{Należy odnieść się do wykorzystywanych wzorców projektowych} (ang.  Model-View-Controller). Przetwarzanie danych odbywa się \ldots.
-} 
 
-\section{Przypadki użycia i scenariusze}
 
-W tej sekcji należy przedstawić przypadki użycia oraz odpowiadające im scenariusze dla poszczególnych grup użytkowników \ldots.
+\section{Nawigacja pomiędzy aktywnościami}
+    Aplikacja otwiera się w menu głównym. W menu głównym dostępne są dwie zakładki: zakłada użytkownika
+i zakładka w solvera. W zakładce użytkownika, użytkownik najpierw wybiera paczkę łamigłówek, a
+następnie łamigłówkę do rozwiązania, po czym przechodzi do ekranu rozwiązywania. W zakładce solvera
+dostępna jest lista wprowadzonych i predefiniowanych łamigłówek dla solvera. Użytkownik może przejść
+do ekranu wprowadzania łamigłówki, by dodać kolejną łamigłówkę, bądź do ekranu auto-rozwiązywania,
+gdzie nakazuje solverowi rozwiązanie wprowadzonej łamigłówki.
 
-\section{Diagramy klas}
+    Zależności między opisanymi aktywnościami są ukazane na diagramie.
 
-W tej sekcji należy przedstawić diagramy klas dla odpowiednich elementów systemu zidentyfikowane na podstawie wcześniejszych rozważań 
-
-\section{Diagramy aktywności}
-
-W tej sekcji należy przedstawić diagramy aktywności dla elementów systemu i odpowiednich procesów wynikające z wcześniejszej analizy.  
-
-{\color{dgray}
-W niniejszym rozdziale przedstawiono diagramy aktywności \ldots. Diagram na rysunku~\ref{czynnosci_GD} przedstawia \ldots.
-} 
-
-\begin{figure}[h!]
-\begin{center}
-\includegraphics[width=0.5\textwidth]{aktyw.pdf}
-\end{center}
-\caption{{\color{dgray}Diagram aktywności związany z procesem rejestracji dokumentu.}} \label{czynnosci_GD}
-\end{figure}  
-
-\section{Diagramy sekwencji}
-
-W tej sekcji należy przedstawić diagramy sekwencji dla obiektów systemu zidentyfikowanych na podstawie wcześniejszych rozważań. Należy wykorzystać nazewnictwo wprowadzone w poprzednich rozdziałach, w szczególności odpowiadające definicjom wprowadzonych klas.
-
-\section{Diagramy stanów}
-
-W tej sekcji należy przedstawić diagramy stanów w których może znaleźć się system. Diagramy te są szczególnie istotne przy projektowaniu systemów czasu rzeczywistego. 
-
-\section{Projekt bazy danych}
-
-W tej sekcji należy przedstawić projekt bazy danych. Należy omówić wycinek rzeczywistości i odpowiadające mu zidentyfikowane elementy systemu, których wartości będą podlegać utrwalaniu. Należy przedyskutować wybór typów danych dla atrybutów poszczególnych obiektów. Należy uzasadnić wybór platformy DBMS. Dla relacyjnych baz danych należy przedyskutować jej normalizację.
-
-\section{Opis protokołów}
-
-W tej sekcji należy omówić protokoły wykorzystywane przez komponenty systemu. Omówić formaty komunikatów i zilustrować je przykładami. 
-
-\section{Opis algorytmów}
-
-W tej sekcji należy wymienić i przedyskutować algorytmy wykorzystywane w systemie. Algorytmy należy przedstawić w pseudokodzie (wykorzystać pakiet \texttt{algorithm2e}). Omówienia poszczególnych kroków algorytmów powinny zawierać odwołania do odpowiednich linii pseudokodu. Dla zaproponowanych autorskich algorytmów należy przeprowadzić analizę ich złożoności czasowej i pamięciowej. 
-
-{\color{dgray}
-Algorytm bąblowania jest przedstawiony w Pseudokodzie~\ref{alg:mine}.
-}
-
-{\small
-\begin{pseudokod}[H]
-%\SetAlTitleFnt{small}
-\SetArgSty{normalfont}
-\SetKwFunction{Process}{Process}
-\SetKwFunction{Calculate}{Calculate}
-\KwIn{Zbiór bąbli $B$}
-\KwOut{Wyporność $W$}
-\ForEach{$b \in B$}{
-\Process{$b$}\;
-\For{$i \leftarrow 1$ \KwTo $|B|$}{
-\If{\Calculate{EW($i$,$b$)} $\le$ 0}{
-$b \leftarrow 2*b$\;
-}
-}
-}
-\While{$B \neq \emptyset$}{
-\For{$j \leftarrow 1$ \KwTo $|B|$}{
-\If{\Calculate{FT($j$,$\hat{b}$)} $\le 0$}{
-$w \leftarrow 2*\hat{b}$\;
-$W \leftarrow W \cup \{w\}$\;
-$B \leftarrow B \setminus \{b\}$\;
-}
-}
-}
-\caption{Wyporność przez bąblowanie}\label{alg:mine}
-\end{pseudokod}
-}
-
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=\textwidth]{images/screens_diagram.png}
+    \caption{Diagram zależności między aktywnościami}
+\end{figure}
