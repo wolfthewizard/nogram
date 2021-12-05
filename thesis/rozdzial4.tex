@@ -205,3 +205,89 @@ mechanizm płytkiej kopii. Mimo że listy wierszy i kolumn zawierają inne obiek
 komórek przechowywane w tych zagnieżdżonych listach są takie same. Dzięki temu, modyfikując stan
 komórki w liście wierszy w $n$-tym wierszu i $m$-tej komórce, modyfikujemy także stan komórki
 zawartej w $n$-tej komórce w $m$-tej kolumnie w liście kolumn.
+
+
+
+\section{Porównanie wydajności solverów}
+    W tej części zbadane zostały wydajności poszczególnych wersji solverów oraz wpływ wybranych
+modyfikacji i heurystyk na ich wydajność.
+
+
+\subsection{Solver całościowy}
+
+\begin{center}
+    \begin{tabular}{|c|c|r r|}
+        \hline
+        {}          & {}        & \multicolumn{2}{c|}{Czas rozwiązywania w ms} \\
+        Nazwa       & Rozmiar   & bez modyfikacji & z częściową weryfikacją \\
+        \hline
+        Cross       & 3 & 1                     & 1 \\
+        Flame       & 5 & 46                    & 15 \\
+        Jellyfish   & 8 & \textit{przekroczono} & \textit{przekroczono} \\
+        \hline
+    \end{tabular}
+\end{center}
+
+
+\subsection{Solver osiowy}
+
+\begin{center}
+    \begin{tabular}{|c|c|r r|}
+        \hline
+        {}          & {}        & \multicolumn{2}{c|}{Czas rozwiązywania w ms} \\
+        Nazwa       & Rozmiar   & bez modyfikacji & z częściową weryfikacją \\
+        \hline
+        Cross       & 3         & 0                     & 0 \\
+        Flame       & 5         & 0                     & 0 \\
+        Jellyfish   & 8         & 463                   & 2 \\
+        Candy       & 8         & 0                     & 0 \\
+        Shield      & 10        & \textit{przekroczono} & 3 \\
+        Dog         & 10        & \textit{przekroczono} & 1 \\
+        Duck        & 16        & \textit{przekroczono} & 12 \\
+        Shrimp      & 16        & \textit{przekroczono} & 14 \\
+        Cherries    & 20        & \textit{przekroczono} & 25 \\
+        Potion      & 20        & \textit{przekroczono} & 315 \\
+        Tape        & 25        & \textit{przekroczono} & 1091 \\
+        Lighter     & 25        & \textit{przekroczono} & 60945 \\
+        \hline
+        Ghost       & 32        & \textit{przekroczono} & 40040 \\
+        Demon       & 32        & \textit{przekroczono} & 3997 \\
+        Butcher     & 48        & \textit{przekroczono} & \textit{przekroczono} \\
+        Ranger      & 48        & \textit{przekroczono} & 59703 \\
+        Orc         & 64        & \textit{przekroczono} & \textit{przekroczono} \\
+        Swordsman   & 64        & \textit{przekroczono} & \textit{przekroczono} \\
+        \hline
+    \end{tabular}
+\end{center}
+
+
+\subsection{Solver eliminacyjny}
+
+\begin{center}
+    \begin{tabular}{|c|c|r r r r r r r|}
+        \hline
+        {}          & {}        & \multicolumn{7}{c|}{Czas rozwiązywania w ms} \\
+        Nazwa       & Rozmiar   & baza & bez przerw. & fifo & kolumny & min komb. & max komb. & śl. ind. \\
+        \hline
+        Cross       & 3         & 0     & 0     & 0     & 0     & 0     & 0     & 0     \\
+        Flame       & 5         & 0     & 0     & 0     & 0     & 0     & 0     & 0     \\
+        Jellyfish   & 8         & 1     & 1     & 2     & 1     & 1     & 1     & 1     \\
+        Candy       & 8         & 0     & 0     & 0     & 0     & 0     & 0     & 0     \\
+        Shield      & 10        & 2     & 2     & 1     & 2     & 2     & 1     & 2     \\
+        Dog         & 10        & 1     & 0     & 1     & 0     & 0     & 1     & 1     \\
+        Duck        & 16        & 2     & 1     & 1     & 1     & 1     & 1     & 2     \\
+        Shrimp      & 16        & 1     & 1     & 1     & 1     & 1     & 1     & 1     \\
+        Cherries    & 20        & 3     & 3     & 4     & 3     & 3     & 3     & 3     \\
+        Potion      & 20        & 12    & 13    & 13    & 13    & 13    & 13    & 13    \\
+        Tape        & 25        & 2     & 2     & 2     & 2     & 2     & 2     & 3     \\
+        Lighter     & 25        & 13    & 13    & 13    & 13    & 12    & 13    & 13    \\
+        \hline
+        Ghost       & 32        & 47    & 47    & 47    & 48    & 45    & 47    & 54    \\
+        Demon       & 32        & 1787  & 1817  & 2380  & 1806  & 1800  & 1822  & 1127  \\
+        Butcher     & 48        & 1811  & 1809  & 1884  & 1819  & 1790  & 1791  & 1717  \\
+        Ranger      & 48        & 46    & 48    & 44    & 47    & 47    & 48    & 59    \\
+        Orc         & 64        & 1463  & 1454  & 1413  & 1446  & 1465  & 1456  & 1311  \\
+        Swordsman   & 64        & 1440  & 1467  & 1489  & 1451  & 1429  & 1432  & 1451  \\
+        \hline
+    \end{tabular}
+\end{center}
