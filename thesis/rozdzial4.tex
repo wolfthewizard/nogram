@@ -16,6 +16,12 @@ pikseli. Solver sprawdza wszystkie możliwe kombinacje pól, aż do wykrycia roz
 jego braku. Wskazówki umieszczone obok planszy służą jedynie do walidacji rozwiązania, i nie są
 wykorzystywane w trakcie rozwiązywania nonogramu.
 
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/all_solver_example.png}
+    \caption{Solver całościowy sprawdza wszystkie możliwe układy planszy w celu znalezienia rozwiązania.}
+\end{figure}
+
     Solver ten zaczyna od pustej planszy. Następnie, dla pierwszego pola wywoływana jest rekursyjna
 metoda: jeśli indeks pola mieści się w zakresie planszy, to najpierw jego status ustawiany jest na
 pusty, i następuje wywołanie metody dla nastepnego indeksu, a jeśli rozwiązanie nie zostanie znalezione,
@@ -60,6 +66,14 @@ stanów, których liczba nigdy nie dojdzie do $2^x$, gdzie $x$ jest długością
 rozwiązanie w tym solverze, gwarantowana jest poprawność w jednej z osi, co dodatkowo znacząco skraca
 czas szukania rozwiązania.
 
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/axis_solver_example.png}
+    \caption{Dla linii na grafice, solver osiowy spradza jedynie 3 stany. Dla tej samej linii,
+solver całościowy sprawdziłby $2^5 = 32$ stany
+    }
+\end{figure}
+
     Solver zaczyna od pustej planszy. Przed rozpoczęciem rozwiązywania sprawdzana jest ilość wszystkich
 kombinacji w danej osi (iloczyn możliwości każdej z linii), i wybierana jest oś z mniejszą liczbą
 możliwości. Następnie generowane są kombinacje dla każdej z linii. Solver korzysta z rekursyjnej
@@ -71,16 +85,16 @@ nie ma rozwiązania, to solver przechodzi do kolejnego ustawienia i wywołuje me
     %\SetAlTitleFnt{small}
     \SetArgSty{normalfont}
     \SetKwFunction{Verify}{Verify}
-    \SetKwFunction{ApplyComb}{ApplyComb}
+    \SetKwFunction{NalozKombinacje}{NalozKombinacje}
     \KwIn{Lista linii $L$, indeks linii $i$, lista wskazówek linii prostopadłych $H$, ilość linii $n$}
     \KwOut{Czy znaleziono rozwiązanie \texttt{true/false}}
     \If{$i = n$}{
-        \Verify{$L$, $H$, $n$}\;
+        \texttt{return} \Verify{$L$, $H$, $n$}\;
     }
     \Else{
-        $line \leftarrow L[i]$\;
-        \ForEach{$comb \in line.combinations$}{
-            \ApplyComb{$line, comb$}\;
+        $linia \leftarrow L[i]$\;
+        \ForEach{$komb \in linia.kombinacje$}{
+            \NalozKombinacje{$linia, komb$}\;
             \If{\texttt{SolverOsiowy}($L, i+1, H, n$)}{
                 \texttt{return true}\;
             }
@@ -100,3 +114,94 @@ zakłada występowanie jedynie bloków długości jeden we wskazówce. W przeci�
 wypełnionych komórek będą dłuższe, oraz będzie ich mniej. Dodatkowo, jak zostało wspomniane na początku,
 weryfikacja jest wymagana jedynie w jednej z dwóch osi, jako że konstrukcja potencjalnych rozwiązań
 opiera się o zestawianie poprawnych kombinacji z linii.
+
+
+\subsection{Solver eliminacyjny}
+    Solverem, którego wariant znajduje się w aplikacji, jest solver eliminacyjny. W przeciwieństwie
+do wcześniej opisanych solverów, solver ten nie zakłada układów komórek w liniach tak długo jak to
+możliwe. W jego wypadku, generowane są możliwe kombinacje dla każdej z linii (zarówno wierszy jak i
+kolumn). W danym przejściu eliminowane są kombinacje sprzeczne z dostępnymi informacjami 
+(np. kombinacje posiadające pełną pierwszą komórkę, podczas gdy pewne jest że jest ona pełna) 
+oraz wyciągane są części wspólne kombinacji (np. wszystkie kombinacje mają pustą drugą komórkę), 
+które dostarczają informacji dla innych linii. Dodatkowo, w przeciwieństwie do poprzednich solverów,
+nie jest konieczna walidacja rozwiązania, jako że rozwiązanie jest poprawne w momencie, gdy każdy
+wiersz i każda kolumna ma dostępną jedną możliwą komibnację.
+
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}[b]{0.35\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/elimination_solver_example_a.png}
+        \caption{pola wspólne dla wszystkich kombinacji zostają naniesione na planszę}
+    \end{subfigure}
+    \hspace{0.1\textwidth}
+    \begin{subfigure}[b]{0.35\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/elimination_solver_example_b.png}
+        \caption{korzystając z informacji z wiersza, solver wnioskuje stan większości pól w kolumnie
+        (x oznacza pole definitywnie puste)}
+    \end{subfigure}
+    \caption{Przykład wnioskowania na podstawie możliwych kombinacji}
+\end{figure}
+
+    Solver zaczyna od pustej planszy. Na początku generowane są wszystkie kombinacje dla każdej z
+linii, a linie wrzucane są do kolejki \textit{last-in first-out}. Następnie solver przechodzi do
+rozwiązywania. Dopóki kolejka nie jest pusta, to są linie, których komibnacje należy zweryfikować.
+Z kolejki usuwana jest sprawdzana linia. Dla tej linii następują dwa kroki: najpierw, eliminowane
+są kombinacje sprzeczne z układem danej linii. W wypadku tego solvera, każda komórka znajduje się
+w jednym z trzech stanów: \textit{pełny}, \textit{pusty} i \textit{nieznany}. Stan \textit{nieznany}
+komórki dopuszcza kombinacje zawierające komórkę pełną lub pustą; pozostałe stany wymagają
+zgodności stanu ze stanem komórki w kombinacji. Po eliminacji sprzecznych kombinacji, dochodzi
+do porównania kombinacji. Jeśli istnieje komórka w linii, której stan jest \textit{nieznany}, a
+wszystkie pozostałe kombinacje mają ustawiony dla niej ten sam stan, to stan komórki jest aktualizowany,
+a prostopadła linia zostaje dodana do kolejki do weryfikacji (następuje przy tym upewnienie, że
+w kolejce nie ma powtórzeń). Kiedy kolejka zostanie opróżniona, sprawdzane są linie.
+Jeśli wszystkie linie mają jeden możliwy stan, to znaczy że zostało znalezione rozwiązanie. Jeśli
+któraś z linii nie ma możliwej kombinacji, to nie istnieje rozwiązanie przy dokonanych założeniach.
+W przeciwnym wypadku, solver zakłada poprawność jednej z kombinacji dla linii
+o kilku możliwych kombinacjach. Jako że wskutek założenia stan linii zmienił się, to do kolejki
+dodawane są linie prostopadłe. Następnie wywoływana jest w sposób rekursyjny metoda rozwiązująca
+nonogram dla obecnego stanu planszy. Jeśli rozwiązanie nie zostanie znalezione w tej gałęzi, to
+solver zakłada poprawność kolejnej kombinacji dla tej linii.
+
+\begin{pseudokod}[H]
+    %\SetAlTitleFnt{small}
+    \SetArgSty{normalfont}
+    \SetKwFunction{SprawdzLinie}{SprawdzLinie}
+    \SetKwFunction{NalozKombinacje}{NalozKombinacje}
+    \SetKwFunction{UzupelnijKolejke}{UzupelnijKolejke}
+    \KwIn{Lista wierszy $R$ i kolumn $C$, kolejka $Q$}
+    \KwOut{Czy znaleziono rozwiązanie \texttt{true/false}}
+    \ForEach{$linia \in Q$}{
+        \SprawdzLinie{$linia$}\;
+    }
+    \If{$(\forall linia \in R \bigcup C)(|linia.kombinacje| = 1)$}{
+        \texttt{return true}\;
+    }
+    \uElseIf{$(\exists linia \in R \bigcup C)(|linia.kombinacje| = 0)$}{
+        \texttt{return false}\;
+    }
+    \Else{
+        $zakladanaLinia \leftarrow$ pierwsza linia z wieloma kombinacjami\;
+        \ForEach{$komb \in zakladanaLinia.kombinacje$}{
+            $kopiaR \leftarrow kopiuj(R)$\;
+            $kopiaC \leftarrow kopiuj(C)$\;
+            \NalozKombinacje{$zakladanaLinia, komb$}\;
+            \UzupelnijKolejke{$Q$}\;
+            \If{\texttt{SolverEliminacyjny}($kopiaR, kopiaC, Q$)}{
+                $R \leftarrow kopiaR$\;
+                $C \leftarrow kopiaC$\;
+                \texttt{return true}\;
+            }
+        }
+        \texttt{return false}\;
+    }
+    \caption{SolverEliminacyjny}\label{alg:eliminationSolver}
+\end{pseudokod}
+
+    Istotna uwaga dotyczy charakterystyki wierszy i kolumn. W celu umożliwienia działania procedury
+został wykorzystany mechanizm obecny w wielu powszechnie używanych językach programowania, mianowicie
+mechanizm płytkiej kopii. Mimo że listy wierszy i kolumn zawierają inne obiekty (listy), to obiekty
+komórek przechowywane w tych zagnieżdżonych listach są takie same. Dzięki temu, modyfikując stan
+komórki w liście wierszy w $n$-tym wierszu i $m$-tej komórce, modyfikujemy także stan komórki
+zawartej w $n$-tej komórce w $m$-tej kolumnie w liście kolumn.
