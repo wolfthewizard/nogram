@@ -1,37 +1,32 @@
 \chapter{Wstęp}
 \thispagestyle{chapterBeginStyle}
 
-Praca dyplomowa inżynierska jest dokumentem opisującym zrealizowany system techniczny. Praca powinna być napisana poprawnym językiem odzwierciedlającym aspekty techniczne (informatyczne) omawianego zagadnienia. Praca powinna być napisana w trybie bezosobowym (w szczególności należy unikać trybu pierwszej osoby liczby pojedynczej i mnogiej). Zdania opisujące konstrukcję systemu informatycznego powinny być tworzone w stronie biernej. W poniższym dokumencie przykłady sformułowań oznaczono kolorem niebieskim. W opisie elementów systemu, komponentów, elementów kodów źródłowych, nazw plików, wejść i wyjść konsoli należy stosować czcionkę stałej szerokości, np: {\color{gray}zmienna \verb|wynik| przyjmuje wartość zwracaną przez funkcję \verb|dodaj(a,b)|, dla argumentów \verb|a| oraz \verb|b| przekazywanych \ldots}.
 
-Układ poniższego dokumentu przedstawia wymaganą strukturę pracy, z rozdziałami zawierającymi analizę zagadnienia, opis projektu systemu oraz implementację (dobór podrozdziałów jest przykładowy i należy go dostosować do własnej tematyki pracy). 
-  
-Wstęp pracy (nie numerowany) powinien składać się z czterech części (które nie są wydzielane jako osobne podrozdziały): zakresu pracy, celu, analizy i porównania istniejących rozwiązań oraz przeglądu literatury, oraz opisu zawartości pracy.
 
-Każdy rozdział powinien rozpoczynać się od akapitu wprowadzającego, w którym zostaje w skrócie omówiona zawartość tego rozdziału.
+	Praca poświęcona jest aplikacji rozwiązującej nonogramy. W pracy opisane są zagadnienia
+teoretyczne potrzebne do zrozumienia problemu, układ i sposób użycia samej aplikacji, a także
+porównanie podejść do rozwiązywania nonogramów.
 
-{\color{dgray}
-Praca poświęcona jest wielowarstwowym rozproszonym systemom informatycznym typu ,,B2B'', wspierającym wymianę danych pomiędzy przedsiębiorstwami. Systemy tego typu, konstruowane dla dużych korporacji, charakteryzują się złożoną strukturą poziomą i pionową, w której dokumenty \ldots
+	Praca podzielona jest na 7 części.
 
-Celem zrealizowanego w ramach pracy projektu było zaprojektowanie i wykonanie aplikacji o następujących założeniach funkcjonalnych:
-\begin{itemize}
-  \item wspieranie zarządzania obiegiem dokumentów wewnątrz korporacji z uwzględnieniem \ldots,
-	\item wspieranie zarządzania zasobami ludzkimi z uwzględnieniem modułów kadrowych oraz \ldots,
-	\item gotowość do uzyskania certyfikatu ISO \ldots,
-	\item \ldots.
-\end{itemize}
+	Pierwszą część stanowi wstęp, wprowadzający odbiorcę w tematykę pracy.
 
-Istnieje szereg aplikacji o zbliżonej funkcjonalności: \ldots, przy czym \ldots.
+	W drugiej części opisany jest problem rozwiązywania nonogramów. Wytłumaczone jest
+czym są nonogramy. Podane są definicje potrzebne do zrozumienia problemu. Na końcu, za pomocą
+opisanych zagadnień wyznaczona jest trudność problemu.
 
-Praca składa się z czterech rozdziałów.
-W rozdziale pierwszym omówiono strukturę przedsiębiorstwa \ldots, scharakteryzowano grupy użytkowników oraz przedstawiono procedury związane z obiegiem dokumentów. Szczegółowo opisano mechanizmy \ldots. Przedstawiono uwarunkowania prawne udostępniania informacji \ldots, w ramach \ldots.
+	Trzecia część zawiera schematyczny opis aplikacji - listę wymagań spełnianych przez
+aplikację oraz zarys nawigacji po niej.
 
-W rozdziale drugim przedstawiono szczegółowy projekt systemy w notacji UML. Wykorzystano diagramy \ldots.
-Zawarto w niej w pseudokod algorytmów generowania oraz omówiono jego właściwości. \ldots.
+	W czwartym rozdziale zawarte są informacje dotyczące implementacji: użyte technologie wraz
+z ich opisem oraz schemat wykorzystanej bazy danych.
 
-W rozdziale trzecim opisano technologie implementacji projektu: wybrany język programowania, biblioteki, system zarządzania bazą danych, itp.  Przedstawiono dokumentację techniczną kodów źródłowych interfejsów poszczególnych modułów systemu. Przedstawiono sygnatury metod publicznych oraz \ldots.
+	Piąta część skupia się na opisie solvera wykorzystanego w aplikacji. Nakreślona jest ewolucja
+solvera w trakcie rozwoju aplikacji, zaproponowane są także heurystyki mogące usprawnić działanie
+solvera. Różne implementacje wraz z usprawnieniami są poddane testom, by ocenić ich wydajność,
+oraz podane są wnioski wyciągnięte z badań.
 
-W rozdziale czwartym przedstawiono sposób instalacji i wdrożenia systemu w środowisku docelowym.
+	Szósty rozdział to krótka instrukcja dla użytkownika, opisująca wymagania do uruchomienia aplikacji.
 
-Końcowy rozdział zawiera podsumowanie uzyskanych wyników.
-}
-
+	Na końcu, w siódmej części, zawarte jest podsumowanie pracy oraz kierunki w których
+można dokonać dalszego rozwoju aplikacji.

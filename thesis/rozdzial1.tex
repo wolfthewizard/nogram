@@ -28,7 +28,7 @@ oraz jeśli $h_i$ nie jest ostatnim elementem ciągu, to blok opisany przez $h_i
 przynajmniej jedną pustą komórką od bloku opisanego przez $h_{i+1}$. Linię spełniającą zadaną wskazówkę
 opisuje wyrażenie regularne: $l=\text{\^{}}0^*1^{h_1}0^+1^{h_2}0^+\ldots0^+1^{h_n}0^*\text{\$}$, gdzie 
 $0$, $1$ oznaczają odpowiednio pustą i wypełnioną komórkę, $h_i$ jest $i$-tym elementem ciągu $H_n$,
-będącego wskazówką dla wiersza/kolumny, a $|l| = n$, $n = w$ dla wiersza i $n = h$ dla kolumny. 
+będącego wskazówką dla wiersza/kolumny, a $|l| = n$, gdzie $n = w$ dla wiersza i $n = h$ dla kolumny. 
 Rozwiązaniem nonogramu jest wypełnienie zadanej planszy w taki sposób, 
 by dla każdego wiersza oraz każdej kolumny wskazówki dla nich były spełnione.
 
@@ -71,7 +71,7 @@ szerokość i wysokość planszy, a $R_n$ i $C_n$ są ciągami wskazówek dla wi
     Problem decyzyjny to problem, na który odpowiedź stanowi 'tak' lub 'nie'.
 \end{definition}
     Problem decyzyjny to pojęcie kluczowe dla klasyfikacji problemu do wybranej klasy złożoności.
-By móc zaklasyfikować wybrany problem (np. rozwiązanie nonogramu) do jakiejś klasy złożoności,
+By móc sklasyfikować wybrany problem (np. rozwiązanie nonogramu) do jakiejś klasy złożoności,
 należy przedstawić go w postaci problemu decyzyjnego.
 \begin{example}
     Czy zadany nonogram $N = (w, h, R_n, C_n)$ ma rozwiązanie?
@@ -118,11 +118,11 @@ można przekształcić na wejścia dla problemu B w czasie wielomianowym, a nast
 wywołując procedurę rozwiązującą problem B wielomianową ilość razy.
 \end{definition}
 \begin{example}
-    Można zdefiniować mnożenie liczb $a \cdot b$ za pomocą operacji dodawania w następujący sposób:
+    Mnożenie liczb $a \cdot b$ można zdefiniować za pomocą operacji dodawania w następujący sposób:
 $$a \cdot b = \underbrace{a + a + \ldots + a}_{b}$$
 \end{example}
     Należy zauważyć, że jeśli problem \textit{A} jest redukowalny do problemu \textit{B} w czasie wielomianowym,
-a problem \textit{B} należy do klasy P, to także problem \textit{A} należy do klasy P, jako że
+a problem \textit{B} należy do klasy P, to problem \textit{A} także należy do klasy P, jako że
 sposobem na jego rozwiązanie jest użycie redukcji wielomianowej by traktować go jako instancję problemu \textit{B},
 a następnie rozwiązanie go za pomocą algorytmu działającego w czasie wielomianowym.
 \begin{corollary}

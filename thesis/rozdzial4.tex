@@ -1,8 +1,8 @@
 \chapter{Solver nonogramów}
 \thispagestyle{chapterBeginStyle}
 
-    W tym rozdziale opisany jest rozwój solvera. Opisane są kolejne główne wersje solverów, zbadany
-jest także wpływ zastosowanych heurystyk na wydajność w rozwiązywaniu wybranych łamigłówek.
+    W tym rozdziale opisany jest rozwój solvera. Opisane są kolejne główne wersje solverów. Zbadany
+został także wpływ zastosowanych heurystyk na wydajność w rozwiązywaniu wybranych łamigłówek.
 
 
 
@@ -172,7 +172,8 @@ solver zakłada poprawność kolejnej kombinacji dla tej linii.
     \SetKwFunction{UzupelnijKolejke}{UzupelnijKolejke}
     \KwIn{Lista wierszy $R$ i kolumn $C$, kolejka $Q$}
     \KwOut{Czy znaleziono rozwiązanie \texttt{true/false}}
-    \ForEach{$linia \in Q$}{
+    \While{$Q.zawieraElementy()$}{
+        $linia \leftarrow Q.pop()$\;
         \SprawdzLinie{$linia$}\;
     }
     \If{$(\forall linia \in R \bigcup C)(|linia.kombinacje| = 1)$}{
@@ -199,6 +200,25 @@ solver zakłada poprawność kolejnej kombinacji dla tej linii.
     \caption{SolverEliminacyjny}\label{alg:eliminationSolver}
 \end{pseudokod}
 
+\begin{pseudokod}[h]
+    %\SetAlTitleFnt{small}
+    \SetArgSty{normalfont}
+    \SetKwFunction{WeryfikujKombinacje}{WeryfikujKombinacje}
+    \KwIn{Linia $l$}
+    \ForEach{$komb \in l.kombinacje$}{
+        \If{\texttt{!WeryfikujKombinacje}($l$)}{
+            $l.kombinacje.usun(l)$\;
+        }
+    }
+    \ForEach{$i \in \{1, 2, \ldots, |l|\}$}{
+        \If{$l[i] =$ \textit{nieznany} $\land$ pole identyczne we wszystkich kombinacjach}{
+            $l[i] = $ nowy stan\;
+            $Q.dodaj$(linia prostopadła do $l$ o indeksie $i$)\;
+        }
+    }
+    \caption{SprawdzLinie}\label{alg:eliminationSolver_checkLine}
+\end{pseudokod}
+
     Istotna uwaga dotyczy charakterystyki wierszy i kolumn. W celu umożliwienia działania procedury
 został wykorzystany mechanizm obecny w wielu powszechnie używanych językach programowania, mianowicie
 mechanizm płytkiej kopii. Mimo że listy wierszy i kolumn zawierają inne obiekty (listy), to obiekty
@@ -221,7 +241,7 @@ czas pozostałych 3 prób zostaje uśredniony i podany jako wynik badania. Jeśl
 iteracji testu przekroczy 5 minut, to test zostaje przerwany i do komórki zostaje wpisany wynik
 \textit{przekroczono}.
 
-    Testy zostały przeprowadzone na komputerze z procesorem Intel Core i5-6300HQ \cite{i5-6300hq}, z
+    Testy zostały przeprowadzone na komputerze z procesorem Intel Core i5-6300HQ, z
 16GB pamięci RAM o taktowaniu 2133Mhz. Testy zostały uruchomione w środowisku Node.js \cite{node}
 w wersji v14.18.2. Czas rozwiązywania łamigłówek na urządzeniu mobilnym może znacząco odbiegać
 od czasów zaprezentowanych w wynikach, z powodu mniejszych zasobów i zastosowanego środowiska
