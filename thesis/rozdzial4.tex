@@ -213,81 +213,335 @@ zawartej w $n$-tej komórce w $m$-tej kolumnie w liście kolumn.
 modyfikacji i heurystyk na ich wydajność.
 
 
-\subsection{Solver całościowy}
+\subsection{Metodyka badań}
+    Metoda prowadzenia badań jest następująca: dla każdej łamigłówki prowadzonych jest 5 prób 
+rozwiązania. Próby z minimalnym oraz maksymalnym czasem rozwiązywania zostają odrzucone, w celu
+eliminacji błędów powstałych na skutek zaburzeń występujących w trakcie prowadzenia testu. Następnie
+czas pozostałych 3 prób zostaje uśredniony i podany jako wynik badania. Jeśli czas wykonania
+iteracji testu przekroczy 5 minut, to test zostaje przerwany i do komórki zostaje wpisany wynik
+\textit{przekroczono}.
 
-\begin{center}
-    \begin{tabular}{|c|c|r r|}
-        \hline
-        {}          & {}        & \multicolumn{2}{c|}{Czas rozwiązywania w ms} \\
-        Nazwa       & Rozmiar   & bez modyfikacji & z częściową weryfikacją \\
-        \hline
-        Cross       & 3 & 1                     & 1 \\
-        Flame       & 5 & 46                    & 15 \\
-        Jellyfish   & 8 & \textit{przekroczono} & \textit{przekroczono} \\
-        \hline
-    \end{tabular}
-\end{center}
+    Testy zostały przeprowadzone na komputerze z procesorem Intel Core i5-6300HQ \cite{i5-6300hq}, z
+16GB pamięci RAM o taktowaniu 2133Mhz. Testy zostały uruchomione w środowisku Node.js \cite{node}
+w wersji v14.18.2. Czas rozwiązywania łamigłówek na urządzeniu mobilnym może znacząco odbiegać
+od czasów zaprezentowanych w wynikach, z powodu mniejszych zasobów i zastosowanego środowiska
+uruchomieniowego.
+
+    Wyniki zostały zaprezentowane w tabelach o następującym układzie: w pierwszych dwóch kolumnach
+zostały podane nazwy łamigłówek i ich wielkości (łamigłówki są zadane na planszach kwadratowych).
+W kolejnych kolumnach, nazwanych odpowiednio do zastosowanej modyfikacji bądź jej braku,
+podany jest czas rozwiązywania nonogramu wyrażony w milisekundach. Czas jest zaokrąglony do pełnych
+milisekund, zatem dla prostych łamigłówek może być wyrażony jako 0.
+
+    Zestaw danych użyty do testów został przedstawiony na końcu rozdziału.
+
+
+\subsection{Solver całościowy}
+    Wydajność solvera całościowego została sprawdzona na zestawie 4 łamigłówek.
+
+\subsubsection{Wyniki}
+\begin{table}[h]
+    \begin{center}
+        \begin{tabular}{|c|c|r|}
+            \hline
+            Nazwa          & Rozmiar        & Czas rozwiązywania w ms \\
+            \hline
+            Cross       & 3 & 1                     \\
+            Flame       & 5 & 46                    \\
+            Jellyfish   & 8 & \textit{przekroczono} \\
+            Candy       & 8 & \textit{przekroczono} \\
+            \hline
+        \end{tabular}
+    \end{center}
+    \caption{Wyniki testów dla solvera całościowego}
+\end{table}
+
+\subsubsection{Interpretacja}
+    Solver całościowy jest w stanie dość szybko rozwiązać niewielkie łamigłówki,
+ale czas jego pracy rośnie bardzo szybko wraz ze wzrostem wielkości planszy.
 
 
 \subsection{Solver osiowy}
+    Wydajność solvera całościowego została sprawdzona na pełnym zestawie 18 łamigłówek. Został
+on poddany jednej modyfikacji.
 
-\begin{center}
-    \begin{tabular}{|c|c|r r|}
-        \hline
-        {}          & {}        & \multicolumn{2}{c|}{Czas rozwiązywania w ms} \\
-        Nazwa       & Rozmiar   & bez modyfikacji & z częściową weryfikacją \\
-        \hline
-        Cross       & 3         & 0                     & 0 \\
-        Flame       & 5         & 0                     & 0 \\
-        Jellyfish   & 8         & 463                   & 2 \\
-        Candy       & 8         & 0                     & 0 \\
-        Shield      & 10        & \textit{przekroczono} & 3 \\
-        Dog         & 10        & \textit{przekroczono} & 1 \\
-        Duck        & 16        & \textit{przekroczono} & 12 \\
-        Shrimp      & 16        & \textit{przekroczono} & 14 \\
-        Cherries    & 20        & \textit{przekroczono} & 25 \\
-        Potion      & 20        & \textit{przekroczono} & 315 \\
-        Tape        & 25        & \textit{przekroczono} & 1091 \\
-        Lighter     & 25        & \textit{przekroczono} & 60945 \\
-        \hline
-        Ghost       & 32        & \textit{przekroczono} & 40040 \\
-        Demon       & 32        & \textit{przekroczono} & 3997 \\
-        Butcher     & 48        & \textit{przekroczono} & \textit{przekroczono} \\
-        Ranger      & 48        & \textit{przekroczono} & 59703 \\
-        Orc         & 64        & \textit{przekroczono} & \textit{przekroczono} \\
-        Swordsman   & 64        & \textit{przekroczono} & \textit{przekroczono} \\
-        \hline
-    \end{tabular}
-\end{center}
+\subsubsection{Modyfikacje}
+    \textbf{Częściowa weryfikacja} rozwiązania polega na wykorzystaniu procedury częsciowej weryfikacji.
+Jest ona podobna do procedury weryfikacji w osi, ale nie sprawdza poprawności całej planszy,
+a jedynie sprawdza czy dany układ może prowadzić do poprawnego rozwiązania (czyli czy nie ma sprzeczności na tym etapie).
+Procedura otrzymuje głębokość dla jakiej ma zweryfikować poprawność. Jeśli do danej głębokości nie
+występuje sprzeczność, to rozwiązanie jest konstruowane dalej. W przeciwnym przypadku, w danej gałęzi
+nie może być poprawnego rozwiązania, i solver przechodzi do innej gałęzi.
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/partial_check_example.png}
+    \caption{Na tym etapie można zdyskwalifikować każde rozwiązanie zawierające pierwszy i drugi wiersz
+w układzie widocznym na grafice}
+\end{figure}
+
+
+
+\subsubsection{Wyniki}
+\begin{table}[h!]
+    \begin{center}
+        \begin{tabular}{|c|c|r r|}
+            \hline
+            {}          & {}        & \multicolumn{2}{c|}{Czas rozwiązywania w ms} \\
+            Nazwa       & Rozmiar   & bez modyfikacji & z częściową weryfikacją \\
+            \hline
+            Cross       & 3         & 0                     & 0 \\
+            Flame       & 5         & 0                     & 0 \\
+            Jellyfish   & 8         & 463                   & 2 \\
+            Candy       & 8         & 0                     & 0 \\
+            Shield      & 10        & \textit{przekroczono} & 3 \\
+            Dog         & 10        & 12004                 & 1 \\
+            Duck        & 16        & \textit{przekroczono} & 12 \\
+            Shrimp      & 16        & \textit{przekroczono} & 14 \\
+            Cherries    & 20        & \textit{przekroczono} & 25 \\
+            Potion      & 20        & \textit{przekroczono} & 315 \\
+            Tape        & 25        & \textit{przekroczono} & 1091 \\
+            Lighter     & 25        & \textit{przekroczono} & 60945 \\
+            \hline
+            Ghost       & 32        & \textit{przekroczono} & 40040 \\
+            Demon       & 32        & \textit{przekroczono} & 3997 \\
+            Butcher     & 48        & \textit{przekroczono} & \textit{przekroczono} \\
+            Ranger      & 48        & \textit{przekroczono} & 59703 \\
+            Orc         & 64        & \textit{przekroczono} & \textit{przekroczono} \\
+            Swordsman   & 64        & \textit{przekroczono} & \textit{przekroczono} \\
+            \hline
+        \end{tabular}
+    \end{center}
+    \caption{Wyniki testów dla solvera osiowego}
+\end{table}
+
+\subsubsection{Interpretacja}
+    W podstawowej wersji, solver osiowy ma niewiele lepszą wydajność od solvera całościowego,
+będąc w stanie rozwiązać niektóre łamigłówki wielkości 10 przy nałożonym ograniczeniu czasowym. 
+Jednak po dodaniu częsciowej weryfikacji, wydajność solvera drastycznie wzrasta, i może zostać
+wykorzystany do rozwiązywania łamigłówek o wiele większych niż w przypadku podstawowej wersji.
+Pokazuje to jak kluczowa jest wstępna eliminacja niepożądanych gałęzi przy rozwiązywaniu danego
+problemu.
 
 
 \subsection{Solver eliminacyjny}
+    Wydajność solvera całościowego została sprawdzona na pełnym zestawie 18 łamigłówek.
 
-\begin{center}
-    \begin{tabular}{|c|c|r r r r r r r|}
-        \hline
-        {}          & {}        & \multicolumn{7}{c|}{Czas rozwiązywania w ms} \\
-        Nazwa       & Rozmiar   & baza & bez przerw. & fifo & kolumny & min komb. & max komb. & śl. ind. \\
-        \hline
-        Cross       & 3         & 0     & 0     & 0     & 0     & 0     & 0     & 0     \\
-        Flame       & 5         & 0     & 0     & 0     & 0     & 0     & 0     & 0     \\
-        Jellyfish   & 8         & 1     & 1     & 2     & 1     & 1     & 1     & 1     \\
-        Candy       & 8         & 0     & 0     & 0     & 0     & 0     & 0     & 0     \\
-        Shield      & 10        & 2     & 2     & 1     & 2     & 2     & 1     & 2     \\
-        Dog         & 10        & 1     & 0     & 1     & 0     & 0     & 1     & 1     \\
-        Duck        & 16        & 2     & 1     & 1     & 1     & 1     & 1     & 2     \\
-        Shrimp      & 16        & 1     & 1     & 1     & 1     & 1     & 1     & 1     \\
-        Cherries    & 20        & 3     & 3     & 4     & 3     & 3     & 3     & 3     \\
-        Potion      & 20        & 12    & 13    & 13    & 13    & 13    & 13    & 13    \\
-        Tape        & 25        & 2     & 2     & 2     & 2     & 2     & 2     & 3     \\
-        Lighter     & 25        & 13    & 13    & 13    & 13    & 12    & 13    & 13    \\
-        \hline
-        Ghost       & 32        & 47    & 47    & 47    & 48    & 45    & 47    & 54    \\
-        Demon       & 32        & 1787  & 1817  & 2380  & 1806  & 1800  & 1822  & 1127  \\
-        Butcher     & 48        & 1811  & 1809  & 1884  & 1819  & 1790  & 1791  & 1717  \\
-        Ranger      & 48        & 46    & 48    & 44    & 47    & 47    & 48    & 59    \\
-        Orc         & 64        & 1463  & 1454  & 1413  & 1446  & 1465  & 1456  & 1311  \\
-        Swordsman   & 64        & 1440  & 1467  & 1489  & 1451  & 1429  & 1432  & 1451  \\
-        \hline
-    \end{tabular}
-\end{center}
+\subsubsection{Modyfikacje}
+    \textbf{Rozwiązywanie bez przerywania} (\textit{bez przerw.}) to modyfikacja polegająca na
+usunięciu warunkowego przerwania szukania rozwiązania. Zamiast przerwać w momencie znalezienia
+kolumny nie zawierającej żadnej poprawnej kombinacji, solver szuka dalej, aż do opróżnienia kolejki,
+i dopiero wtedy informuje o braku rozwiązania. Z uwagi na częste korzystanie z kolejki, eliminacja
+tej instrukcji mogłaby skrócić czas wykonywania jednego sprawdzenia linii.
+
+    \textbf{Zakładanie dla kolumn} (\textit{kolumny}) zmienia kolejność zakładania. Linia z wieloma
+kombinacjami jest szukana najpierw na liście kolumn, a dopiero potem na liście wierszy. Ta modyfikacja
+opiera się na założeniu, że układ wypełnionych pól w łamigłówkach powoduje lepszą wydajność
+przy rozwiązywaniu pionowym.
+
+    \textbf{Zakładanie dla linii z minimalną/maksymalną liczbą kombinacji} (\textit{min/max komb.})
+dokonuje założenia dla linii z najmniejszą/największą liczbą poprawnych kombinacji. W ten sposób
+badany jest wpływ doboru sposobu zakładania na czas szukania rozwiązania.
+
+    \textbf{Kolejność linii w kolejce} to seria modyfikacji sprawdzających wpływ typu kolejki
+na czas rozwiązania. W kolumnie \textit{lifo} podane są wyniki dla kolejki, w której nowo dodane
+bądź ponownie dodane linie są przesuwane na początek kolejki. W \textit{fifo} przedmioty są wrzucane
+na koniec kolejki. \textit{bez zm.} oznacza, że przedmioty są ustawiane na początku kolejki, ale
+ponowne dodanie nie zmienia kolejności przedmiotów w kolejce. W kolejnych trzech kolumnach
+(\textit{śl. ind. lifo}, \textit{śl. ind. fifo}, \textit{śl. ind. bez zm.}) badane są te same
+własności kolejki, ale struktura ta zostaje zmodyfikowana tak, by śledzić linie wraz ze zmodyfikowanymi
+indeksami. Dzięki temu nie jest konieczne sprawdzenie każdego indeksu w linii, a jedynie tych komórek
+dla których zaszła zmiana.
+
+
+\subsubsection{Wyniki}
+
+\begin{table}[h!]
+    \begin{center}
+        \begin{tabular}{|c|c|r r r r r|}
+            \hline
+            {}          & {}        & \multicolumn{5}{c|}{Czas rozwiązywania w ms} \\
+            Nazwa       & Rozmiar   & bez modyfikacji & bez przerw. & kolumny & min komb. & max komb. \\
+            \hline
+            Cross       & 3         & 0     & 0     & 0     & 0     & 0     \\
+            Flame       & 5         & 0     & 0     & 0     & 0     & 0     \\
+            Jellyfish   & 8         & 1     & 1     & 1     & 1     & 1     \\
+            Candy       & 8         & 0     & 0     & 0     & 0     & 0     \\
+            Shield      & 10        & 2     & 2     & 2     & 2     & 1     \\
+            Dog         & 10        & 1     & 0     & 0     & 0     & 1     \\
+            Duck        & 16        & 2     & 1     & 1     & 1     & 1     \\
+            Shrimp      & 16        & 1     & 1     & 1     & 1     & 1     \\
+            Cherries    & 20        & 3     & 3     & 3     & 3     & 3     \\
+            Potion      & 20        & 12    & 13    & 13    & 13    & 13    \\
+            Tape        & 25        & 2     & 2     & 2     & 2     & 2     \\
+            Lighter     & 25        & 13    & 13    & 13    & 12    & 13    \\
+            \hline
+            Ghost       & 32        & 47    & 47    & 48    & 45    & 47    \\
+            Demon       & 32        & 1787  & 1817  & 1806  & 1800  & 1822  \\
+            Butcher     & 48        & 1811  & 1809  & 1819  & 1790  & 1791  \\
+            Ranger      & 48        & 46    & 48    & 47    & 47    & 48    \\
+            Orc         & 64        & 1463  & 1454  & 1446  & 1465  & 1456  \\
+            Swordsman   & 64        & 1440  & 1467  & 1451  & 1429  & 1432  \\
+            \hline
+        \end{tabular}
+    \end{center}
+    \caption{I część wyników dla solvera eliminacyjnego}
+\end{table}
+
+\begin{table}[h]
+    \begin{center}
+        \begin{tabular}{|c|c|r r r r r r|}
+            \hline
+            {}          & {}        & \multicolumn{6}{c|}{Czas rozwiązywania w ms} \\
+            Nazwa       & Rozmiar   & lifo & fifo & bez zm. & śl. ind. lifo & śl. ind. fifo & śl. ind. bez zm. \\
+            \hline
+            Cross       & 3         & 0     & 0     & 0     & 0     & 0     & 0     \\
+            Flame       & 5         & 0     & 0     & 0     & 0     & 0     & 0     \\
+            Jellyfish   & 8         & 1     & 2     & 2     & 2     & 1     & 1     \\
+            Candy       & 8         & 0     & 0     & 0     & 0     & 0     & 0     \\
+            Shield      & 10        & 2     & 1     & 1     & 2     & 3     & 2     \\
+            Dog         & 10        & 1     & 1     & 1     & 1     & 0     & 1     \\
+            Duck        & 16        & 2     & 1     & 2     & 2     & 2     & 2     \\
+            Shrimp      & 16        & 1     & 1     & 1     & 1     & 1     & 1     \\
+            Cherries    & 20        & 3     & 4     & 4     & 3     & 4     & 3     \\
+            Potion      & 20        & 12    & 13    & 14    & 16    & 16    & 13    \\
+            Tape        & 25        & 2     & 2     & 2     & 4     & 3     & 3     \\
+            Lighter     & 25        & 13    & 13    & 13    & 13    & 15    & 13    \\
+            \hline
+            Ghost       & 32        & 47    & 47    & 52    & 56    & 72    & 54    \\
+            Demon       & 32        & 1787  & 2380  & 1980  & 1194  & 1257  & 1127  \\
+            Butcher     & 48        & 1811  & 1884  & 1798  & 1854  & 1962  & 1717  \\
+            Ranger      & 48        & 46    & 44    & 53    & 61    & 62    & 59    \\
+            Orc         & 64        & 1463  & 1413  & 1437  & 1413  & 1415  & 1311  \\
+            Swordsman   & 64        & 1440  & 1489  & 1544  & 1534  & 1608  & 1451  \\
+            \hline
+        \end{tabular}
+    \end{center}
+    \caption{II część wyników dla solvera eliminacyjnego}
+\end{table}
+
+\subsubsection{Interpretacja}
+    Solver eliminacyjny jest najszybszym z zaprezentowanych solverów. Jest w stanie rozwiązać
+nawet największe, 64x64 nonogramy w założonym ograniczeniu czasowym. Każdą ze sprawdzanych łamigłówek
+rozwiązuje szybciej niż solver osiowy. Na szczególną uwagę zasługuje szybkość rozwiązania nonogramów
+\textit{Ghost} i \textit{Ranger}. Dzięki oparciu się o informacje wywnioskowane z poprzednio
+rozpatrywanych linii, solver może rozwiązać nawet łamigłówki o dużych rozmiarach bez zakładania
+układu linii, lub z minimalną jego ilością.
+
+    Pierwsza seria modyfikacji nie miała dużego wpływu na czas rozwiązywania. W drugiej serii
+modyfikacji, niektóre modyfikacje okazały się kluczowe dla czasu działania. Użycie kolejki
+typu \textit{first-in first-out} z przerzucaniem na koniec przy aktualizacji linii znacznie spowolniło
+czas rozwiązywania łamigłówki \textit{Demon} w przypadku bazowej wersji solvera,
+a w przypadku wersji ze śledzeniem indeksów różnica była mniejsza, ale zauważalna.
+Oprócz tego, modyfikacja struktury danych w celu śledzenia modyfikowanych indeksów
+okazała się dobrym pomysłem, jako że solver korzystający z niej (\textit{śl. ind. bez zm.}) osiągnął
+najlepsze czasy dla trudniejszych łamigłówek (np. \textit{Demon}, \textit{Butcher}), 
+będąc nieznacznie wolniejszym dla łamigłówek prostszych (np. \textit{Ghost}, \textit{Ranger}).
+
+
+\subsection{Wnioski}
+    Solver eliminacyjny jest najwydajniejszym z zaproponowanych solverów. Dzięki oparciu na pewnych
+informacjach i ograniczeniu zakładania, a co za tym idzie back-trackingu, może rozwiązać zadaną
+łamigłówkę szybbiej niż inne solvery. W przypadku solvera osiowego, introdukcja częściowej weryfikacji
+bardzo poprawiła jego wydajność.
+
+
+\subsection{Zestaw danych}
+    Do przeprowadzenia badań zostały użyte następujące obrazy, które po konwersji zostały przekazane do solverów
+jako zestaw wskazówek. Grafiki zawierające kolor biały zostały nałożone na tło w kolorze magenta
+w celu wyróżnienia tego koloru na tle białej kartki.
+
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}[b]{0.1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/3x3_cross.png}
+        \caption{Cross}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/5x5_flame.png}
+        \caption{Flame}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/8x8_jellyfish.png}
+        \caption{Jellyfish}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/8x8_candy.png}
+        \caption{Candy}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/10x10_shield.png}
+        \caption{Shield}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/10x10_dog.png}
+        \caption{Dog}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/16x16_duck.png}
+        \caption{Duck}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/16x16_shrimp.png}
+        \caption{Shrimp}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/20x20_cherries.png}
+        \caption{Cherries}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/20x20_potion.png}
+        \caption{Potion}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/25x25_tape.png}
+        \caption{Tape}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/25x25_lighter.png}
+        \caption{Lighter}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/32x32_ghost.png}
+        \caption{Ghost}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/32x32_demon.png}
+        \caption{Demon}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/48x48_butcher.png}
+        \caption{Butcher}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/48x48_ranger.png}
+        \caption{Ranger}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/64x64_orc.png}
+        \caption{Orc}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/data_set/64x64_swordsman.png}
+        \caption{Swordsman}
+    \end{subfigure}
+    \caption{Zestaw danych}
+\end{figure}
