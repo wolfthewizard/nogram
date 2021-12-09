@@ -60,6 +60,7 @@ class Solver {
     height,
     initialFields,
     setFields,
+    setSolveMessage,
     rowHintsWithZeros,
     colHintsWithZeros,
   ) {
@@ -108,8 +109,10 @@ class Solver {
         ),
       );
       console.log(`Solving took ${(endTime - startTime) / 1000}s`);
+      setSolveMessage(`Solved in ${(endTime - startTime) / 1000}s.`);
     } else {
       console.log('unsolvable');
+      setSolveMessage('Puzzle is unsolvable.');
     }
   }
 

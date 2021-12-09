@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
-import {Button} from 'react-native-elements';
+import {Button, Text} from 'react-native-elements';
 import Colors from '../data/Colors';
 import Solver from '../solver/EliminationSolver';
 import FieldStates from '../enums/FieldStates';
@@ -8,7 +8,7 @@ import FastBoard from '../components/FastBoard';
 
 const SolverSolvingActivity = ({route, navigation}) => {
   const {gameData} = route.params;
-  // const [fields, setFields] = useState(gameData.fields);
+  const [solveMessage, setSolveMessage] = useState('');
   const [fields, setFields] = useState(
     [...Array(gameData.boardHeight).keys()].map(() =>
       [...Array(gameData.boardWidth).keys()].map(() => ({
@@ -40,7 +40,14 @@ const SolverSolvingActivity = ({route, navigation}) => {
           colHintsPredefined={gameData.colHints}
         />
       </View>
-      <View style={{paddingTop: 20, flex: 0.2}}>
+      <View style={{paddingTop: 20, flex: 0.1}}>
+        <Text style={{color: 'white', fontSize: 24}}>{solveMessage}</Text>
+      </View>
+      <View
+        style={{
+          paddingBottom: 20,
+          flex: 0.1,
+        }}>
         <Button
           title="Solve"
           onPress={() => {
@@ -49,6 +56,7 @@ const SolverSolvingActivity = ({route, navigation}) => {
               gameData.boardHeight,
               fields,
               setFields,
+              setSolveMessage,
               gameData.rowHints,
               gameData.colHints,
             );
