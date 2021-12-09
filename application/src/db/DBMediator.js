@@ -17,7 +17,7 @@ const force_repopulate = false;
 const getDBConnection = async () =>
   openDatabase({name: DB_NAME, location: 'default'});
 
-const initDb = async () => {
+const initDb = async (callback) => {
   const db = await getDBConnection();
   // const dropTableQuery = `drop table if exists ${USER_PUZZLES_TABLE_NAME}`;
   // await db.executeSql(dropTableQuery);
@@ -47,6 +47,7 @@ const initDb = async () => {
         await db.executeSql(insertPuzzlePackQuery);
       }
     }
+    callback && callback();
   });
   const createDbQuery = `create table if not exists ${USER_PUZZLES_TABLE_NAME} (
     id integer not null primary key,
@@ -113,6 +114,7 @@ const initDb = async () => {
         await db.executeSql(insertPuzzleQuery);
       }
     }
+    callback && callback();
   });
   const createSolverPuzzleTableQuery = `create table if not exists ${SOLVER_PUZZLES_TABLE_NAME} (
     id integer not null primary key,
@@ -146,7 +148,9 @@ const initDb = async () => {
         await db.executeSql(insertPuzzleQuery);
       }
     }
+    callback && callback();
   });
+  callback && callback();
 };
 
 const getDbSize = async (callback) => {
@@ -174,6 +178,5 @@ const getSolverPuzzlesSize = async (callback) => {
 };
 
 enablePromise(true);
-initDb();
 
-export {getDBConnection};
+export {getDBConnection, initDb};

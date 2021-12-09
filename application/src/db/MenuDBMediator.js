@@ -8,20 +8,20 @@ const getPuzzlePackList = async (callback) => {
     const puzzlePacks = [];
     const results = await db.executeSql(
       `select 
-            ${PUZZLE_PACKS_TABLE_NAME}.id, 
-            ${PUZZLE_PACKS_TABLE_NAME}.name, 
-            ${PUZZLE_PACKS_TABLE_NAME}.imgPath,
-            count(${USER_PUZZLES_TABLE_NAME}.id) as totalPuzzles,
-            sum(
-                case when 
-                    ${USER_PUZZLES_TABLE_NAME}.finishType = ${FinishType.FINISHED_WITHOUT_LOSING} or
-                    ${USER_PUZZLES_TABLE_NAME}.finishType = ${FinishType.FINISHED_WITH_LOSING}
-                then 1 else 0 end
-            ) as completedPuzzles
-        from ${PUZZLE_PACKS_TABLE_NAME}
-        left join ${USER_PUZZLES_TABLE_NAME}
-            on ${PUZZLE_PACKS_TABLE_NAME}.id = ${USER_PUZZLES_TABLE_NAME}.packId
-        group by ${PUZZLE_PACKS_TABLE_NAME}.id;`,
+        ${PUZZLE_PACKS_TABLE_NAME}.id, 
+        ${PUZZLE_PACKS_TABLE_NAME}.name, 
+        ${PUZZLE_PACKS_TABLE_NAME}.imgPath,
+        count(${USER_PUZZLES_TABLE_NAME}.id) as totalPuzzles,
+        sum(
+          case when 
+            ${USER_PUZZLES_TABLE_NAME}.finishType = ${FinishType.FINISHED_WITHOUT_LOSING} or
+            ${USER_PUZZLES_TABLE_NAME}.finishType = ${FinishType.FINISHED_WITH_LOSING}
+          then 1 else 0 end
+        ) as completedPuzzles
+      from ${PUZZLE_PACKS_TABLE_NAME}
+      left join ${USER_PUZZLES_TABLE_NAME}
+        on ${PUZZLE_PACKS_TABLE_NAME}.id = ${USER_PUZZLES_TABLE_NAME}.packId
+      group by ${PUZZLE_PACKS_TABLE_NAME}.id;`,
     );
     results.forEach((result) => {
       for (let index = 0; index < result.rows.length; index++) {

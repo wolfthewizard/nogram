@@ -11,21 +11,21 @@ const solverPuzzles = [
     boardWidth: 5,
     boardHeight: 5,
     rowHints: [[1], [2], [3], [1, 1], [2]],
-    colHints: [[], [4], [3, 1], [2], []],
+    colHints: [[0], [4], [3, 1], [2], [0]],
   },
   {
     name: 'Jellyfish',
     boardWidth: 8,
     boardHeight: 8,
     rowHints: [[3], [7], [5], [5], [5], [1, 1, 1], [1, 1, 1], [1]],
-    colHints: [[1, 1], [5], [5], [7], [5, 1], [5], [1, 1], []],
+    colHints: [[1, 1], [5], [5], [7], [5, 1], [5], [1, 1], [0]],
   },
   {
     name: 'Shield',
     boardWidth: 10,
     boardHeight: 10,
     rowHints: [
-      [],
+      [0],
       [9],
       [1, 1],
       [1, 1, 1, 1, 1],
@@ -46,7 +46,7 @@ const solverPuzzles = [
       [1, 1, 1, 1],
       [1, 2],
       [5],
-      [],
+      [0],
     ],
   },
   {
@@ -69,7 +69,7 @@ const solverPuzzles = [
       [3],
       [4],
       [4],
-      [],
+      [0],
     ],
     colHints: [
       [2],
@@ -87,7 +87,7 @@ const solverPuzzles = [
       [4],
       [4],
       [2],
-      [],
+      [0],
     ],
   },
   {
@@ -114,10 +114,10 @@ const solverPuzzles = [
       [15],
       [5, 7],
       [5],
-      [],
+      [0],
     ],
     colHints: [
-      [],
+      [0],
       [5],
       [7],
       [9],
@@ -136,7 +136,7 @@ const solverPuzzles = [
       [3, 5],
       [3],
       [1],
-      [],
+      [0],
     ],
   },
   {
@@ -144,7 +144,7 @@ const solverPuzzles = [
     boardWidth: 25,
     boardHeight: 25,
     rowHints: [
-      [],
+      [0],
       [12],
       [13],
       [15],
@@ -168,7 +168,7 @@ const solverPuzzles = [
       [14],
       [12],
       [8],
-      [],
+      [0],
     ],
     colHints: [
       [1],

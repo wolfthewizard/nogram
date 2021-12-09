@@ -1,8 +1,8 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React from 'react';
-import {View} from 'react-native';
+import React, {useEffect, useMemo, useState} from 'react';
+import {ActivityIndicator, View} from 'react-native';
 import UserChoosingActivity from './src/activities/UserChoosingActivity';
 import UserSolvingActivity from './src/activities/UserSolvingActivity';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -15,6 +15,7 @@ import SolverChoosingActivity from './src/activities/SolverChoosingActivity';
 import {Text} from 'react-native-elements';
 import SolverSolvingActivity from './src/activities/SolverSolvingActivity';
 import SolverInputActivity from './src/activities/SolverInputActivity';
+import {initDb} from './src/db/DBMediator';
 
 const TabNavigator = createBottomTabNavigator();
 
@@ -88,9 +89,22 @@ const AppNavigation = () => (
 );
 
 const App = () => {
+  const [dbReady, setDbReady] = useState(false);
+  const [dbSetupId, setDbSetupId] = useState(0);
+
+  useEffect(() => {
+    initDb(() => setDbSetupId((prevDbSetupId) => prevDbSetupId + 1));
+  }, []);
+
+  useEffect(() => dbSetupId >= 4 && setDbReady(true), [dbSetupId]);
+
   return (
     <View style={styles.application}>
-      <AppNavigation />
+      {dbReady ? (
+        <AppNavigation />
+      ) : (
+        <ActivityIndicator size="large" color={Colors.copper} />
+      )}
     </View>
   );
 };
