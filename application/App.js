@@ -1,14 +1,11 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, View} from 'react-native';
 import UserChoosingActivity from './src/activities/UserChoosingActivity';
 import UserSolvingActivity from './src/activities/UserSolvingActivity';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-// todo: resolve race condition: initial db population vs db data retrieval
-
 import styles from './src/data/Styles';
 import Colors from './src/data/Colors';
 import SolverChoosingActivity from './src/activities/SolverChoosingActivity';
