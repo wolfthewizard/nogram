@@ -19,12 +19,13 @@ const getDBConnection = async () =>
 
 const initDb = async (callback) => {
   const db = await getDBConnection();
-  // const dropTableQuery = `drop table if exists ${USER_PUZZLES_TABLE_NAME}`;
+  // const dropTableQuery = `drop table if exists ${PUZZLE_PACKS_TABLE_NAME}`;
   // await db.executeSql(dropTableQuery);
   const createPuzzlePacksQuery = `create table if not exists ${PUZZLE_PACKS_TABLE_NAME} (
     id integer not null primary key,
     name text not null,
-    imgPath text not null
+    imgPath text not null,
+    size integer not null
   );`;
   await db.executeSql(createPuzzlePacksQuery);
   getPuzzlePacksSize(async (size) => {
@@ -38,17 +39,21 @@ const initDb = async (callback) => {
         const insertPuzzlePackQuery = `insert into ${PUZZLE_PACKS_TABLE_NAME} (
           id,
           name, 
-          imgPath
+          imgPath,
+          size
         ) values (
           ${puzzlePack.id},
           '${puzzlePack.name}',
-          '${puzzlePack.imgPath}'
+          '${puzzlePack.imgPath}',
+          '${puzzlePack.size}'
         );`;
         await db.executeSql(insertPuzzlePackQuery);
       }
     }
     callback && callback();
   });
+  // const dropTableQuery = `drop table if exists ${USER_PUZZLES_TABLE_NAME}`;
+  // await db.executeSql(dropTableQuery);
   const createDbQuery = `create table if not exists ${USER_PUZZLES_TABLE_NAME} (
     id integer not null primary key,
     packId integer not null,

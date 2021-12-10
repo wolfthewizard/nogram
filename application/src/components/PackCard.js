@@ -2,6 +2,7 @@ import React from 'react';
 import {Image, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-elements';
 import Colors from '../data/Colors';
+import requiredAssets from '../db/requiredAssets';
 import ProgressBar from './ProgressBar';
 
 const PackCard = ({packData, openPack}) => {
@@ -17,7 +18,7 @@ const PackCard = ({packData, openPack}) => {
         }}>
         <View style={{flex: 0.7}}>
           <Image
-            source={require('../../res/pack_thumbnails/0_first_steps.png')}
+            source={requiredAssets[packData.imgPath]}
             style={{width: '100%', height: '100%', resizeMode: 'center'}}
           />
         </View>
@@ -29,6 +30,9 @@ const PackCard = ({packData, openPack}) => {
           }}>
           <Text style={{color: 'white', textAlign: 'center', fontSize: 20}}>
             {packData.name}
+          </Text>
+          <Text style={{color: 'white', textAlign: 'center', fontSize: 12}}>
+            {packData.size}x{packData.size}
           </Text>
           <View style={{width: '80%'}}>
             <ProgressBar

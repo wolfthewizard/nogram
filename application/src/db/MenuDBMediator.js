@@ -11,6 +11,7 @@ const getPuzzlePackList = async (callback) => {
         ${PUZZLE_PACKS_TABLE_NAME}.id, 
         ${PUZZLE_PACKS_TABLE_NAME}.name, 
         ${PUZZLE_PACKS_TABLE_NAME}.imgPath,
+        ${PUZZLE_PACKS_TABLE_NAME}.size,
         count(${USER_PUZZLES_TABLE_NAME}.id) as totalPuzzles,
         sum(
           case when 
