@@ -17,7 +17,7 @@ Meta Platforms Inc. oraz społeczność, i jej rozwój także jest nadzorowany p
 jest dostępny na licencji MIT.
 
 	Głównymi pojęciami potrzebnymi do tworzenia aplikacji w React Native są komponenty oraz stany.
-Komponenty reprezentują nie tylko podstawowe składniki interfejsu graficznego, jak pola tekstowe czy 
+Komponenty reprezentują nie tylko podstawowe składniki interfejsu graficznego, takie jak pola tekstowe czy 
 przyciski, ale także zestawy składników realizujące określoną funkcję, np. plansza do gry lub
 lista gier. Komponenty opierają się o stan, czyli zestaw informacji przechowywany w komponencie i
 komunikowany do użytkownika za pomocą interfejsu. Framework odświeża wygląd interfejsu przy zmianie
@@ -27,7 +27,7 @@ do aktualizacji komponentów korzystających z danego stanu.
 	Programowanie w React Native odbywa się za pomocą języka skryptowego JavaScript. Znak towarowy
 należy do Oracle \cite{JS-Oracle}, standard jest utrzymywany przez ECMA \cite{JS-ECMA}, 
 a uruchamiany jest na różnych silnikach rozwijanych zgodnie ze standardem 
-(np. V8 \cite{JS-V8} od Google, czy SpiderMonkey \cite{JS-SpiderMonkey} od Mozilli).
+(np. V8 \cite{JS-V8} od firmy Google, czy SpiderMonkey \cite{JS-SpiderMonkey} od Mozilli).
 
 
 \subsection{Dodatkowe biblioteki}
@@ -58,10 +58,9 @@ przedstawiony na diagramie poniżej.
 	Baza składa się z 3 tabel: paczek, łamigłówek i łamigłówek solvera. Paczki zawierają jedynie
 niezbędne dane do reprezentacji grupy łamigłówek, czyli nazwa i ikona. W tabeli łamigłówek zawarte
 są proste dane takie jak nazwa, maksymalna ilość żyć (ilość błędów, po których się przegrywa).
-Przechowywane są tam również informacje o stanie gry, tj. \texttt{statusRozwiązania} - łamigłówka
-nierozpoczęta i nierozwiązana, łamigłówka rozpoczęta, łamigłówka rozwiązana - oraz \texttt{typUkończenia} -
-łamigłówka nieukończona bez przegranej, łamigłówka nieukończona z przegraną, łamigłówka ukończona
+Przechowywane są tam również informacje o stanie gry, tj. \texttt{statusRozwiązania} — łamigłówka
+nierozpoczęta i nierozwiązana, łamigłówka rozpoczęta, łamigłówka rozwiązana — oraz \texttt{typUkończenia} — łamigłówka nieukończona bez przegranej, łamigłówka nieukończona z przegraną, łamigłówka ukończona
 bez przegranej, łamigłówka ukończona z przegraną. Pod zmienną \texttt{pola} przechowywana jest lista
 pól wraz z ich stanami, pod postacią stringa w formacie JSON. Tabela łamigłówek solvera także zawiera
-łamigłówki, ale w innej formie - zapisane jedynie jako listy wskazówek w formacie JSON oraz dane
+łamigłówki, ale w innej formie: łamigłówka zapisana jest jako listy wskazówek w formacie JSON oraz dane
 do identyfikacji, np. nazwa czy wielkość planszy.

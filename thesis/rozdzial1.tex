@@ -15,14 +15,14 @@ jakim jest rozwiązywanie nonogramów.
     Nonogramy (znane także jako \textit{Paint by Number} oraz \textit{Picross}) to łamigłówki, w których
 celem jest odpowiednie wypełnienie komórek na siatce tak, by uzyskać określony wzór (np. obrazek).
 W tym celu należy kolorować pola zgodnie ze wskazówkami umieszczonymi obok każdego wiersza oraz kolumny
-na siatce. Wskazówki mają postać ciągu liczb - każda z liczb oznacza ilość wypełnionych komórek z rzędu,
+na siatce. Wskazówki mają postać ciągu liczb — każda z liczb oznacza ilość wypełnionych komórek z rzędu,
 a pomiędzy grupami wypełnionych komórek znajduje się przynajmniej jedna pusta komórka.
 
     Uściślając powyższą, nieformalną definicję, nonogram to łamigłówka na siatce wielkości $w \times h$,
 gdzie $w$ oznacza szerokość planszy wyrażoną w ilości komórek, a $h$ wysokość planszy wyrażoną w
 ilości komórek. Dla każdego wiersza i kolumny mamy przedstawiony ciąg liczb $H_n$ będący wskazówką
-dla danej linii. Dany element $h_i$ opisuje blok stworzony z $h_i$ wypełnionych komórek z rzędu, i
-jeśli $h_i$ nie jest pierwszym elementem ciągu, to blok opisany przez $h_i$ jest oddzielony 
+dla danej linii. Dany element $h_i$ opisuje blok stworzony z $h_i$ wypełnionych komórek z rzędu i, jeśli
+$h_i$ nie jest pierwszym elementem ciągu, to blok opisany przez $h_i$ jest oddzielony 
 przynajmniej jedną pustą komórką od bloku opisanego przez $h_{i-1}$, 
 oraz jeśli $h_i$ nie jest ostatnim elementem ciągu, to blok opisany przez $h_i$ jest oddzielony
 przynajmniej jedną pustą komórką od bloku opisanego przez $h_{i+1}$. Linię spełniającą zadaną wskazówkę
@@ -86,7 +86,7 @@ należy przedstawić go w postaci problemu decyzyjnego.
     Znalezienie najkrótszej ścieżki między dwoma punktami w grafie należy do klasy P, ponieważ
 algorytm Dijkstry znajduje najkrótszą ścieżkę w czasie wielomianowym. Sformułowanie tego problemu
 w postaci problemu decyzyjnego mogłoby brzmieć następująco: Czy dla danego wejściowego grafu $G = (V, E)$
-istnieje ścieżka z punktu $v_1 \in V$ do punktu $v_2 \in V$ o długości niewiększej niż $x$?
+istnieje ścieżka z punktu $v_1 \in V$ do punktu $v_2 \in V$ o długości nie większej niż $x$?
 \end{example}
 
 
@@ -98,12 +98,12 @@ można zweryfikować w czasie wielomianowym.
 \begin{example}
     Mając zbiór $I$ przedmiotów, gdzie przedmiot $i_n$ to dwójka $(v_n, w_n)$, gdzie $v_n$ to wartość,
 a $w_n$ to waga, oraz ograniczenie górne na sumę wag wybranych przedmiotów $w_{max}$, czy można
-wybrać przedmioty w taki sposób by nie przekroczyć limitu wagi $w_{max}$, a by suma wartości
+wybrać przedmioty w taki sposób, by nie przekroczyć limitu wagi $w_{max}$, a by suma wartości
 wybranych przedmiotów była większa lub równa $c$?
 
     Tak zadany problem to wersja decyzyjna problemu plecakowego. Być może nie istnieje algorytm znajdujący
 przydział przedmiotów w czasie wielomianowym, ale mając przedstawione rozwiązanie $S \subseteq I$
-można zsumować wartości przedmiotów z $S$ i sprawdzić czy jest to poprawne rozwiązanie.
+można zsumować wartości przedmiotów z $S$ i sprawdzić, czy jest to poprawne rozwiązanie.
 \end{example}
 
     Należy zauważyć, że każdy problem z klasy \textit{P} należy także do klasy \textit{NP}, ponieważ
@@ -123,11 +123,11 @@ $$a \cdot b = \underbrace{a + a + \ldots + a}_{b}$$
 \end{example}
     Należy zauważyć, że jeśli problem \textit{A} jest redukowalny do problemu \textit{B} w czasie wielomianowym,
 a problem \textit{B} należy do klasy P, to problem \textit{A} także należy do klasy P, jako że
-sposobem na jego rozwiązanie jest użycie redukcji wielomianowej by traktować go jako instancję problemu \textit{B},
+sposobem na jego rozwiązanie jest użycie redukcji wielomianowej, by traktować go jako instancję problemu \textit{B},
 a następnie rozwiązanie go za pomocą algorytmu działającego w czasie wielomianowym.
 \begin{corollary}
     Jeśli istnieje redukcja z \textit{A} w \textit{B} w czasie wielomianowym, to \textit{B} jest
-co najmniej tak złożony jak \textit{A}.
+co najmniej tak złożony, jak \textit{A}.
 \end{corollary}
 
 
@@ -155,7 +155,7 @@ NP-trudnych oraz NP.
 \end{definition}
 \begin{corollary}
     Pokazanie, że problem decyzyjny \textit{A} jest NP-zupełny sprowadza się do pokazania, że istnieje redukcja
-wielomianowa z problemu \textit{H} z klasy problemów NP-trudnych, oraz że rozwiązanie problemu \textit{A}
+wielomianowa z problemu \textit{H} z klasy problemów NP-trudnych oraz że rozwiązanie problemu \textit{A}
 można zweryfikować w czasie wielomianowym.
 \end{corollary}
 
@@ -164,7 +164,7 @@ można zweryfikować w czasie wielomianowym.
 \section{Przypisanie problemu rozwiązania nonogramów do odpowiedniej klasy złożoności}
 
     Mając zdefiniowane pojęcia potrzebne do klasyfikacji problemu do odpowiedniej klasy złożoności,
-należy znaleźć klasę do jakiej należy rozwiązywanie nonogramów. Z uwagi na specyfikę klas, klasyfikacji
+należy znaleźć klasę, do jakiej należy rozwiązywanie nonogramów. Z uwagi na specyfikę klas, klasyfikacji
 poddana zostanie decyzyjna wersja problemu, tj. 
 '\textit{Czy zadany nonogram $N = (w, h, R_n, C_n)$ ma rozwiązanie?}'.
 
@@ -172,7 +172,7 @@ poddana zostanie decyzyjna wersja problemu, tj.
 \subsection{Problem rozwiązania nonogramu jest w NP}
     Niech $M_{h, w}$ będzie macierzą oznaczająca rozwiązanie zadanego nonogramu $N = (w, h, R_n, C_n)$,
 gdzie $m_{i, j}$ oznacza stan komórki w wierszu $i$ i kolumnie $j$, oraz $m_{i, j} = 1$, jeśli komórka
-jest wypełniona, a $m_{i, j} = 0$ jeśli pusta. Macierz $M_{h, w}$ jest mapowana na $h + w$ list,
+jest wypełniona, a $m_{i, j} = 0$, jeśli komórka jest pusta. Macierz $M_{h, w}$ jest mapowana na $h + w$ list,
 będących ciągami stanów komórek w kolejnych wierszach, i kolumnach.
 
     Do weryfikacji rozwiązania użyjemy następującej procedury:
@@ -218,16 +218,16 @@ dla wierszy oraz kolumn. Jeśli w obu przypadkach procedura zwróci \texttt{true
 
     Czas wykonania procedury jest zależny od wielkości planszy. Zewnętrzna pętla wykonuje się
 tyle razy, ile jest linii w osi ($h$ w przypadku wierszy, $w$ w przypadku kolumn). Na początku pętli
-dochodzi do ekstrakcji pewnych danych do lokalnych zmiennych oraz inicjalizacji tablicy - w zależności
-od jezyka użytego do implementacji, ta grupa operacji zajmuje czas stały bądź liniowy. Następnie
+dochodzi do ekstrakcji pewnych danych do lokalnych zmiennych oraz inicjalizacji tablicy — w zależności
+od języka użytego do implementacji, ta grupa operacji zajmuje czas stały bądź liniowy. Następnie
 uruchamiana jest pierwsza wewnętrzna pętla. W tej pętli analizowane są dane w danej linii, by zmapować
-układ jej komórek do wskazówki jaką reprezentuje. Złożoność operacji w każdej iteracji jest stała,
-jeśli założymy że powiększenie tablicy o dodatkowy element wymaga stałego czasu - w p.p. czas wykonania
+układ jej komórek do wskazówki, jaką reprezentuje. Złożoność operacji w każdej iteracji jest stała,
+jeśli założymy, że powiększenie tablicy o dodatkowy element wymaga stałego czasu — w p.p. czas wykonania
 iteracji może być liniowy. Ilość wykonań tej pętli zależy od długości linii.
 Po wykonaniu pierwszej pętli, w zależności od układu stanu komórek w linii,
-może dojść do kolejnego powiększenia tablicy o dodatkowy element - złożoność nie przekracza liniowej.
+może dojść do kolejnego powiększenia tablicy o dodatkowy element — złożoność nie przekracza liniowej.
 Na końcu zewnętrznej pętli wykonywana jest druga pętla, która iteruje po elementach wskazówki zadanej
-w rozwiązaniu, i porównuje ich watość do analogicznych elementów we wskazówce odtworzonej z układu linii.
+w rozwiązaniu, i porównuje ich wartość do analogicznych elementów we wskazówce odtworzonej z układu linii.
 Rozbieżność oznacza, że rozwiązanie nie jest prawidłowe, i procedura przedwcześnie zakańcza wykonanie.
 Długość wskazówki można z góry ograniczyć przez $\lceil \frac{x}{2} \rceil$, gdzie $x$ jest długością
 linii.
@@ -243,11 +243,11 @@ należy do klasy \textit{NP}.
 Przykładowy dowód jest opisany w pracy \cite{Nonograms-NP-Hard} i jego zarys jest następujący.
 Autor rozpoczyna dowód od powołania się na NP-trudność gry na grafach, nazwanej jako
 \textit{Bounded Nondeterministic Constraint Logic}. Następnie, poprzez redukcję, autor udowadnia 
-NP-trudność zmodyfikowanej wersji gry, określonej na grafach planarnych. Po udowodnieniu tego faktu,
+NP-trudność zmodyfikowanej wersji gry, określonej na grafach planarnych. Po udowodnieniu tego faktu
 autor konstruuje redukcję wielomianową z planarnej \textit{Bounded Nondeterministic Constraint Logic}
 w rozwiązywanie nonogramów, tym samym udowadniając ich przynależność do tej klasy problemów.
 
 
 \subsection{Problem rozwiązania nonogramu jest NP-zupełny}
-    Pokazawszy, że zadany problem jest w NP, oraz jest NP-trudny, pokazane zostało że problem ten
-jest NP-zupełny.
+    Problem rozwiązania nonogramu został zaklasyfikowany do klasy problemów NP, oraz klasy problemów
+NP-trudnych. Wobec tego, rozważany problem należy do klasy problemów NP-zupełnych.
