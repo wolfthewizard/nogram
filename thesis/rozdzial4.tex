@@ -1,8 +1,9 @@
 \chapter{Solver nonogramów}
 \thispagestyle{chapterBeginStyle}
 
-    W tym rozdziale opisany jest rozwój solvera. Opisane są kolejne główne wersje solverów. Zbadany
-został także wpływ zastosowanych heurystyk na wydajność w rozwiązywaniu wybranych łamigłówek.
+    W tym rozdziale opisany jest rozwój solvera. Przedstawione są kolejne wersje solverów, wraz z
+opisem ich działania. Zbadany został wpływ zastosowanych heurystyk na wydajność w rozwiązywaniu 
+wybranych łamigłówek. Podany został także schemat dla łamigłówek znajdujących się w aplikacji.
 
 
 
@@ -22,23 +23,16 @@ wykorzystywane w trakcie rozwiązywania nonogramu.
     \caption{Solver całościowy sprawdza wszystkie możliwe układy planszy w celu znalezienia rozwiązania.}
 \end{figure}
 
-    Solver ten zaczyna od pustej planszy. Następnie, dla pierwszego pola wywoływana jest rekursyjna
-metoda: jeśli indeks pola mieści się w zakresie planszy, to najpierw jego status ustawiany jest na
-pusty, i następuje wywołanie metody dla następnego indeksu, a jeśli rozwiązanie nie zostanie znalezione,
-to pole jest wypełniane i ponownie dochodzi do wywołania metody na następnym polu. Jeśli indeks
-wykracza poza zakres planszy, to znaczy, że wszystkie pola mają ustawiony status i wywoływana jest
-metoda sprawdzająca poprawność rozwiązania, podobna do tej opisanej w \ref{alg:axisValidation}.
-Jeśli solver zakończy działanie zwracając \texttt{true}, to w przekazanej mu macierzy pól 
-(równoznaczne z listą wierszy) znajdzie się rozwiązanie łamigłówki.
+    Sposób działania tego solvera został przedstawiony w kodzie poniżej.
 
 \begin{pseudokod}[H]
     %\SetAlTitleFnt{small}
     \SetArgSty{normalfont}
-    \SetKwFunction{Verify}{Verify}
+    \SetKwFunction{WeryfikujRozwiazanie}{WeryfikujRozwiazanie}
     \KwIn{Lista wierszy $R$, indeks pola $i$, lista wskazówek wierszy $Hr$ i kolumn $Hc$, szerokość $w$ i wysokość $h$ planszy}
     \KwOut{Czy znaleziono rozwiązanie \texttt{true/false}}
     \If{$i \geq w \cdot h$}{
-        \texttt{return} \Verify{$R$, $Hr$, $Hc$, $w$, $h$}\;
+        \texttt{return} \WeryfikujRozwiazanie{$R$, $Hr$, $Hc$, $w$, $h$}\;
     }
     \Else{
         $iWiersza \leftarrow \lceil \frac{i}{w} \rceil$\;
@@ -53,10 +47,24 @@ Jeśli solver zakończy działanie zwracając \texttt{true}, to w przekazanej mu
     \caption{SolverCałościowy}\label{alg:allSolver}
 \end{pseudokod}
 
-    Złożoność czasowa tego solvera jest bardzo duża. Procedura sprawdzająca poprawność rozwiązania
-może zostać wywołana $2^{w*h}$ razy, czyli inaczej $2^n$, gdzie $n$ to ilość pól na planszy. 
-Wynika to z faktu, że każde kolejne pole wymaga sprawdzenia pól poprzednich, a samo może znajdować
-się w dwóch stanach, więc podwaja ilość wywołań procedury sprawdzającej.
+    Solver ten zaczyna od pustej planszy. Następnie, dla pierwszego pola wywoływana jest rekursyjna
+metoda: jeśli indeks pola mieści się w zakresie planszy, to najpierw jego status ustawiany jest na
+pusty, i następuje wywołanie metody dla następnego indeksu, a jeśli rozwiązanie nie zostanie znalezione,
+to pole jest wypełniane i ponownie dochodzi do wywołania metody na następnym polu. Jeśli indeks
+wykracza poza zakres planszy, to znaczy, że wszystkie pola mają ustawiony status i wywoływana jest
+metoda sprawdzająca poprawność rozwiązania, podobna do tej opisanej w \ref{alg:axisValidation}.
+Jeśli solver zakończy działanie zwracając \texttt{true}, to w przekazanej mu macierzy pól 
+(równoznaczne z listą wierszy) znajdzie się rozwiązanie łamigłówki.
+
+    Ta wersja solvera cechuje się wysoką złożonością obliczeniową. Procedura sprawdzająca poprawność
+rozwiązania zostanie wywołana $2^n$ razy w najgorszym przypadku, gdzie $n$ to ilość pól na planszy.
+Oprócz tego, na każdym poziomie rekursji zostaje wykonany zestaw operacji, którego złożoność można
+określić jako stałą. Zważywszy, że drzewo wywołań jest drzewem binarnym, a każdy poziom zostaje
+wywołany 2 razy rzadziej niż poprzedni, daje to dodatkowe 
+$\frac{2^n}{2} + \frac{2^n}{4} + \ldots + 1 = 2^n - 1$ operacji do wykonania. Przyjmując złożoność
+$\mathcal{O}(n^2)$ procedury weryfikującej, daje to złożoność
+$\mathcal{O}(2^n) \cdot \mathcal{O}(n^2) + \mathcal{O}(2^n) \cdot \mathcal{O}(1) = \mathcal{O}(2^n \cdot n^2)$
+solvera dla najgorszego przypadku.
 
 
 \subsection{Solver osiowy}
@@ -74,22 +82,17 @@ solver całościowy sprawdziłby $2^5 = 32$ stany
     }
 \end{figure}
 
-    Solver zaczyna od pustej planszy. Przed rozpoczęciem rozwiązywania sprawdzana jest ilość wszystkich
-kombinacji w danej osi (iloczyn możliwości każdej z linii) i wybierana jest oś z mniejszą liczbą
-możliwości. Następnie generowane są kombinacje dla każdej z linii. Solver korzysta z rekursyjnej
-metody i ustawia pierwszą kombinację dla pierwszej linii. Następnie wywołuje metodę dla kolejnej linii,
-aż do ostatniej, i wtedy weryfikuje rozwiązanie. Jeśli dla danego ustawienia w linii łamigłówka
-nie ma rozwiązania, to solver przechodzi do kolejnego ustawienia i wywołuje metodę w kolejnej linii.
+    Zarys algorytmu w tej wersji został przedstawiony w kodzie.
 
 \begin{pseudokod}[H]
     %\SetAlTitleFnt{small}
     \SetArgSty{normalfont}
-    \SetKwFunction{Verify}{Verify}
+    \SetKwFunction{WeryfikujRozwiazanie}{WeryfikujRozwiazanie}
     \SetKwFunction{NalozKombinacje}{NalozKombinacje}
     \KwIn{Lista linii $L$, indeks linii $i$, lista wskazówek linii prostopadłych $H$, ilość linii $n$}
     \KwOut{Czy znaleziono rozwiązanie \texttt{true/false}}
     \If{$i = n$}{
-        \texttt{return} \Verify{$L$, $H$, $n$}\;
+        \texttt{return} \WeryfikujRozwiazanie{$L$, $H$, $n$}\;
     }
     \Else{
         $linia \leftarrow L[i]$\;
@@ -104,12 +107,20 @@ nie ma rozwiązania, to solver przechodzi do kolejnego ustawienia i wywołuje me
     \caption{SolverOsiowy}\label{alg:axisSolver}
 \end{pseudokod}
 
+    Solver zaczyna od pustej planszy. Przed rozpoczęciem rozwiązywania sprawdzana jest ilość wszystkich
+kombinacji w danej osi (iloczyn możliwości każdej z linii) i wybierana jest oś z mniejszą liczbą
+możliwości. Następnie generowane są kombinacje dla każdej z linii. Solver korzysta z rekursyjnej
+metody i ustawia pierwszą kombinację dla pierwszej linii. Następnie wywołuje metodę dla kolejnej linii,
+aż do ostatniej, i wtedy weryfikuje rozwiązanie. Jeśli dla danego ustawienia w linii łamigłówka
+nie ma rozwiązania, to solver przechodzi do kolejnego ustawienia i wywołuje metodę w kolejnej linii.
+
     Dzięki eliminacji kombinacji sprzecznych ze wskazówkami w danej osi, procedura sprawdzania
 poprawności rozwiązania jest wywoływana o wiele rzadziej niż w przypadku solvera całościowego.
 O ile ilość kombinacji w linii przy rozpatrywaniu każdej komórki z osobna to $2^n$, gdzie $n$ to
 długość linii, tak w przypadku rozważania poprawnych kombinacji dla linii jest ona zależna od
 długości i zawartości wskazówki, i można ją ograniczyć z góry przez
-${n + 1 - h} \choose h$, a $h$ to ilość wskazówek w linii. To przybliżenie jest zawyżone, ponieważ
+${n + 1 - h} \choose h$, a $h$ to ilość liczb we wskazówce dla danej linii. 
+To przybliżenie jest zawyżone, ponieważ
 zakłada występowanie jedynie bloków długości jeden we wskazówce. W przeciętnym przypadku, bloki
 wypełnionych komórek będą dłuższe, oraz będzie ich mniej. Co więcej, jak zostało wspomniane na początku,
 weryfikacja jest wymagana jedynie w jednej z dwóch osi, jako że konstrukcja potencjalnych rozwiązań
@@ -144,25 +155,8 @@ wiersz i każda kolumna ma dostępną jedną możliwą kombinację.
     \caption{Przykład wnioskowania na podstawie możliwych kombinacji}
 \end{figure}
 
-    Solver zaczyna od pustej planszy. Na początku generowane są wszystkie kombinacje dla każdej z
-linii, a linie wrzucane są do kolejki \textit{last-in first-out}. Następnie solver przechodzi do
-rozwiązywania. Dopóki kolejka nie jest pusta, to są linie, których komibnacje należy zweryfikować.
-Z kolejki usuwana jest sprawdzana linia. Dla tej linii następują dwa kroki: najpierw, eliminowane
-są kombinacje sprzeczne z układem danej linii. W wypadku tego solvera, każda komórka znajduje się
-w jednym z trzech stanów: \textit{pełny}, \textit{pusty} i \textit{nieznany}. Stan \textit{nieznany}
-komórki dopuszcza kombinacje zawierające komórkę pełną lub pustą; pozostałe stany wymagają
-zgodności stanu ze stanem komórki w kombinacji. Po eliminacji sprzecznych kombinacji, dochodzi
-do porównania kombinacji. Jeśli istnieje komórka w linii, której stan jest \textit{nieznany}, a
-wszystkie pozostałe kombinacje mają ustawiony dla niej ten sam stan, to stan komórki jest aktualizowany,
-a prostopadła linia zostaje dodana do kolejki do weryfikacji (następuje przy tym upewnienie, że
-w kolejce nie ma powtórzeń). Kiedy kolejka zostanie opróżniona, sprawdzane są linie.
-Jeśli wszystkie linie mają jeden możliwy stan, to znaczy, że zostało znalezione rozwiązanie. Jeśli
-któraś z linii nie ma możliwej kombinacji, to nie istnieje rozwiązanie przy dokonanych założeniach.
-W przeciwnym wypadku, solver zakłada poprawność jednej z kombinacji dla linii
-o kilku możliwych kombinacjach. Jako że wskutek założenia stan linii zmienił się, to do kolejki
-dodawane są linie prostopadłe. Następnie wywoływana jest w sposób rekursyjny metoda rozwiązująca
-nonogram dla obecnego stanu planszy. Jeśli rozwiązanie nie zostanie znalezione w tej gałęzi, to
-solver zakłada poprawność kolejnej kombinacji dla tej linii.
+    Główna procedura tego solvera oraz fragment odpowiedzialny za sprawdzanie danej linii zostały
+przedstawione za pomocą pseudokodu.
 
 \begin{pseudokod}[H]
     %\SetAlTitleFnt{small}
@@ -206,8 +200,8 @@ solver zakłada poprawność kolejnej kombinacji dla tej linii.
     \SetKwFunction{WeryfikujKombinacje}{WeryfikujKombinacje}
     \KwIn{Linia $l$}
     \ForEach{$komb \in l.kombinacje$}{
-        \If{\texttt{!WeryfikujKombinacje}($l$)}{
-            $l.kombinacje.usun(l)$\;
+        \If{\texttt{!WeryfikujKombinacje}($komb, l$)}{
+            $l.kombinacje.usun(komb)$\;
         }
     }
     \ForEach{$i \in \{1, 2, \ldots, |l|\}$}{
@@ -219,6 +213,26 @@ solver zakłada poprawność kolejnej kombinacji dla tej linii.
     \caption{SprawdzLinie}\label{alg:eliminationSolver_checkLine}
 \end{pseudokod}
 
+    Solver zaczyna od pustej planszy. Na początku generowane są wszystkie kombinacje dla każdej z
+linii, a linie wrzucane są do kolejki \textit{last-in first-out}. Następnie solver przechodzi do
+rozwiązywania. Dopóki kolejka nie jest pusta, to są linie, których kombinacje należy zweryfikować.
+Z kolejki usuwana jest sprawdzana linia. Dla tej linii następują dwa kroki: najpierw, eliminowane
+są kombinacje sprzeczne z układem danej linii. W wypadku tego solvera, każda komórka znajduje się
+w jednym z trzech stanów: \textit{pełny}, \textit{pusty} i \textit{nieznany}. Stan \textit{nieznany}
+komórki dopuszcza kombinacje zawierające komórkę pełną lub pustą; pozostałe stany wymagają
+zgodności stanu ze stanem komórki w kombinacji. Po eliminacji sprzecznych kombinacji, dochodzi
+do porównania kombinacji. Jeśli istnieje komórka w linii, której stan jest \textit{nieznany}, a
+wszystkie pozostałe kombinacje mają ustawiony dla niej ten sam stan, to stan komórki jest aktualizowany,
+a prostopadła linia zostaje dodana do kolejki do weryfikacji (następuje przy tym upewnienie, że
+w kolejce nie ma powtórzeń). Kiedy kolejka zostanie opróżniona, sprawdzane są linie.
+Jeśli wszystkie linie mają jeden możliwy stan, to znaczy, że zostało znalezione rozwiązanie. Jeśli
+któraś z linii nie ma możliwej kombinacji, to nie istnieje rozwiązanie przy dokonanych założeniach.
+W przeciwnym wypadku, solver zakłada poprawność jednej z kombinacji dla linii
+o kilku możliwych kombinacjach. Jako że wskutek założenia stan linii zmienił się, to do kolejki
+dodawane są linie prostopadłe. Następnie wywoływana jest w sposób rekursyjny metoda rozwiązująca
+nonogram dla obecnego stanu planszy. Jeśli rozwiązanie nie zostanie znalezione w tej gałęzi, to
+solver zakłada poprawność kolejnej kombinacji dla tej linii.
+
     Istotna uwaga dotyczy charakterystyki wierszy i kolumn. W celu umożliwienia działania procedury
 został wykorzystany mechanizm obecny w wielu powszechnie używanych językach programowania, mianowicie
 mechanizm płytkiej kopii. Mimo że listy wierszy i kolumn zawierają inne obiekty (listy), to obiekty
@@ -226,14 +240,32 @@ komórek przechowywane w tych zagnieżdżonych listach są takie same. Dzięki t
 komórki w liście wierszy w $n$-tym wierszu i $m$-tej komórce, modyfikujemy także stan komórki
 zawartej w $n$-tej komórce w $m$-tej kolumnie w liście kolumn.
 
+    Zaproponowany solver jest dobrze przystosowany do rozwiązywania łamigłówek, dla których nie
+następuje zakładanie układu dowolnej linii. W wypadku takich łamigłówek, solver ten wykonuje procedurę
+\texttt{SprawdzLinie} pewną ilość razy, a następnie upewnia się, że każda linia ma jedną dostępną
+kombinację. Wyliczenie kombinacji dla wszystkich linii wymaga dostępu do $w+h$ zmiennych, co oznacza $w+h$ operacji
+wykonanych w stałym czasie. Ilość wykonań procedury \texttt{SprawdzLinie} można ograniczyć z góry
+przez $w+h+n$, gdzie $n$ to ilość pól na planszy, ponieważ pierwsze $w+h$ wykonań jest narzucone 
+przez zapełnienie kolejki wszystkimi liniami przed przystąpieniem do rozwiązywania, a każde kolejne
+wykonanie jest skutkiem określenia stanu przynajmniej jednego z pól na planszy, jako że jest to 
+jedyny sposób na dodanie linii do kolejki. Weryfikacja pojedynczej kombinacji jest wykonywana w
+czasie wielomianowym, jednak ilość kombinacji nie jest wielomianowa: dla wskazówek wypełnionych
+samymi jedynkami wynosi
+${n + 1 - h} \choose h$, gdzie $h$ to ilość liczb we wskazówce. Gdyby jednak ograniczyć ilość
+liczb we wskazówkach, to możliwa ilość kombinacji będzie wielomianowo zależna od wielkości planszy.
+Zatem dla podklasy nonogramów, która składa się z łamigłówek możliwych do rozwiązania bez dokonywania
+zakładania stanu jednej z linii, i w których długość wskazówki jest ograniczona, solver ten
+uzyskuje złożoność wielomianową.
+
 
 
 \section{Porównanie wydajności solverów}
     W tej części zbadane zostały wydajności poszczególnych wersji solverów oraz wpływ wybranych
 modyfikacji i heurystyk na ich wydajność.
 
+\subsection{Metodyka badań}\label{metodyka}
 
-\subsection{Metodyka badań}
+\subsubsection{Ogólna metodyka}
     Metoda prowadzenia badań jest następująca: dla każdej łamigłówki prowadzonych jest 5 prób 
 rozwiązania. Próby z minimalnym oraz maksymalnym czasem rozwiązywania zostają odrzucone, w celu
 eliminacji błędów powstałych na skutek zaburzeń występujących w trakcie prowadzenia testu. Następnie
@@ -241,18 +273,22 @@ czas pozostałych 3 prób zostaje uśredniony i podany jako wynik badania. Jeśl
 iteracji testu przekroczy 5 minut, to test zostaje przerwany i do komórki zostaje wpisany wynik
 \textit{przekroczono}.
 
-    Testy zostały przeprowadzone na komputerze z procesorem Intel Core i5-6300HQ, z
+\subsubsection{Środowisko}
+    Testy zostały przeprowadzone w systemie Ubuntu 20.04.3 LTS w wersji 64-bitowej.
+System został zainstalowany na komputerze z procesorem Intel Core i5-6300HQ, z dostępem do
 16GB pamięci RAM o taktowaniu 2133Mhz. Testy zostały uruchomione w środowisku Node.js \cite{node}
 w wersji v14.18.2. Czas rozwiązywania łamigłówek na urządzeniu mobilnym może znacząco odbiegać
 od czasów zaprezentowanych w wynikach, z powodu mniejszych zasobów i zastosowanego środowiska
 uruchomieniowego.
 
+\subsubsection{Prezentacja wyników}
     Wyniki zostały zaprezentowane w tabelach o następującym układzie: w pierwszych dwóch kolumnach
 zostały podane nazwy łamigłówek i ich wielkości (łamigłówki są zadane na planszach kwadratowych).
 W kolejnych kolumnach, nazwanych odpowiednio do zastosowanej modyfikacji bądź jej braku,
 podany jest czas rozwiązywania nonogramu wyrażony w milisekundach. Czas jest zaokrąglony do pełnych
 milisekund, zatem dla prostych łamigłówek może być wyrażony jako 0.
 
+\subsubsection{Zestaw danych}
     Zestaw danych użyty do testów został przedstawiony na końcu rozdziału.
 
 
@@ -278,7 +314,11 @@ milisekund, zatem dla prostych łamigłówek może być wyrażony jako 0.
 
 \subsubsection{Interpretacja}
     Solver całościowy jest w stanie dość szybko rozwiązać niewielkie łamigłówki,
-ale czas jego pracy rośnie bardzo szybko wraz ze wzrostem wielkości planszy.
+ale czas jego pracy rośnie bardzo szybko wraz ze wzrostem wielkości planszy. Wynik taki jest oczekiwany,
+ponieważ z każdym dodatkowym polem, solver średnio podwaja swój czas pracy. Przejście z łamigłówki
+wielkości 5x5 na łamigłówkę 8x8 wiązałoby się zatem z około $2^{8 \cdot 8 - 5 \cdot 5}$-krotnym wydłużeniem
+czasu pracy. Pomijając kwestię budowy samych łamigłówek, przyjmując 46 milisekund jako czas pracy 
+dla łamigłówki wielkości 5, daje to około 800 lat pracy solvera dla łamigłówki wielkości 8.
 
 
 \subsection{Solver osiowy}
@@ -286,7 +326,7 @@ ale czas jego pracy rośnie bardzo szybko wraz ze wzrostem wielkości planszy.
 on poddany jednej modyfikacji.
 
 \subsubsection{Modyfikacje}
-    \textbf{Częściowa weryfikacja} rozwiązania polega na wykorzystaniu procedury częsciowej weryfikacji.
+    \textbf{Częściowa weryfikacja} rozwiązania polega na wykorzystaniu procedury częściowej weryfikacji.
 Jest ona podobna do procedury weryfikacji w osi, ale nie sprawdza poprawności całej planszy,
 a jedynie sprawdza, czy dany układ może prowadzić do poprawnego rozwiązania (czyli czy nie ma sprzeczności na tym etapie).
 Procedura otrzymuje głębokość, dla jakiej ma zweryfikować poprawność. Jeśli do danej głębokości nie
@@ -300,8 +340,6 @@ nie może być poprawnego rozwiązania, i solver przechodzi do innej gałęzi.
 w układzie widocznym na grafice}
 \end{figure}
 
-
-\clearpage
 \subsubsection{Wyniki}
 \begin{table}[!htb]
     \begin{center}
@@ -356,8 +394,8 @@ tej instrukcji mogłaby skrócić czas wykonywania jednego sprawdzenia linii.
 
     \textbf{Zakładanie dla kolumn} (\textit{kolumny}) zmienia kolejność zakładania. Linia z wieloma
 kombinacjami jest szukana najpierw na liście kolumn, a dopiero potem na liście wierszy. Ta modyfikacja
-opiera się na założeniu, że układ wypełnionych pól w łamigłówkach powoduje lepszą wydajność
-przy rozwiązywaniu pionowym.
+opiera się na założeniu, że układ wypełnionych pól w łamigłówkach może powodować lepszą wydajność
+przy rozwiązywaniu z priorytetem dla osi pionowej.
 
     \textbf{Zakładanie dla linii z minimalną/maksymalną liczbą kombinacji} (\textit{min/max komb.})
 dokonuje założenia dla linii z najmniejszą/największą liczbą poprawnych kombinacji. W ten sposób
@@ -442,11 +480,11 @@ dla których zaszła zmiana.
 
 \subsubsection{Interpretacja}
     Solver eliminacyjny jest najszybszym z zaprezentowanych solverów. Jest w stanie rozwiązać
-nawet największe, 64x64 nonogramy w założonym ograniczeniu czasowym. Każdą ze sprawdzanych łamigłówek
+nawet największe, 64x64 nonogramy w nałożonym ograniczeniu czasowym. Każdą ze sprawdzanych łamigłówek
 rozwiązuje szybciej niż solver osiowy. Na szczególną uwagę zasługuje szybkość rozwiązania nonogramów
 \textit{Ghost} i \textit{Ranger}. Dzięki oparciu się o informacje, które zostały wywnioskowane z poprzednio
 rozpatrywanych linii, solver może rozwiązać nawet łamigłówki o dużych rozmiarach bez zakładania
-układu linii, lub z minimalną jego ilością.
+poprawności kombinacji dowolnej linii, lub z minimalną jego ilością.
 
     Pierwsza seria modyfikacji nie miała dużego wpływu na czas rozwiązywania. Część modyfikacji z
 drugiej serii okazała się mieć kluczowy wpływ na wydajność solvera przy rozwiązywaniu danej łamigłówki. Użycie kolejki
@@ -460,10 +498,16 @@ będąc nieznacznie wolniejszym dla łamigłówek prostszych (np. \textit{Ghost}
 
 
 \subsection{Wnioski}
-    Solver eliminacyjny jest najwydajniejszym z zaproponowanych solverów. Dzięki oparciu na pewnych
+    Złożoność solvera całościowego bardzo ogranicza jego przydatność w rozwiązywaniu nonogramów.
+Solver osiowy, dzięki ograniczeniu ilości kombinacji dla danej linii, okazał się od niego lepszy,
+ale tylko w niewielkim stopniu. Jednak poszerzenie solvera osiowego o częściową weryfikację rozwiązania
+znacznie poprawiło jego osiągi. Solver eliminacyjny jest najwydajniejszym z zaproponowanych solverów. Dzięki oparciu na pewnych
 informacjach i ograniczeniu zakładania, a co za tym idzie back-trackingu, może rozwiązać zadaną
-łamigłówkę szybbiej niż inne solvery. W przypadku solvera osiowego, introdukcja częściowej weryfikacji
-bardzo poprawiła jego wydajność.
+łamigłówkę szybciej niż inne solvery.
+
+    Przeprowadzane badania potwierdzają układ hierarchii solverów: solver osiowy osiąga lepsze wyniki
+od solvera całościowego dzięki ograniczeniu się do zakładania w jednej osi. Najlepszym okazał
+się solver eliminacyjny, który w miarę możliwości wyklucza zakładanie poprawności kombinacji.
 
 
 \subsection{Zestaw danych}
@@ -565,3 +609,48 @@ w celu wyróżnienia tego koloru na tle białej kartki.
     \end{subfigure}
     \caption{Zestaw danych}
 \end{figure}
+
+
+
+\section{Predefiniowane łamigłówki}
+
+
+\subsection{Wymagania dla łamigłówek}
+    Łamigłówki, które zostały umieszczone w aplikacji dla użytkownika, muszą spełniać pewne wymagania.
+
+\subsubsection{Łamigłówka ma jedno rozwiązanie}
+    Wynika to ze sposobu zapisu łamigłówki w aplikacji. Każda łamigłówka jest pewnym obrazkiem,
+zapisanym w formie siatki komórek, które są puste lub odpowiednio zakolorowane. Gdyby dopuścić
+łamigłówkę, która ma wiele rozwiązań, to każde rozwiązanie poza przewidzianym nie byłoby dopuszczane,
+mimo jego poprawności.
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/no_unique_solution.png}
+    \caption{Łamigłówka zdefiniowana na górze ma 2 rozwiązania, z których tylko jedno pokrywa się
+z przewidzianym. Jeśli użytkownik zacznie rozwiązywać nonogram zakładając poprawność prawej wersji,
+to aplikacja w nieuzasadniony sposób uzna to za błąd.}
+\end{figure}
+
+\subsubsection{Łamigłówka nie wymaga zakładania}
+    Łamigłówki wymagające założenia poprawności jednego z wariantów na pewnym etapie są zdecydowanie
+bardziej złożone od łamigłówek, które da się ułożyć zbierając informacje z pojedynczych wierszy i kolumn.
+W przypadku solvera, założenie poprawności niewłaściwej kombinacji wymaga jedynie dokonania back-trackingu
+i sprawdzenia kolejnej kombinacji. Użytkownik musi rozwiązać taką łamigłówkę w pamięci, ponieważ
+zaznaczenie błędnej komórki na planszy wiązałoby się z wychwyceniem błędu przez aplikację.
+
+
+\subsection{Zatwierdzenie spełniania wymienionych wymagań przez łamigłówkę}
+    Do weryfikacji łamigłówki użyty został zmodyfikowany solver eliminacyjny. Brak konieczności
+zakładania przy rozwiązywaniu łamigłówki został sprawdzony przez nakazanie solverowi rozwiązania
+łamigłówki. Modyfikacja solvera polega na tym, że solver odrzuca łamigłówkę, jeśli kolejka linii do
+sprawdzenia została opróżniona, ale łamigłówka nie została rozwiązana. Jeśli łamigłówka nie została
+rozwiązana na tym etapie, to solver przejdzie do założeń: dla linii z wieloma poprawnymi
+kombinacjami zakładałby poprawność jednej z nich. Jest to jednak sprzeczne z wymaganiem.
+
+    Tak zmodyfikowany solver weryfikuje jednocześnie pierwsze kryterium. Znalezienie rozwiązania
+łamigłówki bez dokonania założeń oznacza istnienie wyłącznie jednego rozwiązania. Wynika to z faktu,
+że solver rozwiązuje łamigłówkę dokonując serii wnioskowań na liniach. W każdym wnioskowaniu solver
+uzupełnia jedynie te pola, co do których stanu jest pewien. Rozwiązanie całej łamigłówki w ten sposób
+oznacza, że każda komórka znajduje się w jedynym możliwym dla siebie stanie, co wyklucza istnienie
+innych rozwiązań.

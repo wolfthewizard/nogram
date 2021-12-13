@@ -4,8 +4,9 @@
 
 
 \section{Aplikacja i praca}
-    Aplikacja przedstawiona w tej pracy ma umożliwić zarówno rekreacyjne rozwiązywanie predefiniowanych
-nonogramów, jak i zapewnić dostęp do szybkiego solvera nonogramów. 
+    Aplikacja przedstawiona w tej pracy umożliwia rekreacyjne rozwiązywanie predefiniowanych
+nonogramów oraz zapewnia dostęp do szybkiego solvera nonogramów. Dzięki zaimplementowaniu programu
+na urządzenia mobilne, korzystanie z tych funkcjonalności jest możliwe praktycznie wszędzie.
 
     W pracy zostały opisane pojęcia teoretyczne związane z rozwiązywaniem nonogramów, 
 między innymi klasy złożoności problemów. Nakreślona została złożoność tej klasy łamigłówek 
@@ -14,9 +15,31 @@ nonogramy oraz zbadanie wpływu heurystyk na ich wydajność pozwala lepiej zroz
 złożoności danych plansz i umożliwić łatwiejsze określenie ich trudności.
 
 
+
 \section{Możliwości rozwoju}
-    Aplikacja może zostać poszerzona o moduł generujący łamigłówki żądanej trudności. Dzięki temu
-program zyskałby powtarzalność i umożliwił użytkownikowi dobranie odpowiedniego wyzwania na
-daną chwilę. Dodanie modułu sczytującego plansze ze zdjęć znacznie ułatwiłoby wprowadzanie łamigłówek
-dla solvera. W dłuższej perspektywie aplikacja skorzystałaby z dodania funkcji publikacji
-łamigłówek i rozwiązywania łamigłówek stworzonych przez innych graczy.
+    Dla aplikacji przedstawionej w pracy istnieje szereg funkcjonalności, które zwiększyłyby jej
+atrakcyjność i konkurencyjność.
+
+\subsubsection{Automatyczne generowanie łamigłówek}
+    Dzięki automatycznemu generowaniu łamigłówek o zadanych parametrach, aplikacja zyskałaby
+na powtarzalności. Użytkownik wybierałby trudność i rozmiar łamigłówki, a moduł zwracałby
+wygenerowaną łamigłówkę do rozwiązania. Wyzwaniem przy tworzeniu tej funkcjonalności byłoby takie
+dobranie parametrów, by użytkownik mógł oczekiwać nonogramów mieszczących się w wybranym zakresie
+trudności. Algorytm mógłby ocenić trudność wygenerowanej łamigłówki poprzez sprawdzenie ilości liczb
+we wskazówkach, ilości wypełnionych pól w liniach, ruchów potrzebnych solverowi do jej rozwiązania,
+bądź konieczności zakładania (lub jej braku).
+
+\subsubsection{Sczytywanie nonogramów ze zdjęć}
+    Implementacja sczytywania nonogramów ze zdjęć w znaczącym stopniu ułatwiłaby wprowadzanie
+łamigłówek dla solvera. Dla tego modułu konieczne byłoby opracowanie rozpoznawania łamigłówek w taki
+sposób, by układ wskazówek i liczb we wskazówkach pokrywał się z siatką, na której zdefiniowana jest
+łamigłówka. Modyfikacja polegająca na rozpoznawaniu już wypełnionych pól na planszy jest
+także warta rozważenia.
+
+\subsubsection{Tworzenie łamigłówek dla innych graczy}
+    Podobnie jak w przypadku automatycznego generowania łamigłówek, dzielenie się łamigłówkami
+znacznie zwiększyłoby powtarzalność aplikacji. Jednak w odróżnieniu od wyżej wymienionej funkcjonalności,
+łamigłówki tworzone przez graczy mogłyby przedstawiać rzeczywiste obiekty, podobnie jak jest w przypadku
+łamigłówek dostępnych w aplikacji. Takie łamigłówki miałyby pewne walory estetyczne. Dodanie
+tego modułu wiązałoby się z implementacją serwera, który zbierałby łamigłówki od różnych graczy.
+Aplikacja powinna także zostać poszerzona o możliwość oceny rozwiązanych łamigłówek.
