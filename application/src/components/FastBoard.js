@@ -248,52 +248,54 @@ const FastBoard = ({
                 conversionType.current = null;
               }}
               onResponderMove={({nativeEvent: {pageX, pageY}}) => {
-                const touchedTile = {
-                  rowI: Math.floor(
-                    (pageY - verticalOffset) / (size + marginSize),
-                  ),
-                  colI: Math.floor(
-                    (pageX - horizontalOffset) / (size + marginSize),
-                  ),
-                };
-                if (touchDirectionHorizontal.current === null) {
-                  if (
-                    touchedTile.rowI === previouslyTouchedTile.current.rowI &&
-                    touchedTile.colI !== previouslyTouchedTile.current.colI
-                  ) {
-                    touchDirectionHorizontal.current = true;
-                    touchedLevel.current = previouslyTouchedTile.current.rowI;
-                  } else if (
-                    touchedTile.rowI !== previouslyTouchedTile.current.rowI &&
-                    touchedTile.colI === previouslyTouchedTile.current.colI
-                  ) {
-                    touchDirectionHorizontal.current = false;
-                    touchedLevel.current = previouslyTouchedTile.current.colI;
+                if (!gameFinished) {
+                  const touchedTile = {
+                    rowI: Math.floor(
+                      (pageY - verticalOffset) / (size + marginSize),
+                    ),
+                    colI: Math.floor(
+                      (pageX - horizontalOffset) / (size + marginSize),
+                    ),
+                  };
+                  if (touchDirectionHorizontal.current === null) {
+                    if (
+                      touchedTile.rowI === previouslyTouchedTile.current.rowI &&
+                      touchedTile.colI !== previouslyTouchedTile.current.colI
+                    ) {
+                      touchDirectionHorizontal.current = true;
+                      touchedLevel.current = previouslyTouchedTile.current.rowI;
+                    } else if (
+                      touchedTile.rowI !== previouslyTouchedTile.current.rowI &&
+                      touchedTile.colI === previouslyTouchedTile.current.colI
+                    ) {
+                      touchDirectionHorizontal.current = false;
+                      touchedLevel.current = previouslyTouchedTile.current.colI;
+                    }
                   }
-                }
-                if (touchDirectionHorizontal.current !== null) {
-                  if (touchDirectionHorizontal.current === true) {
-                    const sX =
-                      previouslyTouchedTile.current.colI > touchedTile.colI
-                        ? touchedTile.colI
-                        : previouslyTouchedTile.current.colI;
-                    const eX =
-                      previouslyTouchedTile.current.colI < touchedTile.colI
-                        ? touchedTile.colI
-                        : previouslyTouchedTile.current.colI;
-                    handleFieldsLineTap([sX, eX]);
-                  } else {
-                    const sY =
-                      previouslyTouchedTile.current.rowI > touchedTile.rowI
-                        ? touchedTile.rowI
-                        : previouslyTouchedTile.current.rowI;
-                    const eY =
-                      previouslyTouchedTile.current.rowI < touchedTile.rowI
-                        ? touchedTile.rowI
-                        : previouslyTouchedTile.current.rowI;
-                    handleFieldsLineTap([sY, eY]);
+                  if (touchDirectionHorizontal.current !== null) {
+                    if (touchDirectionHorizontal.current === true) {
+                      const sX =
+                        previouslyTouchedTile.current.colI > touchedTile.colI
+                          ? touchedTile.colI
+                          : previouslyTouchedTile.current.colI;
+                      const eX =
+                        previouslyTouchedTile.current.colI < touchedTile.colI
+                          ? touchedTile.colI
+                          : previouslyTouchedTile.current.colI;
+                      handleFieldsLineTap([sX, eX]);
+                    } else {
+                      const sY =
+                        previouslyTouchedTile.current.rowI > touchedTile.rowI
+                          ? touchedTile.rowI
+                          : previouslyTouchedTile.current.rowI;
+                      const eY =
+                        previouslyTouchedTile.current.rowI < touchedTile.rowI
+                          ? touchedTile.rowI
+                          : previouslyTouchedTile.current.rowI;
+                      handleFieldsLineTap([sY, eY]);
+                    }
+                    previouslyTouchedTile.current = touchedTile;
                   }
-                  previouslyTouchedTile.current = touchedTile;
                 }
               }}>
               <View

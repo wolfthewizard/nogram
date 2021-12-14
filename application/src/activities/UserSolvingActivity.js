@@ -69,10 +69,20 @@ const UserSolvingActivity = ({route, navigation}) => {
           ),
         0,
       );
+    const tilesMarked = fields.reduce(
+      (a, row) =>
+        a +
+        row.reduce(
+          (b, field) => b + (field.state === FieldStates.MARKED_EMPTY ? 1 : 0),
+          0,
+        ),
+      0,
+    );
 
     if (
       (lives !== gameData.maxLives ||
-        tilesLeft.current !== gameData.totalPixels) &&
+        tilesLeft.current !== gameData.totalPixels ||
+        tilesMarked > 0) &&
       gameData.solveStatus !== SolveStatus.BEGAN
     ) {
       gameData.solveStatus = SolveStatus.BEGAN;
@@ -90,6 +100,8 @@ const UserSolvingActivity = ({route, navigation}) => {
         gameData.finishType === FinishType.FINISHED_WITH_LOSING
       ) {
         saveGameStatus(gameData.id, SolveStatus.SOLVED);
+      } else {
+        saveGameStatus(gameData.id, SolveStatus.UNSOLVED);
       }
       saveGameFoundPixels(gameData.id, 0);
       saveGameLivesCount(gameData.id, gameData.maxLives);
