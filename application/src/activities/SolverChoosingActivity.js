@@ -60,7 +60,8 @@ const SolverChoosingActivity = ({navigation}) => {
                   padding: 15,
                   borderRadius: 5,
                 }}>
-                <Text style={{color: 'white', fontSize: 20}}>
+                <Text
+                  style={{color: 'white', fontSize: 5 * global.fontSizeBase}}>
                   Are you sure you want to delete puzzle named '
                   {deletedPuzzle.current.name || 'Unnamed'}'?
                 </Text>
@@ -79,7 +80,7 @@ const SolverChoosingActivity = ({navigation}) => {
                       <Text
                         style={{
                           color: Colors.nearWhite,
-                          fontSize: 16,
+                          fontSize: 4 * global.fontSizeBase,
                         }}>
                         Cancel
                       </Text>
@@ -101,7 +102,7 @@ const SolverChoosingActivity = ({navigation}) => {
                       <Text
                         style={{
                           color: Colors.nearWhite,
-                          fontSize: 16,
+                          fontSize: 4 * global.fontSizeBase,
                         }}>
                         Delete
                       </Text>
@@ -147,7 +148,7 @@ const SolverChoosingActivity = ({navigation}) => {
                       <Text
                         style={{
                           color: 'white',
-                          fontSize: 10,
+                          fontSize: 2.5 * global.fontSizeBase,
                           textAlign: 'center',
                         }}>
                         Predefined Puzzles

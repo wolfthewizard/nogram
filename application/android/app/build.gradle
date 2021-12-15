@@ -148,11 +148,18 @@ android {
             keyPassword 'android'
         }
 
+        // release {
+        //     storeFile file('test.keystore')
+        //     storePassword 'testes'
+        //     keyAlias 'test'
+        //     keyPassword 'testes'
+        // }
+
         release {
-            storeFile file('test.keystore')
-            storePassword 'testes'
-            keyAlias 'test'
-            keyPassword 'testes'
+            storeFile file('release.keystore')
+            storePassword "6nd1b812m8cv"
+            keyAlias "release"
+            keyPassword "6nd1b812m8cv"
         }
     }
     buildTypes {

@@ -20,7 +20,7 @@ const SolverPuzzleCard = ({puzzleData, openPuzzle, requestDelete}) => {
         <Text
           style={{
             color: 'white',
-            fontSize: 20,
+            fontSize: 5 * global.fontSizeBase,
             fontStyle: puzzleData.name ? 'normal' : 'italic',
           }}>
           {puzzleData.name || 'Unnamed'}

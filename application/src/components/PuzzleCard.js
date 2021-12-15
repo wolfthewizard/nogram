@@ -6,15 +6,7 @@ import Colors from '../data/Colors';
 import FinishType from '../enums/FinishType';
 import SolveStatus from '../enums/SolveStatus';
 
-// const getTextColor = (percent) => {
-//   const h = Math.round(220 * (1 - percent / 100)) * 0x10000 + 255 * 0x100;
-//   return '#' + ('000000' + h.toString(16)).slice(-6);
-// };
-
 const PuzzleCard = ({puzzleData, openPuzzle}) => {
-  // const completePercent = Math.floor(
-  //   (puzzleData.foundPixels / puzzleData.totalPixels) * 100,
-  // );
   const elementColor =
     puzzleData.finishType === FinishType.FINISHED_WITHOUT_LOSING
       ? Colors.gold
@@ -67,7 +59,12 @@ const PuzzleCard = ({puzzleData, openPuzzle}) => {
               justifyContent: 'center',
               backgroundColor: Colors.darkGray,
             }}>
-            <Text style={{color: 'white', textAlign: 'center', fontSize: 16}}>
+            <Text
+              style={{
+                color: 'white',
+                textAlign: 'center',
+                fontSize: 4 * global.fontSizeBase,
+              }}>
               {puzzleData.name || 'Unnamed'}
             </Text>
           </View>

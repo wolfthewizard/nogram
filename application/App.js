@@ -13,6 +13,10 @@ import {Text} from 'react-native-elements';
 import SolverSolvingActivity from './src/activities/SolverSolvingActivity';
 import SolverInputActivity from './src/activities/SolverInputActivity';
 import {initDb} from './src/db/DBMediator';
+import {Dimensions} from 'react-native';
+
+const {width} = Dimensions.get('window');
+global.fontSizeBase = width * 0.01;
 
 const TabNavigator = createBottomTabNavigator();
 

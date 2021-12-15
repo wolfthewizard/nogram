@@ -89,7 +89,7 @@ const SolverInputActivity = ({navigation}) => {
               borderRadius: 5,
               color: 'white',
               alignSelf: 'stretch',
-              fontSize: 24,
+              fontSize: 6 * global.fontSizeBase,
               marginHorizontal: 20,
               textAlign: 'center',
             }}
@@ -107,13 +107,19 @@ const SolverInputActivity = ({navigation}) => {
           <Button
             title="Cancel"
             buttonStyle={{backgroundColor: Colors.gray}}
-            titleStyle={{color: Colors.nearBlack, fontSize: 36}}
+            titleStyle={{
+              color: Colors.nearBlack,
+              fontSize: 9 * global.fontSizeBase,
+            }}
             onPress={navigation.goBack}
           />
           <Button
             title="Add"
             buttonStyle={{backgroundColor: Colors.copper}}
-            titleStyle={{color: Colors.nearBlack, fontSize: 36}}
+            titleStyle={{
+              color: Colors.nearBlack,
+              fontSize: 9 * global.fontSizeBase,
+            }}
             onPress={() => {
               addPuzzle(
                 {

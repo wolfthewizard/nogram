@@ -16,7 +16,7 @@ const PackCard = ({packData, openPack}) => {
           borderRadius: 5,
           overflow: 'hidden',
         }}>
-        <View style={{flex: 0.7}}>
+        <View style={{flex: 0.65}}>
           <Image
             source={requiredAssets[packData.imgPath]}
             style={{width: '100%', height: '100%', resizeMode: 'center'}}
@@ -24,14 +24,24 @@ const PackCard = ({packData, openPack}) => {
         </View>
         <View
           style={{
-            flex: 0.3,
+            flex: 0.35,
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <Text style={{color: 'white', textAlign: 'center', fontSize: 20}}>
+          <Text
+            style={{
+              color: 'white',
+              textAlign: 'center',
+              fontSize: 5 * global.fontSizeBase,
+            }}>
             {packData.name}
           </Text>
-          <Text style={{color: 'white', textAlign: 'center', fontSize: 12}}>
+          <Text
+            style={{
+              color: 'white',
+              textAlign: 'center',
+              fontSize: 3 * global.fontSizeBase,
+            }}>
             {packData.size}x{packData.size}
           </Text>
           <View style={{width: '80%'}}>

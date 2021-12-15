@@ -175,12 +175,22 @@ const UserSolvingActivity = ({route, navigation}) => {
           </View>
         )}
         {gameState === GameStates.WON && (
-          <Text style={{color: 'white', fontSize: 50, textAlign: 'center'}}>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 12.5 * global.fontSizeBase,
+              textAlign: 'center',
+            }}>
             You win!
           </Text>
         )}
         {gameState === GameStates.LOST && (
-          <Text style={{color: 'white', fontSize: 50, textAlign: 'center'}}>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 12.5 * global.fontSizeBase,
+              textAlign: 'center',
+            }}>
             You lose!
           </Text>
         )}

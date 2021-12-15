@@ -41,7 +41,9 @@ const SolverSolvingActivity = ({route, navigation}) => {
         />
       </View>
       <View style={{paddingTop: 20, flex: 0.1}}>
-        <Text style={{color: 'white', fontSize: 24}}>{solveMessage}</Text>
+        <Text style={{color: 'white', fontSize: 6 * global.fontSizeBase}}>
+          {solveMessage}
+        </Text>
       </View>
       <View
         style={{
@@ -62,7 +64,10 @@ const SolverSolvingActivity = ({route, navigation}) => {
             );
           }}
           buttonStyle={{backgroundColor: Colors.copper}}
-          titleStyle={{color: Colors.nearBlack, fontSize: 36}}
+          titleStyle={{
+            color: Colors.nearBlack,
+            fontSize: 9 * global.fontSizeBase,
+          }}
         />
       </View>
     </View>
