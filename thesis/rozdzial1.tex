@@ -15,12 +15,12 @@ jakim jest rozwiązywanie nonogramów.
     Nonogramy (znane także jako \textit{Paint by Number} oraz \textit{Picross}) to łamigłówki, w których
 celem jest odpowiednie wypełnienie komórek na siatce tak, by uzyskać określony wzór (np. obrazek).
 W tym celu należy kolorować pola zgodnie ze wskazówkami umieszczonymi obok każdego wiersza oraz kolumny
-na siatce. Wskazówki mają postać ciągu liczb — każda z liczb oznacza ilość wypełnionych komórek z rzędu,
+na siatce. Wskazówki mają postać ciągu liczb - każda z liczb oznacza liczbę wypełnionych komórek z rzędu,
 a pomiędzy grupami wypełnionych komórek znajduje się przynajmniej jedna pusta komórka.
 
     Uściślając powyższą, nieformalną definicję, nonogram to łamigłówka na siatce wielkości $w \times h$,
-gdzie $w$ oznacza szerokość planszy wyrażoną w ilości komórek, a $h$ wysokość planszy wyrażoną w
-ilości komórek. Dla każdego wiersza i kolumny mamy przedstawiony ciąg liczb $H_n$ będący wskazówką
+gdzie $w$ oznacza szerokość planszy wyrażoną w liczbie komórek, a $h$ wysokość planszy wyrażoną w
+liczbie komórek. Dla każdego wiersza i kolumny mamy przedstawiony ciąg liczb $H_n$ będący wskazówką
 dla danej linii. Dany element $h_i$ opisuje blok stworzony z $h_i$ wypełnionych komórek z rzędu i, jeśli
 $h_i$ nie jest pierwszym elementem ciągu, to blok opisany przez $h_i$ jest oddzielony 
 przynajmniej jedną pustą komórką od bloku opisanego przez $h_{i-1}$, 
@@ -115,7 +115,7 @@ To czy $P = NP$ jest jak do tej pory nierozwiązanym problemem.
 \begin{definition}
     Problem A jest redukowalny do problemu B w czasie wielomianowym, jeśli wejścia dla problemu A
 można przekształcić na wejścia dla problemu B w czasie wielomianowym, a następnie rozwiązać problem A
-wywołując procedurę rozwiązującą problem B wielomianową ilość razy.
+wywołując procedurę rozwiązującą problem B wielomianową liczbę razy.
 \end{definition}
 \begin{example}
     Mnożenie liczb $a \cdot b$ można zdefiniować za pomocą operacji dodawania w następujący sposób:
@@ -218,14 +218,14 @@ dla wierszy oraz kolumn. Jeśli w obu przypadkach procedura zwróci \texttt{true
 
     Czas wykonania procedury jest zależny od wielkości planszy. Zewnętrzna pętla wykonuje się
 tyle razy, ile jest linii w osi ($h$ w przypadku wierszy, $w$ w przypadku kolumn). Na początku pętli
-dochodzi do ekstrakcji pewnych danych do lokalnych zmiennych oraz inicjalizacji tablicy — w zależności
+dochodzi do ekstrakcji pewnych danych do lokalnych zmiennych oraz inicjalizacji tablicy - w zależności
 od języka użytego do implementacji, ta grupa operacji zajmuje czas stały bądź liniowy. Następnie
 uruchamiana jest pierwsza wewnętrzna pętla. W tej pętli analizowane są dane w danej linii, by zmapować
 układ jej komórek do wskazówki, jaką reprezentuje. Złożoność operacji w każdej iteracji jest stała,
-jeśli założymy, że powiększenie tablicy o dodatkowy element wymaga stałego czasu — w p.p. czas wykonania
-iteracji może być liniowy. Ilość wykonań tej pętli zależy od długości linii.
+jeśli założymy, że powiększenie tablicy o dodatkowy element wymaga stałego czasu - w p.p. czas wykonania
+iteracji może być liniowy. Liczba wykonań tej pętli zależy od długości linii.
 Po wykonaniu pierwszej pętli, w zależności od układu stanu komórek w linii,
-może dojść do kolejnego powiększenia tablicy o dodatkowy element — złożoność nie przekracza liniowej.
+może dojść do kolejnego powiększenia tablicy o dodatkowy element - złożoność nie przekracza liniowej.
 Na końcu zewnętrznej pętli wykonywana jest druga pętla, która iteruje po elementach wskazówki zadanej
 w rozwiązaniu, i porównuje ich wartość do analogicznych elementów we wskazówce odtworzonej z układu linii.
 Rozbieżność oznacza, że rozwiązanie nie jest prawidłowe, i procedura przedwcześnie zakańcza wykonanie.

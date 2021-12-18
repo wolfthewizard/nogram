@@ -57,9 +57,10 @@ przedstawiony na diagramie poniżej.
 
 	Baza składa się z 3 tabel: paczek, łamigłówek i łamigłówek solvera. Paczki zawierają jedynie
 niezbędne dane do reprezentacji grupy łamigłówek, czyli nazwa i ikona. W tabeli łamigłówek zawarte
-są proste dane takie jak nazwa, maksymalna ilość żyć (ilość błędów, po których się przegrywa).
-Przechowywane są tam również informacje o stanie gry, tj. \texttt{statusRozwiązania} — łamigłówka
-nierozpoczęta i nierozwiązana, łamigłówka rozpoczęta, łamigłówka rozwiązana — oraz \texttt{typUkończenia} — łamigłówka nieukończona bez przegranej, łamigłówka nieukończona z przegraną, łamigłówka ukończona
+są proste dane takie jak nazwa, maksymalna liczba żyć (liczba błędów, po których się przegrywa).
+Przechowywane są tam również informacje o stanie gry, tj. \texttt{statusRozwiązania} - łamigłówka
+nierozpoczęta i nierozwiązana, łamigłówka rozpoczęta, łamigłówka rozwiązana - oraz \texttt{typUkończenia} - 
+łamigłówka nieukończona bez przegranej, łamigłówka nieukończona z przegraną, łamigłówka ukończona
 bez przegranej, łamigłówka ukończona z przegraną. Pod zmienną \texttt{pola} przechowywana jest lista
 pól wraz z ich stanami, pod postacią stringa w formacie JSON. Tabela łamigłówek solvera także zawiera
 łamigłówki, ale w innej formie: łamigłówka zapisana jest jako listy wskazówek w formacie JSON oraz dane

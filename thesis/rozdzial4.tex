@@ -57,7 +57,7 @@ Jeśli solver zakończy działanie zwracając \texttt{true}, to w przekazanej mu
 (równoznaczne z listą wierszy) znajdzie się rozwiązanie łamigłówki.
 
     Ta wersja solvera cechuje się wysoką złożonością obliczeniową. Procedura sprawdzająca poprawność
-rozwiązania zostanie wywołana $2^n$ razy w najgorszym przypadku, gdzie $n$ to ilość pól na planszy.
+rozwiązania zostanie wywołana $2^n$ razy w najgorszym przypadku, gdzie $n$ to liczba pól na planszy.
 Oprócz tego, na każdym poziomie rekursji zostaje wykonany zestaw operacji, którego złożoność można
 określić jako stałą. Zważywszy, że drzewo wywołań jest drzewem binarnym, a każdy poziom zostaje
 wywołany 2 razy rzadziej niż poprzedni, daje to dodatkowe 
@@ -89,7 +89,7 @@ solver całościowy sprawdziłby $2^5 = 32$ stany
     \SetArgSty{normalfont}
     \SetKwFunction{WeryfikujRozwiazanie}{WeryfikujRozwiazanie}
     \SetKwFunction{NalozKombinacje}{NalozKombinacje}
-    \KwIn{Lista linii $L$, indeks linii $i$, lista wskazówek linii prostopadłych $H$, ilość linii $n$}
+    \KwIn{Lista linii $L$, indeks linii $i$, lista wskazówek linii prostopadłych $H$, liczba linii $n$}
     \KwOut{Czy znaleziono rozwiązanie \texttt{true/false}}
     \If{$i = n$}{
         \texttt{return} \WeryfikujRozwiazanie{$L$, $H$, $n$}\;
@@ -107,7 +107,7 @@ solver całościowy sprawdziłby $2^5 = 32$ stany
     \caption{SolverOsiowy}\label{alg:axisSolver}
 \end{pseudokod}
 
-    Solver zaczyna od pustej planszy. Przed rozpoczęciem rozwiązywania sprawdzana jest ilość wszystkich
+    Solver zaczyna od pustej planszy. Przed rozpoczęciem rozwiązywania sprawdzana jest liczba wszystkich
 kombinacji w danej osi (iloczyn możliwości każdej z linii) i wybierana jest oś z mniejszą liczbą
 możliwości. Następnie generowane są kombinacje dla każdej z linii. Solver korzysta z rekursyjnej
 metody i ustawia pierwszą kombinację dla pierwszej linii. Następnie wywołuje metodę dla kolejnej linii,
@@ -116,7 +116,7 @@ nie ma rozwiązania, to solver przechodzi do kolejnego ustawienia i wywołuje me
 
     Dzięki eliminacji kombinacji sprzecznych ze wskazówkami w danej osi, procedura sprawdzania
 poprawności rozwiązania jest wywoływana o wiele rzadziej niż w przypadku solvera całościowego.
-O ile ilość kombinacji w linii przy rozpatrywaniu każdej komórki z osobna to $2^n$, gdzie $n$ to
+O ile liczba kombinacji w linii przy rozpatrywaniu każdej komórki z osobna to $2^n$, gdzie $n$ to
 długość linii, tak w przypadku rozważania poprawnych kombinacji dla linii jest ona zależna od
 długości i zawartości wskazówki, i można ją ograniczyć z góry przez
 ${n + 1 - h} \choose h$, a $h$ to ilość liczb we wskazówce dla danej linii. 
@@ -242,17 +242,17 @@ zawartej w $n$-tej komórce w $m$-tej kolumnie w liście kolumn.
 
     Zaproponowany solver jest dobrze przystosowany do rozwiązywania łamigłówek, dla których nie
 następuje zakładanie układu dowolnej linii. W wypadku takich łamigłówek, solver ten wykonuje procedurę
-\texttt{SprawdzLinie} pewną ilość razy, a następnie upewnia się, że każda linia ma jedną dostępną
+\texttt{SprawdzLinie} pewną liczbę razy, a następnie upewnia się, że każda linia ma jedną dostępną
 kombinację. Wyliczenie kombinacji dla wszystkich linii wymaga dostępu do $w+h$ zmiennych, co oznacza $w+h$ operacji
-wykonanych w stałym czasie. Ilość wykonań procedury \texttt{SprawdzLinie} można ograniczyć z góry
-przez $w+h+n$, gdzie $n$ to ilość pól na planszy, ponieważ pierwsze $w+h$ wykonań jest narzucone 
+wykonanych w stałym czasie. Liczbę wykonań procedury \texttt{SprawdzLinie} można ograniczyć z góry
+przez $w+h+n$, gdzie $n$ to liczba pól na planszy, ponieważ pierwsze $w+h$ wykonań jest narzucone 
 przez zapełnienie kolejki wszystkimi liniami przed przystąpieniem do rozwiązywania, a każde kolejne
 wykonanie jest skutkiem określenia stanu przynajmniej jednego z pól na planszy, jako że jest to 
 jedyny sposób na dodanie linii do kolejki. Weryfikacja pojedynczej kombinacji jest wykonywana w
-czasie wielomianowym, jednak ilość kombinacji nie jest wielomianowa: dla wskazówek wypełnionych
+czasie wielomianowym, jednak liczba kombinacji nie jest wielomianowa: dla wskazówek wypełnionych
 samymi jedynkami wynosi
 ${n + 1 - h} \choose h$, gdzie $h$ to ilość liczb we wskazówce. Gdyby jednak ograniczyć ilość
-liczb we wskazówkach, to możliwa ilość kombinacji będzie wielomianowo zależna od wielkości planszy.
+liczb we wskazówkach, to możliwa liczba kombinacji będzie wielomianowo zależna od wielkości planszy.
 Zatem dla podklasy nonogramów, która składa się z łamigłówek możliwych do rozwiązania bez dokonywania
 zakładania stanu jednej z linii, i w których długość wskazówki jest ograniczona, solver ten
 uzyskuje złożoność wielomianową.
@@ -499,7 +499,7 @@ będąc nieznacznie wolniejszym dla łamigłówek prostszych (np. \textit{Ghost}
 
 \subsection{Wnioski}
     Złożoność solvera całościowego bardzo ogranicza jego przydatność w rozwiązywaniu nonogramów.
-Solver osiowy, dzięki ograniczeniu ilości kombinacji dla danej linii, okazał się od niego lepszy,
+Solver osiowy, dzięki ograniczeniu liczby kombinacji dla danej linii, okazał się od niego lepszy,
 ale tylko w niewielkim stopniu. Jednak poszerzenie solvera osiowego o częściową weryfikację rozwiązania
 znacznie poprawiło jego osiągi. Solver eliminacyjny jest najwydajniejszym z zaproponowanych solverów. Dzięki oparciu na pewnych
 informacjach i ograniczeniu zakładania, a co za tym idzie back-trackingu, może rozwiązać zadaną

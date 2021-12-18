@@ -106,7 +106,11 @@ const SolverInputActivity = ({navigation}) => {
         <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
           <Button
             title="Cancel"
-            buttonStyle={{backgroundColor: Colors.gray}}
+            buttonStyle={{
+              backgroundColor: Colors.gray,
+              borderRadius: 1000,
+              paddingHorizontal: 20,
+            }}
             titleStyle={{
               color: Colors.nearBlack,
               fontSize: 9 * global.fontSizeBase,
@@ -115,7 +119,11 @@ const SolverInputActivity = ({navigation}) => {
           />
           <Button
             title="Add"
-            buttonStyle={{backgroundColor: Colors.copper}}
+            buttonStyle={{
+              backgroundColor: Colors.copper,
+              borderRadius: 1000,
+              paddingHorizontal: 20,
+            }}
             titleStyle={{
               color: Colors.nearBlack,
               fontSize: 9 * global.fontSizeBase,

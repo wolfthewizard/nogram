@@ -157,9 +157,9 @@ android {
 
         release {
             storeFile file('release.keystore')
-            storePassword "6nd1b812m8cv"
+            storePassword "passpass"
             keyAlias "release"
-            keyPassword "6nd1b812m8cv"
+            keyPassword "passpass"
         }
     }
     buildTypes {

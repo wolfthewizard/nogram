@@ -53,17 +53,21 @@ const combinations = (elementAmount, elements) => {
 };
 
 class Solver {
-  constructor() {}
+  constructor() {
+    this.obtainedSolutions = [];
+  }
 
   solve(
     width,
     height,
     initialFields,
-    setFields,
+    setSolutionsFound,
     setSolveMessage,
     rowHintsWithZeros,
     colHintsWithZeros,
+    findAllSolutions,
   ) {
+    this.obtainedSolutions = [];
     const resetFields = initialFields.map((row) =>
       row.map((field) => ({
         ...field,
@@ -71,7 +75,6 @@ class Solver {
         state: SolverFieldState.UNTOUCHED,
       })),
     );
-    setFields(resetFields);
 
     const mutableRows = JSON.parse(JSON.stringify(resetFields));
     const mutableCols = [...Array(width).keys()].map((i) =>
@@ -81,48 +84,55 @@ class Solver {
     const rowHints = Solver.removeZerosFromHints(rowHintsWithZeros);
     const colHints = Solver.removeZerosFromHints(colHintsWithZeros);
 
-    console.log('starting the solving process');
     const startTime = new Date().getTime();
 
-    if (
-      Solver.solveByElimination(
-        mutableRows,
-        mutableCols,
-        rowHints,
-        colHints,
-        width,
-        height,
-      )
-    ) {
-      const endTime = new Date().getTime();
-      console.log('solved');
-      setFields(
-        mutableRows.map((row) =>
-          row.map((field) => ({
-            ...field,
-            state:
-              field.state === SolverFieldState.GUESSED_EMPTY ||
-              field.state === SolverFieldState.KNOWN_EMPTY
-                ? FieldStates.UNTOUCHED
-                : FieldStates.CORRECTLY_UNCOVERED,
-          })),
+    this.solveByElimination(
+      mutableRows,
+      mutableCols,
+      rowHints,
+      colHints,
+      width,
+      height,
+      findAllSolutions,
+    );
+    const endTime = new Date().getTime();
+    if (this.obtainedSolutions.length) {
+      setSolutionsFound(
+        this.obtainedSolutions.map((solution) =>
+          solution.map((row) =>
+            row.map((field) => ({
+              ...field,
+              state:
+                field.state === SolverFieldState.GUESSED_EMPTY ||
+                field.state === SolverFieldState.KNOWN_EMPTY
+                  ? FieldStates.UNTOUCHED
+                  : FieldStates.CORRECTLY_UNCOVERED,
+            })),
+          ),
         ),
       );
       console.log(`Solving took ${(endTime - startTime) / 1000}s`);
-      setSolveMessage(`Solved in ${(endTime - startTime) / 1000}s.`);
+      setSolveMessage(
+        `Found ${
+          (findAllSolutions && `${this.obtainedSolutions.length} `) || ''
+        }solution${this.obtainedSolutions.length > 1 ? 's' : ''} in ${
+          (endTime - startTime) / 1000
+        }s.`,
+      );
     } else {
       console.log('unsolvable');
       setSolveMessage('Puzzle is unsolvable.');
     }
   }
 
-  static solveByElimination(
+  solveByElimination(
     mutableRows,
     mutableCols,
     rowHints,
     colHints,
     width,
     height,
+    findAllSolutions,
   ) {
     // first we generate combinations as list of indexes where we need to insert a gap
     const rowCombinations = Solver.generateCombinationsFromHints(
@@ -160,7 +170,7 @@ class Solver {
       });
     }
 
-    return Solver.solveRecursively(
+    this.solveRecursively(
       mutableRows,
       mutableCols,
       possibleRows,
@@ -168,10 +178,11 @@ class Solver {
       width,
       height,
       linesToCheck,
+      findAllSolutions,
     );
   }
 
-  static solveRecursively(
+  solveRecursively(
     mutableRows,
     mutableCols,
     possibleRows,
@@ -179,6 +190,7 @@ class Solver {
     width,
     height,
     linesToCheck,
+    findAllSolutions,
   ) {
     const filledField = SolverFieldState.GUESSED_FILLED;
     const emptyField = SolverFieldState.GUESSED_EMPTY;
@@ -229,10 +241,11 @@ class Solver {
       possibleRows.every((c) => c.length === 1) &&
       possibleCols.every((c) => c.length === 1)
     ) {
+      this.obtainedSolutions.push(mutableRows);
       return true;
     } else {
       // begin assuming
-      const rowAssumption = Solver.assumeOnLines(
+      const rowAssumption = this.assumeOnLines(
         mutableRows,
         mutableCols,
         possibleRows,
@@ -243,12 +256,13 @@ class Solver {
         filledField,
         linesToCheck,
         false,
+        findAllSolutions,
       );
 
       // if there was an assumption series on rows, return result; otherwise look at columns
       return rowAssumption !== null
         ? rowAssumption
-        : Solver.assumeOnLines(
+        : this.assumeOnLines(
             mutableCols,
             mutableRows,
             possibleCols,
@@ -259,11 +273,12 @@ class Solver {
             filledField,
             linesToCheck,
             true,
+            findAllSolutions,
           );
     }
   }
 
-  static assumeOnLines(
+  assumeOnLines(
     lines,
     perpendicularLines,
     possibleLines,
@@ -274,6 +289,7 @@ class Solver {
     filledField,
     linesToCheck,
     isCol,
+    findAllSolutions,
   ) {
     // choose first row/col to have more than one combination available
     for (let i = 0; i < lineBroadth; i++) {
@@ -314,7 +330,7 @@ class Solver {
             (lineOptions) => lineOptions.map((possibleLine) => possibleLine),
           );
 
-          const branchingResult = Solver.solveRecursively(
+          const branchingResult = this.solveRecursively(
             isCol ? perpendicularLinesCopy : linesCopy,
             !isCol ? perpendicularLinesCopy : linesCopy,
             isCol ? perpendicularPossibleLinesCopy : possibleLinesCopy,
@@ -322,16 +338,9 @@ class Solver {
             isCol ? lineBroadth : lineLength,
             !isCol ? lineBroadth : lineLength,
             linesToCheck,
+            findAllSolutions,
           );
-          if (branchingResult) {
-            // we found a solution
-            // we need to copy it to current lines to enable passing data up
-            for (let k = 0; k < lineLength; k++) {
-              lines[k] = linesCopy[k];
-            }
-            for (let k = 0; k < lineBroadth; k++) {
-              perpendicularLines[k] = perpendicularLinesCopy[k];
-            }
+          if (branchingResult && !findAllSolutions) {
             return true;
           }
         }
