@@ -20,14 +20,15 @@ a pomiędzy grupami wypełnionych komórek znajduje się przynajmniej jedna pust
 
     Uściślając powyższą, nieformalną definicję, nonogram to łamigłówka na siatce wielkości $w \times h$,
 gdzie $w$ oznacza szerokość planszy wyrażoną w liczbie komórek, a $h$ wysokość planszy wyrażoną w
-liczbie komórek. Dla każdego wiersza i kolumny mamy przedstawiony ciąg liczb $H_n$ będący wskazówką
+liczbie komórek. Dla każdego wiersza i kolumny mamy przedstawiony ciąg liczb 
+$(H_k) = (h_1, h_2, \ldots, h_k)$ będący wskazówką
 dla danej linii. Dany element $h_i$ opisuje blok stworzony z $h_i$ wypełnionych komórek z rzędu i, jeśli
 $h_i$ nie jest pierwszym elementem ciągu, to blok opisany przez $h_i$ jest oddzielony 
 przynajmniej jedną pustą komórką od bloku opisanego przez $h_{i-1}$, 
 oraz jeśli $h_i$ nie jest ostatnim elementem ciągu, to blok opisany przez $h_i$ jest oddzielony
 przynajmniej jedną pustą komórką od bloku opisanego przez $h_{i+1}$. Linię spełniającą zadaną wskazówkę
 opisuje wyrażenie regularne: $l=\text{\^{}}0^*1^{h_1}0^+1^{h_2}0^+\ldots0^+1^{h_n}0^*\text{\$}$, gdzie 
-$0$, $1$ oznaczają odpowiednio pustą i wypełnioną komórkę, $h_i$ jest $i$-tym elementem ciągu $H_n$,
+$0$, $1$ oznaczają odpowiednio pustą i wypełnioną komórkę, $h_i$ jest $i$-tym elementem ciągu $(H_k)$,
 będącego wskazówką dla wiersza/kolumny, a $|l| = n$, gdzie $n = w$ dla wiersza i $n = h$ dla kolumny. 
 Rozwiązaniem nonogramu jest wypełnienie zadanej planszy w taki sposób, 
 by dla każdego wiersza oraz każdej kolumny wskazówki dla nich były spełnione.
@@ -37,12 +38,12 @@ by dla każdego wiersza oraz każdej kolumny wskazówki dla nich były spełnion
     \begin{subfigure}[b]{0.3\textwidth}
         \centering
         \includegraphics[width=\textwidth]{images/nonogram_example_empty.png}
-        \caption{przed rozwiązaniem}
+        \caption{plansza przed rozwiązaniem}
     \end{subfigure}
     \begin{subfigure}[b]{0.3\textwidth}
         \centering
         \includegraphics[width=\textwidth]{images/nonogram_example_filled.png}
-        \caption{po rozwiązaniu}
+        \caption{plansza po rozwiązaniu}
     \end{subfigure}
     \caption{Przykładowa plansza}
 \end{figure}
@@ -50,15 +51,23 @@ by dla każdego wiersza oraz każdej kolumny wskazówki dla nich były spełnion
 
 \subsection{Definicje}
 \begin{definition}
-    Wskazówką nazywamy ciąg $H_i$ liczb, opisujący ułożenie wypełnionych komórek w danej linii.
+    Blok wypełnionych komórek w linii tworzy grupa wszystkich wypełnionych komórek z rzędu,
+nieoddzielonych żadną pustą komórką.
+\end{definition}
+\begin{definition}
+    Wskazówką nazywamy ciąg $(H_k) = (h_1, h_2, \ldots h_k)$ liczb, które opisują długości kolejnych
+bloków dla danej linii.
 \end{definition}
 \begin{remark}
     Dla uproszczenia opisu algorytmów następuje założenie, że pusta linia jest opisywana przez
 wskazówkę będącą ciągiem pustym.
 \end{remark}
 \begin{definition}
-    Instancją problemu nonogramu jest czwórka $N = (w, h, R_n, C_n)$, gdzie $w$, $h$ to odpowiednio
-szerokość i wysokość planszy, a $R_n$ i $C_n$ są ciągami wskazówek dla wierszy oraz kolumn.
+    Instancją problemu nonogramu jest czwórka $N = \big(w, h, (R_h), (C_w)\big)$, gdzie $w$ i $h$ 
+to odpowiednio szerokość i wysokość planszy, a 
+$(R_h) = \big((H_{r_1}), (H_{r_2}), \ldots, (H_{r_h})\big)$ i  
+$(C_w) = \big((H_{c_1}), (H_{c_2}), \ldots, (H_{c_w})\big)$
+są ciągami wskazówek dla wierszy oraz kolumn.
 \end{definition}
 
 
@@ -66,20 +75,18 @@ szerokość i wysokość planszy, a $R_n$ i $C_n$ są ciągami wskazówek dla wi
 \section{Wymagane zagadnienia matematyczne}
 
 
-\subsection{Problem decyzyjny}
-\begin{definition}
+\begin{definition}[Problem decyzyjny]
     Problem decyzyjny to problem, na który odpowiedź stanowi 'tak' lub 'nie'.
 \end{definition}
     Problem decyzyjny to pojęcie kluczowe dla klasyfikacji problemu do wybranej klasy złożoności.
 By móc sklasyfikować wybrany problem (np. rozwiązanie nonogramu) do jakiejś klasy złożoności,
 należy przedstawić go w postaci problemu decyzyjnego.
 \begin{example}
-    Czy zadany nonogram $N = (w, h, R_n, C_n)$ ma rozwiązanie?
+    Czy zadany nonogram $N = \big(w, h, (R_h), (C_w)\big)$ ma rozwiązanie?
 \end{example}
 
 
-\subsection{Klasa złożoności P}
-\begin{definition}
+\begin{definition}[Klasa złożoności P]
     Klasa złożoności P zawiera wszystkie problemy decyzyjne, których rozwiązanie można znaleźć w czasie wielomianowym.
 \end{definition}
 \begin{example}
@@ -90,8 +97,7 @@ istnieje ścieżka z punktu $v_1 \in V$ do punktu $v_2 \in V$ o długości nie w
 \end{example}
 
 
-\subsection{Klasa złożoności NP}
-\begin{definition}
+\begin{definition}[Klasa złożoności NP]
     Klasa złożoności NP zawiera wszystkie problemy decyzyjne, których rozwiązanie dla odpowiedzi pozytywnej
 można zweryfikować w czasie wielomianowym.
 \end{definition}
@@ -108,11 +114,10 @@ można zsumować wartości przedmiotów z $S$ i sprawdzić, czy jest to poprawne
 
     Należy zauważyć, że każdy problem z klasy \textit{P} należy także do klasy \textit{NP}, ponieważ
 rozwiązanie problemu decyzyjnego jest jednym ze sposobów weryfikacji poprawności jego rozwiązania.
-To czy $P = NP$ jest jak do tej pory nierozwiązanym problemem.
+To czy $P = NP$ jest jak do tej pory nierozwiązanym problemem i stanowi jeden z problemów milenijnych.
 
 
-\subsection{Redukcja wielomianowa}
-\begin{definition}
+\begin{definition}[Redykcja wielomianowa]
     Problem A jest redukowalny do problemu B w czasie wielomianowym, jeśli wejścia dla problemu A
 można przekształcić na wejścia dla problemu B w czasie wielomianowym, a następnie rozwiązać problem A
 wywołując procedurę rozwiązującą problem B wielomianową liczbę razy.
@@ -131,8 +136,7 @@ co najmniej tak złożony, jak \textit{A}.
 \end{corollary}
 
 
-\subsection{Klasa problemów NP-trudnych}
-\begin{definition}
+\begin{definition}[Klasa problemów NP-trudnych]
     Problem \textit{H} należy do klasy problemów NP-trudnych, jeśli każdy problem w klasie NP 
 jest redukowalny do \textit{H} w czasie wielomianowym.
 \end{definition}
@@ -148,8 +152,8 @@ twierdzenia Cooka-Levina \cite{Cook-Levin}.
 redukcji wielomianowej z \textit{A} w \textit{B} implikuje przynależność \textit{B} do tej klasy,
 o ile \textit{A} także do niej należy.
 
-\subsection{Klasa problemów NP-zupełnych}
-\begin{definition}
+
+\begin{definition}[Klasa problemów NP-zupełnych]
     Problem decyzyjny \textit{C} należy do klasy problemów NP-zupełnych, jeśli należy do klas problemów
 NP-trudnych oraz NP.
 \end{definition}
@@ -166,11 +170,13 @@ można zweryfikować w czasie wielomianowym.
     Mając zdefiniowane pojęcia potrzebne do klasyfikacji problemu do odpowiedniej klasy złożoności,
 należy znaleźć klasę, do jakiej należy rozwiązywanie nonogramów. Z uwagi na specyfikę klas, klasyfikacji
 poddana zostanie decyzyjna wersja problemu, tj. 
-'\textit{Czy zadany nonogram $N = (w, h, R_n, C_n)$ ma rozwiązanie?}'.
+'\textit{Czy zadany nonogram $N = \big(w, h, (R_h), (C_w)\big)$ ma rozwiązanie?}'.
 
 
-\subsection{Problem rozwiązania nonogramu jest w NP}
-    Niech $M_{h, w}$ będzie macierzą oznaczająca rozwiązanie zadanego nonogramu $N = (w, h, R_n, C_n)$,
+\begin{theorem}
+    Problem rozwiązania nonogramu jest w NP
+\end{theorem}
+    Niech $M_{h, w}$ będzie macierzą oznaczająca rozwiązanie zadanego nonogramu $N = \big(w, h, (R_h), (C_w)\big)$,
 gdzie $m_{i, j}$ oznacza stan komórki w wierszu $i$ i kolumnie $j$, oraz $m_{i, j} = 1$, jeśli komórka
 jest wypełniona, a $m_{i, j} = 0$, jeśli komórka jest pusta. Macierz $M_{h, w}$ jest mapowana na $h + w$ list,
 będących ciągami stanów komórek w kolejnych wierszach, i kolumnach.
@@ -238,7 +244,9 @@ Zaproponowana procedura ma złożoność wielomianową, zatem problem decyzyjny 
 należy do klasy \textit{NP}.
 
 
-\subsection{Problem rozwiązania nonogramu jest NP-trudny}
+\begin{theorem}
+    Problem rozwiązania nonogramu jest NP-trudny
+\end{theorem}
     Dowód NP-trudności rozwiązywania nonogramów jest obszerny i wykracza poza zakres tej pracy.
 Przykładowy dowód jest opisany w pracy \cite{Nonograms-NP-Hard} i jego zarys jest następujący.
 Autor rozpoczyna dowód od powołania się na NP-trudność gry na grafach, nazwanej jako
@@ -248,6 +256,8 @@ autor konstruuje redukcję wielomianową z planarnej \textit{Bounded Nondetermin
 w rozwiązywanie nonogramów, tym samym udowadniając ich przynależność do tej klasy problemów.
 
 
-\subsection{Problem rozwiązania nonogramu jest NP-zupełny}
+\begin{theorem}
+    Problem rozwiązania nonogramu jest NP-zupełny
+\end{theorem}
     Problem rozwiązania nonogramu został zaklasyfikowany do klasy problemów NP, oraz klasy problemów
 NP-trudnych. Wobec tego, rozważany problem należy do klasy problemów NP-zupełnych.

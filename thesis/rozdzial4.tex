@@ -20,7 +20,8 @@ wykorzystywane w trakcie rozwiązywania nonogramu.
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.5\textwidth]{images/all_solver_example.png}
-    \caption{Solver całościowy sprawdza wszystkie możliwe układy planszy w celu znalezienia rozwiązania.}
+    \caption{Możliwe układy dla przykładowej planszy}
+    Solver całościowy sprawdza wszystkie możliwe układy planszy w celu znalezienia rozwiązania.
 \end{figure}
 
     Sposób działania tego solvera został przedstawiony w kodzie poniżej.
@@ -77,9 +78,9 @@ czas szukania rozwiązania.
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.5\textwidth]{images/axis_solver_example.png}
-    \caption{Dla linii na grafice solver osiowy spradza jedynie 3 stany. Dla tej samej linii
+    \caption{Możliwe układy dla przykładowej linii}
+    Dla linii na grafice solver osiowy spradza jedynie 3 stany. Dla tej samej linii
 solver całościowy sprawdziłby $2^5 = 32$ stany
-    }
 \end{figure}
 
     Zarys algorytmu w tej wersji został przedstawiony w kodzie.
@@ -335,9 +336,10 @@ nie może być poprawnego rozwiązania, i solver przechodzi do innej gałęzi.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.4\textwidth]{images/partial_check_example.png}
-    \caption{Na tym etapie można zdyskwalifikować każde rozwiązanie zawierające pierwszy i drugi wiersz
-w układzie widocznym na grafice}
+    \includegraphics[width=0.35\textwidth]{images/partial_check_example.png}
+    \caption{Wizualizacja częściowej weryfikacji}
+    Na tym etapie można zdyskwalifikować każde rozwiązanie zawierające pierwszy i drugi wiersz
+w układzie widocznym na grafice
 \end{figure}
 
 \subsubsection{Wyniki}
@@ -412,6 +414,7 @@ indeksami. Dzięki temu nie jest konieczne sprawdzenie każdego indeksu w linii,
 dla których zaszła zmiana.
 
 
+\clearpage
 \subsubsection{Wyniki}
 
 \begin{table}[h!]
@@ -446,7 +449,7 @@ dla których zaszła zmiana.
     \caption{I część wyników dla solvera eliminacyjnego}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[h!]
     \begin{center}
         \begin{tabular}{|c|c|r r r r r r|}
             \hline
@@ -478,6 +481,7 @@ dla których zaszła zmiana.
     \caption{II część wyników dla solvera eliminacyjnego}
 \end{table}
 
+\clearpage
 \subsubsection{Interpretacja}
     Solver eliminacyjny jest najszybszym z zaprezentowanych solverów. Jest w stanie rozwiązać
 nawet największe, 64x64 nonogramy w nałożonym ograniczeniu czasowym. Każdą ze sprawdzanych łamigłówek
@@ -510,7 +514,67 @@ od solvera całościowego dzięki ograniczeniu się do zakładania w jednej osi.
 się solver eliminacyjny, który w miarę możliwości wyklucza zakładanie poprawności kombinacji.
 
 
-\subsection{Zestaw danych}
+
+\section{Predefiniowane łamigłówki}
+
+
+\subsection{Wymagania dla łamigłówek użytkownika}
+    Łamigłówki, które zostały umieszczone w aplikacji dla użytkownika, muszą spełniać pewne wymagania.
+
+\subsubsection{Łamigłówka ma jedno rozwiązanie}
+    Wynika to ze sposobu zapisu łamigłówki w aplikacji. Każda łamigłówka jest pewnym obrazkiem,
+zapisanym w formie siatki komórek, które są puste lub odpowiednio zakolorowane. Gdyby dopuścić
+łamigłówkę, która ma wiele rozwiązań, to każde rozwiązanie poza przewidzianym nie byłoby dopuszczane,
+mimo jego poprawności.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/no_unique_solution.png}
+    \caption{Przykład łamigłówki z wieloma rozwiązaniami}
+    Łamigłówka zdefiniowana na górze ma 2 rozwiązania, z których tylko jedno pokrywa się
+z przewidzianym. Gdyby znalazła się w aplikacji, to rozpoczęcie rozwiązywania z założeniem 
+poprawności prawej wersji wiązałoby się z nieuzasadnionym uznaniem błędu przez aplikację.
+\end{figure}
+
+\subsubsection{Łamigłówka nie wymaga zakładania}
+    Łamigłówki wymagające założenia poprawności jednego z wariantów na pewnym etapie są zdecydowanie
+bardziej złożone od łamigłówek, które da się ułożyć zbierając informacje z pojedynczych wierszy i kolumn.
+W przypadku solvera, założenie poprawności niewłaściwej kombinacji wymaga jedynie dokonania back-trackingu
+i sprawdzenia kolejnej kombinacji. Użytkownik musi rozwiązać taką łamigłówkę w pamięci, ponieważ
+zaznaczenie błędnej komórki na planszy wiązałoby się z wychwyceniem błędu przez aplikację.
+
+
+\subsection{Zatwierdzenie spełniania wymienionych wymagań przez łamigłówkę}
+    Do weryfikacji łamigłówki użyty został zmodyfikowany solver eliminacyjny. Brak konieczności
+zakładania przy rozwiązywaniu łamigłówki został sprawdzony przez nakazanie solverowi rozwiązania
+łamigłówki. Modyfikacja solvera polega na tym, że solver odrzuca łamigłówkę, jeśli kolejka linii do
+sprawdzenia została opróżniona, ale łamigłówka nie została rozwiązana. Jeśli łamigłówka nie została
+rozwiązana na tym etapie, to solver przejdzie do założeń: dla linii z wieloma poprawnymi
+kombinacjami zakładałby poprawność jednej z nich. Jest to jednak sprzeczne z wymaganiem.
+
+    Tak zmodyfikowany solver weryfikuje jednocześnie pierwsze kryterium. Znalezienie rozwiązania
+łamigłówki bez dokonania założeń oznacza istnienie wyłącznie jednego rozwiązania. Wynika to z faktu,
+że solver rozwiązuje łamigłówkę dokonując serii wnioskowań na liniach. W każdym wnioskowaniu solver
+uzupełnia jedynie te pola, co do których stanu jest pewien. Rozwiązanie całej łamigłówki w ten sposób
+oznacza, że każda komórka znajduje się w jedynym możliwym dla siebie stanie, co wyklucza istnienie
+innych rozwiązań.
+
+
+\subsection{Wymagania dla łamigłówek solvera}
+    Z uwagi na możliwość wprowadzania łamigłówek przez użytkownika oraz inny sposób przechowywania
+łamigłówek dla solvera (za pomocą wskazówek), nie jest możliwe wykluczenie
+konieczności rozwiązania łamigłowki z wieloma rozwiązaniami. Wobec tego solver w aplikacji
+został przystosowany do tego typu łamigłówek. Aplikacja udostępnia użytkownikowi opcję wygenerowania
+wszystkich rozwiązań danej łamigłówki, dzięki czemu może pozyskać rozwiązanie oraz zweryfikować
+jego unikalność. Następuje to przez prostą modyfikację algorytmu: po znalezieniu rozwiązania, solver
+dorzuca je do puli znanych rozwiązań i szuka dalej.
+
+    Wśród predefiniowanych łamigłówek solvera znajduje się łamigłówka z wieloma (2) rozwiązaniami,
+o nazwie \textit{Cherry}.
+
+
+
+\section{Zestaw danych}
     Do przeprowadzenia badań zostały użyte następujące obrazy, które po konwersji zostały przekazane do solverów
 jako zestaw wskazówek. Grafiki zawierające kolor biały zostały nałożone na tło w kolorze magenta
 w celu wyróżnienia tego koloru na tle białej kartki.
@@ -609,48 +673,3 @@ w celu wyróżnienia tego koloru na tle białej kartki.
     \end{subfigure}
     \caption{Zestaw danych}
 \end{figure}
-
-
-
-\section{Predefiniowane łamigłówki}
-
-
-\subsection{Wymagania dla łamigłówek}
-    Łamigłówki, które zostały umieszczone w aplikacji dla użytkownika, muszą spełniać pewne wymagania.
-
-\subsubsection{Łamigłówka ma jedno rozwiązanie}
-    Wynika to ze sposobu zapisu łamigłówki w aplikacji. Każda łamigłówka jest pewnym obrazkiem,
-zapisanym w formie siatki komórek, które są puste lub odpowiednio zakolorowane. Gdyby dopuścić
-łamigłówkę, która ma wiele rozwiązań, to każde rozwiązanie poza przewidzianym nie byłoby dopuszczane,
-mimo jego poprawności.
-
-\begin{figure}[!htb]
-    \centering
-    \includegraphics[width=0.6\textwidth]{images/no_unique_solution.png}
-    \caption{Łamigłówka zdefiniowana na górze ma 2 rozwiązania, z których tylko jedno pokrywa się
-z przewidzianym. Jeśli użytkownik zacznie rozwiązywać nonogram zakładając poprawność prawej wersji,
-to aplikacja w nieuzasadniony sposób uzna to za błąd.}
-\end{figure}
-
-\subsubsection{Łamigłówka nie wymaga zakładania}
-    Łamigłówki wymagające założenia poprawności jednego z wariantów na pewnym etapie są zdecydowanie
-bardziej złożone od łamigłówek, które da się ułożyć zbierając informacje z pojedynczych wierszy i kolumn.
-W przypadku solvera, założenie poprawności niewłaściwej kombinacji wymaga jedynie dokonania back-trackingu
-i sprawdzenia kolejnej kombinacji. Użytkownik musi rozwiązać taką łamigłówkę w pamięci, ponieważ
-zaznaczenie błędnej komórki na planszy wiązałoby się z wychwyceniem błędu przez aplikację.
-
-
-\subsection{Zatwierdzenie spełniania wymienionych wymagań przez łamigłówkę}
-    Do weryfikacji łamigłówki użyty został zmodyfikowany solver eliminacyjny. Brak konieczności
-zakładania przy rozwiązywaniu łamigłówki został sprawdzony przez nakazanie solverowi rozwiązania
-łamigłówki. Modyfikacja solvera polega na tym, że solver odrzuca łamigłówkę, jeśli kolejka linii do
-sprawdzenia została opróżniona, ale łamigłówka nie została rozwiązana. Jeśli łamigłówka nie została
-rozwiązana na tym etapie, to solver przejdzie do założeń: dla linii z wieloma poprawnymi
-kombinacjami zakładałby poprawność jednej z nich. Jest to jednak sprzeczne z wymaganiem.
-
-    Tak zmodyfikowany solver weryfikuje jednocześnie pierwsze kryterium. Znalezienie rozwiązania
-łamigłówki bez dokonania założeń oznacza istnienie wyłącznie jednego rozwiązania. Wynika to z faktu,
-że solver rozwiązuje łamigłówkę dokonując serii wnioskowań na liniach. W każdym wnioskowaniu solver
-uzupełnia jedynie te pola, co do których stanu jest pewien. Rozwiązanie całej łamigłówki w ten sposób
-oznacza, że każda komórka znajduje się w jedynym możliwym dla siebie stanie, co wyklucza istnienie
-innych rozwiązań.
