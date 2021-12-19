@@ -21,6 +21,8 @@ const combinations = (elementAmount, elements) => {
   }
 };
 
+// AxisSolver with implemented partial verification
+// this solver cannot check for multiple solutions, and returns the first one found
 class Solver {
   constructor() {}
 
@@ -28,7 +30,8 @@ class Solver {
     width,
     height,
     initialFields,
-    setFields,
+    setSolutionsFound,
+    setSolveMessage,
     rowHintsWithZeros,
     colHintsWithZeros,
   ) {
@@ -39,17 +42,14 @@ class Solver {
         state: FieldStates.UNTOUCHED,
       })),
     );
-    setFields(resetFields);
 
     const mutableRows = JSON.parse(JSON.stringify(resetFields));
     const mutableCols = [...Array(width).keys()].map((i) =>
       [...Array(height).keys()].map((j) => resetFields[j][i]),
     );
 
-    const rowHints = mutableRows.map((row) => Solver.generateHints(row));
-    const colHints = mutableCols.map((col) => Solver.generateHints(col));
-    // const rowHints = Solver.removeZerosFromHints(rowHintsWithZeros);
-    // const colHints = Solver.removeZerosFromHints(colHintsWithZeros);
+    const rowHints = Solver.removeZerosFromHints(rowHintsWithZeros);
+    const colHints = Solver.removeZerosFromHints(colHintsWithZeros);
 
     const startTime = new Date().getTime();
 
@@ -67,8 +67,11 @@ class Solver {
       if (
         Solver.solveAlongLines(mutableRows, rowHints, width, height, colHints)
       ) {
+        const endTime = new Date().getTime();
         console.log('solved');
-        setFields(mutableRows);
+        setSolutionsFound([mutableRows]);
+        console.log(`Solving took ${(endTime - startTime) / 1000}s`);
+        setSolveMessage(`Found solution in ${(endTime - startTime) / 1000}s.`);
       } else {
         console.log('unsolvable');
       }
@@ -77,54 +80,23 @@ class Solver {
       if (
         Solver.solveAlongLines(mutableCols, colHints, height, width, rowHints)
       ) {
+        const endTime = new Date().getTime();
         console.log('solved');
-        setFields(
+        setSolutionsFound([
           [...Array(width).keys()].map((i) =>
             [...Array(height).keys()].map((j) => mutableCols[j][i]),
           ),
-        );
+        ]);
+        console.log(`Solving took ${(endTime - startTime) / 1000}s`);
+        setSolveMessage(`Found solution in ${(endTime - startTime) / 1000}s.`);
       } else {
         console.log('unsolvable');
+        setSolveMessage('Puzzle is unsolvable.');
       }
     }
 
     const endTime = new Date().getTime();
     console.log(endTime - startTime);
-  }
-
-  static generateHints = (series) => {
-    const cellStreaks = [];
-    let latestStreak = 0;
-    for (const cell of series) {
-      if (cell.hasPixel) {
-        latestStreak++;
-      } else if (latestStreak > 0) {
-        cellStreaks.push(latestStreak);
-        latestStreak = 0;
-      }
-    }
-    latestStreak > 0 && cellStreaks.push(latestStreak);
-    return cellStreaks;
-    // in contrast to hints on board, do not generate 0 hint for empty line
-    // return cellStreaks.length > 0 ? cellStreaks : [0];
-  };
-
-  static removeZerosFromHints = (hints) =>
-    hints.map((line) => (line.length === 1 && line[0] === 0 ? [] : line));
-
-  static getAmountOfLineCombinations(hints, dimension) {
-    return hints.reduce((currentCombinations, nextLineHints) => {
-      const nextLineStreaks = nextLineHints.length;
-      const nextLineGaps =
-        dimension -
-        nextLineHints.reduce((s, nh) => s + nh, 0) -
-        nextLineStreaks +
-        1;
-      const nextRowCombinations =
-        factorial(nextLineGaps + nextLineStreaks) /
-        (factorial(nextLineGaps) * factorial(nextLineStreaks));
-      return currentCombinations * nextRowCombinations;
-    }, 1);
   }
 
   static solveAlongLines(
@@ -169,6 +141,7 @@ class Solver {
     perpendicularHintLines,
   ) {
     if (index === lineBroadth) {
+      // maximum recursion depth - validate solution
       return this.validateAlongLines(
         lines,
         perpendicularHintLines,
@@ -255,13 +228,13 @@ class Solver {
           }
           currentHint--;
           if (currentHint < 0) {
-            // more pixels in a row than current hint suggests
+            // more pixels in a block than current hint suggests
             return false;
           }
         } else {
           if (currentHintBegan) {
             if (currentHint > 0) {
-              // less pixels in a row than current hint suggests
+              // less pixels in a block than current hint suggests
               return false;
             }
             currentHintBegan = false;
@@ -291,13 +264,13 @@ class Solver {
           }
           currentHint--;
           if (currentHint < 0) {
-            // more pixels in a row than current hint suggests
+            // more pixels in a block than current hint suggests
             return false;
           }
         } else {
           if (currentHintBegan) {
             if (currentHint > 0) {
-              // less pixels in a row than current hint suggests
+              // less pixels in a block than current hint suggests
               return false;
             }
             currentHintBegan = false;
@@ -322,6 +295,24 @@ class Solver {
       }
     }
     return true;
+  }
+
+  static removeZerosFromHints = (hints) =>
+    hints.map((line) => (line.length === 1 && line[0] === 0 ? [] : line));
+
+  static getAmountOfLineCombinations(hints, dimension) {
+    return hints.reduce((currentCombinations, nextLineHints) => {
+      const nextLineStreaks = nextLineHints.length;
+      const nextLineGaps =
+        dimension -
+        nextLineHints.reduce((s, nh) => s + nh, 0) -
+        nextLineStreaks +
+        1;
+      const nextRowCombinations =
+        factorial(nextLineGaps + nextLineStreaks) /
+        (factorial(nextLineGaps) * factorial(nextLineStreaks));
+      return currentCombinations * nextRowCombinations;
+    }, 1);
   }
 }
 

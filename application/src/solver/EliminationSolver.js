@@ -52,6 +52,8 @@ const combinations = (elementAmount, elements) => {
   }
 };
 
+// EliminationSolver with line's changed indices tracking
+// the solver can check for multiple solutions
 class Solver {
   constructor() {
     this.obtainedSolutions = [];
