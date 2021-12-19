@@ -442,6 +442,12 @@ class Solver {
       const gaps =
         lineDepth - hintLine.reduce((s, nh) => s + nh, 0) - streaks + 1;
       const blocks = gaps + streaks; // block is either an empty pixel or full series of filled pixels from hint
+      if (gaps < 0 || blocks < 0) {
+        return {
+          combinations: [],
+          blocks: 0,
+        };
+      }
       return {
         combinations: combinations(gaps, [...Array(blocks).keys()]),
         blocks,
