@@ -1,6 +1,6 @@
 # nogram
 
-A mobile application for solving nonograms.\\
+A mobile application for solving nonograms.
 
 Links to artwork used in the application:
 
